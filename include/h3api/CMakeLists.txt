@@ -1,0 +1,49 @@
+add_subdirectory(H3AdventureMap)
+add_subdirectory(H3AI)
+add_subdirectory(H3Artifacts)
+add_subdirectory(H3Assets)
+add_subdirectory(H3Base)
+add_subdirectory(H3Campaign)
+add_subdirectory(H3Combat)
+add_subdirectory(H3Constants)
+add_subdirectory(H3Containers)
+add_subdirectory(H3Creatures)
+add_subdirectory(H3Defines)
+add_subdirectory(H3DialogControls)
+add_subdirectory(H3Dialogs)
+add_subdirectory(H3GameData)
+add_subdirectory(H3GzWrapper)
+add_subdirectory(H3Heroes)
+add_subdirectory(H3Managers)
+add_subdirectory(H3Players)
+add_subdirectory(H3RMG)
+add_subdirectory(H3Skills)
+add_subdirectory(H3Towns)
+add_subdirectory(H3Utilities)
+
+target_sources(H3API PUBLIC
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3AdventureMap.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3AI.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Artifacts.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Assets.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Base.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Campaign.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Combat.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Constants.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Containers.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Creatures.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Defines.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3DialogControls.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Dialogs.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GameData.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GzWrapper.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Heroes.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Managers.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Players.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3RMG.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Skills.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Towns.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Utilities.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Version.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/PreprocessorCleanup.hpp"
+)

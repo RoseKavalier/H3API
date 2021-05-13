@@ -1,0 +1,31 @@
+target_sources(H3API PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GarrisonInterface.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GlobalEvent.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3LossCondition.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Main.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3MainSetup.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3MapInfo.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Network.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3RandomDwelling.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Resources.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3ScenarioMapInformation.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Spell.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3TurnTimer.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3VictoryCondition.cpp"
+)
+
+target_sources(H3API PUBLIC
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GarrisonInterface.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GlobalEvent.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3LossCondition.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Main.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3MainSetup.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3MapInfo.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Network.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3RandomDwelling.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Resources.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3ScenarioMapInformation.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Spell.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3TurnTimer.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3VictoryCondition.hpp"
+)

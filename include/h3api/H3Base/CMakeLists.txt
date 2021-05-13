@@ -1,0 +1,14 @@
+target_sources(H3API PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Allocator.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Bitfield.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Core.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Functions.cpp"
+)
+
+target_sources(H3API PUBLIC
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Allocator.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Bitfield.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Config.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Core.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Functions.hpp"
+)

@@ -1,0 +1,11 @@
+target_sources(H3API PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3String.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Vector.cpp"
+)
+
+target_sources(H3API PUBLIC
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Bitset.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Set.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3String.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3Vector.hpp"
+)

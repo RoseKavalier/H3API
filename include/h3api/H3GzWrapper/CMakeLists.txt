@@ -1,0 +1,13 @@
+target_sources(H3API PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GzFile.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GzInflateBuf.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GzStream.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3ZStream.cpp"
+)
+
+target_sources(H3API PUBLIC
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GzFile.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GzInflateBuf.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3GzStream.hpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/H3ZStream.hpp"
+)

@@ -1,0 +1,221 @@
+#====================
+#   Version 1.6.0
+#====================
+[code]
+* Added automatically generated single-header format
+* enums in NH3Constants now have typedefs in the h3 namespace, remains weakly-typed but without polluting the entire namespace
+* Added preprocessor option _H3API_UNPREFIXED_NAMES_
+* All internal preprocessors are now undefined
+* Added several named H3Dialogs and campaign structures
+* Properly named zlib file wrappers
+* Several bugfixes
+
+[maintenance]
+* Deprecated a large number of items, see the version 1.6.0 ReadMe
+* Library is now divided in a large number of units, making it simpler to add content and maintain
+* Preprocessor option _H3API_LIBRARY_ is now controlled internally
+* All F_ functions are deprecated, replaced by more aptly named functions in their own units
+* All enum prefixes are removed, conflicts are avoided by having every enum in its own namespace
+* All random map generation structures have their prefixed modified from RMG_ to H3Rmg
+
+#====================
+#   Version 1.5.0
+#====================
+[code]
+* Added H3Campaign submodule, starting with H3CmpBonusBuildings and defines.
+* Added H3SelectScenarioDialog and constant IDs
+* Defined missing H3MainSetup fields
+* Added H3PuzzleCoordinates, H3PuzzlePiecesOrder and defines
+* Added H3VictoryCondition, H3LossCondition and their type enums, members of H3Main and map loading structures.
+* Added H3MapInformation, inheriting H3MapInfo, a member of H3Main
+* H3PlayerUnk renamed H3PlayerAttributes and is fully defined
+* H3Main better defined using previous structures
+* Fixed H3Main::IsHuman argument type
+* Replaced memory access macros by forced inline functions.
+	PtrAt() may be used on any type of data, the others now all require an h3::ADDRESS (unsigned int)
+* H3Patcher methods are now functions returning success/failure
+* Added H3Range<> C++11-style range and default typedefs Range (int) and RangeU (unsigned int)
+* Added H3Biset::Intersects and H3Bitset::Contains
+* Added a number of register setting/access methods to patcher_x86's HookContext with automatic/custom casting
+
+[maintenance]
+* Renamed a few protected fields
+* Marked a few fields for deprecation
+
+#====================
+#   Version 1.4.0
+#====================
+[code]
+* struct enums are being shifted to NH3Constants and replaced by typedef. 
+	As such, they require strong typing or use through NH3Constants:
+	e.g. H3Spell::eSpells::LIGHTNING_BOLT or NH3Spells::LIGHTNING_BOLT
+
+[maintenance]
+* Removed a large number of deprecated items from 1.3.X
+
+#====================
+#   Version 1.3.0
+#====================
+[code]
+* Conditionally added H3StdVector, a H3Vector equivalent derived from std::vector
+    Define _H3API_STD_VECTOR_ to enable this class
+    Requires Visual Studio 2013 or more recent (may be revised if inconsistencies or other libraries conform to the format)
+* Fixed colorization issues with H3Palette565
+* Added LightShadow(), DarkShadow() and Blend() to H3RGB565 and H3ARGB888 emulating h3's equivalent algorithms
+* Added operator BOOL() to H3UniquePtr<>
+* Fixed H3ResourceManager::iterator++
+* Added H3WavLoader
+* Defined H3WavFile::hSample and H3SoundMgr::hsamples, ::PlaySoundAndWait
+* Renamed H3Executive to H3ExecutiveMgr without deprecation (and P_Executive -> P_ExecutiveMgr)
+* Added a few member functions to H3CombatMgr with descriptions
+* Modified H3Tree::H3Node member order to be more efficient
+* H3String and H3Vector changed some remaining signed integers to UINT
+* Added more details to H3HeroInfo
+* H3ObjectAllocator<> should now have std::allocator conformance
+* Added H3SpreadSheet class, allowing you to write h3 text tables
+* Primitive type declaration are moved to H3Types.hpp.
+    This light header can be included in you .h or .hpp file with basic forward declarations to lighten include load
+* H3Vector now takes const& input
+* Added H3Set, a light version of std::set as it appears within heroes3
+    H3ResourceManager converted to H3Set
+* H3ObjectMask access improved with an iterator and (x, y) probing
+* H3TownDependencies has been reworked to be more descriptive using bitfields
+* H3MapItem's mirror and access now have bitfields as unions for easier use
+* H3CombatMonster received some more field details, protected pending some verifications
+* Added basic H3API.natvis to facilitate debug visualization of H3 containers
+
+[maintenance]
+* Latest 1.2 branch archived in a separate branch for some time
+* _H3_STD_CONVERSIONS_ renamed _H3API_STD_CONVERSIONS_
+* H3Palette565::Get32bitColors() now returns H3Palette32* instead of H3ARGB888*
+* Added CMake filtering and added BINARY_CUSTOM_DIR option to set your own output directory
+* 'QuickBattle' related structures re-branded as 'FastBattle' to better distinguish it from the Quick Combat option
+* ArraySize is removed; use std::size in its place
+* The library is converted to 4-bytes alignment which will remove most h3align padding fields
+    Some structures are not 4-byte aligned (e.g. H3Hero) and will remain unaligned (1-byte)
+    More structures now have their sizes statically verified
+* Several enums renamed to follow coding style.
+* Internal functions now all start with an underscore and follow _camelCase
+* H3SmartPointer renamed H3AutoPtr<> as a stand-in for std::auto_ptr<>
+* All struct enums are being moved to NH3Constants, structures will receive a typedef
+    As a bonus, more structures will have access to relevant NH3Constants
+    However this requires 'strong' typing to access the enum values
+    e.g. H3Spell::eSpells::DIMENSION_DOOR instead of H3Spell::DIMENSION_DOOR
+* Comments style revisited for headers
+* Better documentation of code continues
+* No deprecated items have been removed, removal will be done in 1.4.0
+
+#====================
+#   Version 1.2.0
+#====================
+[code]
+* Added H3Bitmap, a class to convert H3LoadedPcx16 to a bitmap which may be saved externally
+* Added H3Map<> and H3FastMap<>, helper classes to navigate [x][y][z] maps declared as 1-d array
+
+[maintenance]
+* Version 1.1.0 archived in a separate branch for some time
+* Modified bitfield style to follow struct member style
+* Standardized most of the library to the coding style
+* F_GetLocalTime() now returns H3String instead of printing to h3_TextBuffer
+* Removed H3Functions as a dependency within the library
+
+#====================
+#   Version 1.1.0
+#====================
+[code]
+* Removed all deprecated items from Version 1.0.0
+* Fixed reversed AI fields within H3Hero
+* Added information to H3CombatMonster regarding contour highlight
+* Changed H3String integer assignment to use a temporary h3_TextBuffer
+* Added width information to H3Font
+* H3Palette565 colors now defined as union to easily capture HDmod 32bit palette
+* Fixed rgb order issues in H3RGB formats
+* Added named colors to H3ARGB888
+* H3TownManager is more fleshed out
+* Added operator[] access to H3LoadedDef and H3DefGroup
+* H3BinaryLoader now casts to BOOL to verify its contents were successfully acquired
+* Added H3Patcher::ObjectPatch to easily patch memory structure's members
+
+[maintenance]
+* Version 1.0.0 archived in a separate branch for some time
+* Continuing conformance of code to established guidelines
+* Next version will propose new deprecations
+
+#====================
+#   Version 1.0.0
+#====================
+[code]
+* THISCALL_X, STDCALL_X, FASTCALL_X and CDECL_X now use templated functions instead of casting to UINT
+    This makes it completely trivial to pass float, double or other arguments to h3 functions
+* H3Bitset was added to properly handle h3's bitfields like std::bitset would
+  Slightly more heavy than H3Bitfield but safe and usage is more intuitive
+* H3Path was added which acts as a very modest version of std::filesystem for non-recursive RAII directory iteration
+* H3Ini class was added with basic read/write capacity
+  Intended for ini files with known order of sections & keys
+* H3Dlg has been rewritten to use its own virtual functions.
+  A number of new virtual functions have been added for ease of use for example:
+    OnOK()
+    OnCancel()
+    OnLeftClick()
+    OnWheelButton()
+    OnKeyPress()
+    OnCreate() ... and more
+* H3DlgItems have also had their virtual functions explicitly written out
+  Still a work in progress, H3Dlg does not provide a direct way of creating them yet
+* H3Vector indices now are all unsigned
+    Added Remove(_Elem*) and Remove(_Elem*, _Elem*) that act like erase()
+    Size() now behaves like std::vector::size(), the existing Size() was renamed RawSize()
+* H3String now uses UINT everywhere for length of the string
+  Added Erase(first, last) and variants to erase characters between to mean [first, last)
+  Remove(first, last) now uses Erase()
+    range is [first, last) instead of old [first, last]
+  npos replaces previous HS_FAIL and HS_NOT_FOUND enums.
+  cast operator LPCSTR() has been removed; it did more bad that good.
+* H3Tree reworked to include iterators
+  Larger footprint in memory but faster execution
+* H3Defines now shares all definitions between macro pointer-style and non-macro reference-style
+    Macros that define arrays are now enforced to use (index) to access array elements instead of [index]
+    Non-array macros require suffix () as well for interchangeability between macro and non-macro styles
+      In the case of non-arrays that happen to be pointers, this indicates intent that there are
+      no successive elements to be accessed; whereas (index) shows clear intent of having access
+* Added H3Patcher::AddressOfPatch() methods that let you write a reference to any data you have
+    patcher_x86 has equivalent PatcherInstance::WriteAddressOf() if you prefer that method
+* H3UniquePtr is a weak form of std::unique_ptr using H3Allocator specifically to free memory
+* Many minor improvements and bug fixes
+* H3Defines now use uniform typedef of template classes across macro and non-macro option setting
+  this makes it much easier to maintain both styles, switch back and forth between both,
+  and also using them will help show intent over the old style of macros/functions.
+  * H3DataPointer
+    * to get the held data as reference, dereference it with operator *
+    * to get the held data as pointer, take its address with operator operator &
+    * to access regularly, use operator `->`
+    * cannot be copied or assigned from (constructor(const &), operator=(const &))
+    * however has operator cast to its template type as pointer
+  * H3DataArrayPointer same as H3DataArrayPointer but for table-style data, plus:
+    * operator[index] access as reference
+    * operator(index) access as pointer
+    * operator cast is through its address to allow operator[] use
+  * H3PrimitivePointer same as H3DataPointer but for primitive types only (e.g. char, char*, bool, int, ...)
+  * H3PrimitiveArrayPointer same as H3PrimitivePointer but with the same additions from H3DataArrayPointer
+
+[maintenance]
+* reworked library structure, all setup and configurations are now done through H3_Config.hpp
+* added deprecated message to _H3API_DEPRECATED_
+* deprecated functions and macros will be removed entirely after a certain period of time
+* added _H3API_STATIC_ASSERT_ to perform compile-time assertion
+* added preprocessor _H3API_NO_VALIDATION_ to skip usage of _H3API_STATIC_ASSERT_
+* introducing major.minor.build version system
+      _H3API_VERSION_ and _H3API_VERSION_TEXT_ macros can be used to get this information
+* removed 'Last updated' field from file notices, it was never really maintained and not representative
+* a large number of functions, structures have been renamed for consistency.
+    They are all marked as _H3API_DEPRECATED_(Use NewName instead), you should get warnings from the compiler in most cases
+    The prefix h3_ has been reserved for primitive data that can be immediately accessed with an address (e.g. h3_TextBuffer)
+        All other uses have been renamed with the prefix P_ to indicate Pointer behaviour
+    H3LoadedDEF   -> H3LoadedDef
+    H3LoadedPCX   -> H3LoadedPcx
+    H3LoadedPCX16 -> H3LoadedPcx16
+    H3LoadedPCX24 -> H3LoadedPcx24
+    If you are not getting these deprecation messages, edit your IDE to show them
+      MSVC -> Property Pages -> C/C++ -> General -> Treat Warnings As Errors & be certain warning 4996 is not disabled
+* H3API is now its own repository which will make it easier for me to maintain it without having to worry about H3.Plugins
+* Basic CMake support has been added to generate build files for static library compilation
