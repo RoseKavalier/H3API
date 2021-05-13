@@ -132,6 +132,11 @@ Use of any C++11 feature should be enclosed within `_H3API_CPLUSPLUS11_` guards,
   * e.g. `eArtifact::NONE` & `eArtifactSlot::NONE`
 * enum class should use `_H3API_ENUM_` macro for compatibility
 
+# Contributors
+People who have sent in fixes to the api but are not directly shown for various reasons:
+@igrikRS
+@thehlopster
+
 # Disclaimer
 
 This software is not in any way official and is not endorsed by anyone.
