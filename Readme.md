@@ -135,8 +135,8 @@ Use of any C++11 feature should be enclosed within `_H3API_CPLUSPLUS11_` guards,
 # Contributors
 People who have sent in fixes to the api but are not directly shown for various reasons:
 
-@igrikRS<br>
-@thehlopster
+[@igrikRS](https://github.com/igrikRS)<br>
+[@thehlopster](https://github.com/thehlopster)
 
 # Disclaimer
 
