@@ -80,7 +80,7 @@ namespace h3
 	}
 	_H3API_ BOOL H3Army::AddStack(INT32 type, INT32 amount, INT32 slot)
 	{
-		THISCALL_4(BOOL, 0x44A9B0, this, type, amount, slot);
+		return THISCALL_4(BOOL, 0x44A9B0, this, type, amount, slot);
 	}
 	_H3API_ VOID H3Army::SplitFromStackToStack(INT32 fromStack, INT32 toStack, INT32 fraction)
 	{
