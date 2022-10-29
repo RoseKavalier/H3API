@@ -53,7 +53,7 @@ namespace h3
 		_H3API_ H3Army();
 		_H3API_ H3Army(const H3Army& other);
 		// * add amount creature of type to slot
-		_H3API_ VOID AddStack(INT32 type, INT32 amount, INT32 slot);
+		_H3API_ BOOL AddStack(INT32 type, INT32 amount, INT32 slot);
 		// * Split fromStack based on fraction denominator to toStack
 		// * fraction = 2 cuts in half
 		_H3API_ VOID SplitFromStackToStack(INT32 fromStack, INT32 toStack, INT32 fraction);
