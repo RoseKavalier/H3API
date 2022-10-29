@@ -337,7 +337,7 @@ namespace h3
 		 * if too many creatures are present
 		 */
 		_H3API_ BOOL CanSummonOrClone() const;
-};
+	};
 	_H3API_ASSERT_SIZE_(H3CombatManager);
 	_H3API_ASSERT_SIZE_(H3CombatManager::TownTowerLoaded);
 
