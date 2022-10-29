@@ -198,7 +198,13 @@ namespace h3
 		h3unk8 _f_13D2C[12];
 		/** @brief [132E8] */
 		RECT updateRect;
-		h3unk8 _f_13D48[12];
+		h3unk8 _f_13D48[4];
+	public:
+		/** @brief [13D4C] */
+		INT32 necromancyRaisedAmount;
+		/** @brief [13D50] eCreatures */
+		INT32 necromancyRaisedTypeId;
+	protected:
 		/** @brief [13D54] */
 		INT cmNumWinPcxLoaded;
 	public:
