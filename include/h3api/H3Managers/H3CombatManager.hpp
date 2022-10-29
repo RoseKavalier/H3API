@@ -294,6 +294,7 @@ namespace h3
 		_H3API_ INT32 NextCreatureToMove();
 		_H3API_ BOOL8 IsHiddenBattle();
 		_H3API_ BOOL8 IsBattleOver();
+		_H3API_ VOID  AddNecromancyRaisedCreature(INT32 side);
 		_H3API_ VOID  Refresh();
 		_H3API_ VOID  Refresh(BOOL redrawScreen, INT timeDelay, BOOL redrawBackground);
 		_H3API_ VOID  RefreshCreatures();
@@ -336,7 +337,7 @@ namespace h3
 		 * if too many creatures are present
 		 */
 		_H3API_ BOOL CanSummonOrClone() const;
-	};
+};
 	_H3API_ASSERT_SIZE_(H3CombatManager);
 	_H3API_ASSERT_SIZE_(H3CombatManager::TownTowerLoaded);
 

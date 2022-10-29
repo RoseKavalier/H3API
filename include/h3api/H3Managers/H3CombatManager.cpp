@@ -62,6 +62,10 @@ namespace h3
 	{
 		return THISCALL_1(BOOL8, 0x465410, this);
 	}
+	_H3API_ VOID H3CombatManager::AddNecromancyRaisedCreature(INT32 side)
+	{
+		THISCALL_2(VOID, 0x469B00, this, side);
+	}
 	_H3API_ VOID H3CombatManager::Refresh()
 	{
 		Refresh(1, 0, 1);
