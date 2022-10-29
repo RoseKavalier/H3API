@@ -357,6 +357,12 @@ namespace h3
 		_H3API_ VOID Show();
 
 		/**
+		 * @brief Get what creature type would be raised after combat
+		 *
+		 * @return eCretures to raise
+		 */
+		_H3API_ eCreature GetNecromancyCreatureId() const;
+		/**
 		 * @brief Calculates the hero's necromancy power
 		 *
 		 * @param clamp_value Whether to cap the value at 1.0f

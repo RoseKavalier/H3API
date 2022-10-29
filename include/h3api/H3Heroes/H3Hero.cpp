@@ -316,6 +316,11 @@ namespace h3
 		THISCALL_3(VOID, 0x4D7840, this, NH3Objects::eObjectTypes::HERO, id);
 	}
 
+	_H3API_ eCreature H3Hero::GetNecromancyCreatureId() const
+	{
+		return THISCALL_1(eCreature, 0x4E3ED0, this);
+	}
+
 	_H3API_ FLOAT H3Hero::GetNecromancyPower(BOOL8 clamp_value) const
 	{
 		return THISCALL_2(FLOAT, 0x4E3F40, this, clamp_value);
