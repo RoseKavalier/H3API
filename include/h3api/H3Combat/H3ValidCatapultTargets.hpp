@@ -23,7 +23,7 @@ namespace h3
 	struct H3ValidCatapultTargets
 	{
 		_H3API_SIZE_(0xC);
-		_H3API_GET_INFO_(0x4929DD + 3, H3ValidCatapultTargets);
+		_H3API_GET_INFO_(0x63BE68, H3ValidCatapultTargets);
 
 		INT32 fortElementId;
 		INT16 hex;

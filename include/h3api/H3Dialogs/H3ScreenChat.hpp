@@ -28,7 +28,7 @@ namespace h3
 	struct H3ScreenChat
 	{
 		_H3API_SIZE_(0x44);
-		_H3API_GET_INFO_(0x405F27 + 1, H3ScreenChat);
+		_H3API_GET_INFO_(0x69D800, H3ScreenChat);
 		_H3API_CTOR_DTOR_(0x5525C4, 0x552640);
 
 		struct ChatEntry

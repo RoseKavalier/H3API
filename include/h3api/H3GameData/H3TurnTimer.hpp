@@ -22,7 +22,7 @@ namespace h3
 	struct H3TurnTimer
 	{
 		_H3API_SIZE_(0x14);
-		_H3API_GET_INFO_(0x4AD194 + 1, H3TurnTimer);
+		_H3API_GET_INFO_(0x69D680, H3TurnTimer);
 
 		/** @brief [00]*/
 		UINT lastShownTime;

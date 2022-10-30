@@ -22,7 +22,7 @@ namespace h3
 	struct H3ObstacleInfo
 	{
 		_H3API_SIZE_(0x14);
-		_H3API_GET_INFO_(0x465C1E + 3, H3ObstacleInfo);
+		_H3API_GET_INFO_(0x63C7C8, H3ObstacleInfo);
 
 		/** @brief [00] (bitfield)*/
 		UINT16 landTypes;

@@ -21,7 +21,7 @@ namespace h3
 	struct H3TownCreatureTypes
 	{
 		_H3API_SIZE_(0x38);
-		_H3API_GET_INFO_(0x47AB00 + 3, H3TownCreatureTypes);
+		_H3API_GET_INFO_(0x6747B4, H3TownCreatureTypes);
 		struct iterator
 		{
 		protected:

@@ -84,7 +84,7 @@ namespace h3
 	// * CRBanks.txt converted in memory, overall bank state
 	struct H3CreatureBankSetup
 	{
-		_H3API_GET_INFO_(0x47A3C1 + 1, H3CreatureBankSetup);
+		_H3API_GET_INFO_(0x695088, H3CreatureBankSetup);
 
 		H3String name;
 		H3CreatureBankState states[4];

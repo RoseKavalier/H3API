@@ -43,7 +43,7 @@ namespace h3
 	struct H3TownFortifications
 	{
 		_H3API_SIZE_(0x288);
-		_H3API_GET_INFO_(0x4947C0 + 3, H3TownFortifications);
+		_H3API_GET_INFO_(0x66D848, H3TownFortifications);
 
 		H3WallSection fortifications[h3::limits::FORT_ELEMENTS];
 	};

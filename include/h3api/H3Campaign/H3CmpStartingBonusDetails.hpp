@@ -136,7 +136,7 @@ namespace h3
 
 	struct H3CmpBonusBuildingsNames
 	{
-		_H3API_GET_INFO_(0x48415F + 3, H3CmpBonusBuildingsNames);
+		_H3API_GET_INFO_(0x6755B8, H3CmpBonusBuildingsNames);
 
 		LPCSTR names[44];
 	};
