@@ -20,7 +20,7 @@ namespace h3
 
 	struct H3SpellbookText
 	{
-		_H3API_GET_INFO_(0x59DBB0 + 3, H3SpellbookText);
+		_H3API_GET_INFO_(0x6A5338, H3SpellbookText);
 		struct TextPair
 		{
 			LPCSTR text;

@@ -22,7 +22,7 @@ namespace h3
 
 	struct H3TownDependencies
 	{
-		_H3API_GET_INFO_(0x5D6015 + 3, H3TownDependencies);
+		_H3API_GET_INFO_(0x6977E8, H3TownDependencies);
 
 		H3BuildingsBitfield m_dependency[h3::limits::BUILDINGS];
 	};

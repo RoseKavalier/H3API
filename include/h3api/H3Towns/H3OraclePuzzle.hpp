@@ -19,14 +19,14 @@ namespace h3
 
 	struct H3PuzzleCoordinates
 	{
-		_H3API_GET_INFO_(0x52CC09 + 3, H3PuzzleCoordinates);
+		_H3API_GET_INFO_(0x6818F4, H3PuzzleCoordinates);
 		INT16 x[48];
 		INT16 y[48];
 	};
 
 	struct H3PuzzlePiecesOrder
 	{
-		_H3API_GET_INFO_(0x52CBF2 + 4, H3PuzzlePiecesOrder);
+		_H3API_GET_INFO_(0x681FB4, H3PuzzlePiecesOrder);
 		INT16 order[48];
 	};
 

@@ -35,7 +35,7 @@ namespace h3
 	// * a binary tree to hold game assets
 	struct H3ResourceManager : H3Set<H3ResourceItemData, 0x69E604>
 	{
-		_H3API_GET_INFO_(0x55A7CE + 1, H3ResourceManager);
+		_H3API_GET_INFO_(0x69E560, H3ResourceManager);
 
 		_H3API_ Node* FindItem(LPCSTR name);
 		_H3API_ VOID  AddItem(H3ResourceItem* item);

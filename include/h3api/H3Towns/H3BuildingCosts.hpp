@@ -24,7 +24,7 @@ namespace h3
 
 	struct H3SpecialBuildingCosts
 	{
-		_H3API_GET_INFO_(0x5C1539 + 3, H3SpecialBuildingCosts);
+		_H3API_GET_INFO_(0x6A8344, H3SpecialBuildingCosts);
 
 		// * each town has its own
 		H3Resources cost[9];
@@ -32,7 +32,7 @@ namespace h3
 
 	struct H3NeutralBuildingCosts
 	{
-		_H3API_GET_INFO_(0x5C1509 + 3, H3NeutralBuildingCosts);
+		_H3API_GET_INFO_(0x6A8160, H3NeutralBuildingCosts);
 
 		// * same for all towns
 		H3Resources cost[17];
@@ -40,7 +40,7 @@ namespace h3
 
 	struct H3DwellingBuildingCosts
 	{
-		_H3API_GET_INFO_(0x5C1566 + 3, H3DwellingBuildingCosts);
+		_H3API_GET_INFO_(0x6A9880, H3DwellingBuildingCosts);
 		// * each town has its own 2 * 7 levels
 		// * unupgraded first, then upgraded
 		H3Resources cost[2][7];

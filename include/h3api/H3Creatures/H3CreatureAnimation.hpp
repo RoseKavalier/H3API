@@ -24,7 +24,7 @@ namespace h3
 	struct H3CreatureAnimation
 	{
 		_H3API_SIZE_(0x54);
-		_H3API_GET_INFO_(0x50CC01 + 3, H3CreatureAnimation);
+		_H3API_GET_INFO_(0x699930, H3CreatureAnimation);
 
 		struct H3MissileOffets
 		{

@@ -21,7 +21,7 @@ namespace h3
 
 	struct H3QuestsText
 	{
-		_H3API_GET_INFO_(0x56C72F + 2, H3QuestsText);
+		_H3API_GET_INFO_(0x69E788, H3QuestsText);
 
 		struct
 		{
