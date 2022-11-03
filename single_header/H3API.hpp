@@ -18606,10 +18606,8 @@ namespace h3
 	public:
 		/** @brief [132A0] */
 		INT32 turnsSinceLastEnchanterCast[2];
-		/** @brief [132A8] is used to prevent other monster summon */
-		INT32 summonedMonId[2];
 	protected:
-		h3unk8 _f_132A8[8];
+		h3unk8 _f_132A8[16];
 	public:
 		/** @brief [132B8] */
 		INT32 currentMonSide;
