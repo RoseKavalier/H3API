@@ -146,8 +146,10 @@ namespace h3
 	public:
 		/** @brief [132A0] */
 		INT32 turnsSinceLastEnchanterCast[2];
+		/** @brief [132A8] unique monster type to summon with magic for current combat */
+		eCreature summonedMonster[2];
 	protected:
-		h3unk8 _f_132A8[16];
+		h3unk8 _f_132A8[8];
 	public:
 		/** @brief [132B8] */
 		INT32 currentMonSide;
@@ -203,7 +205,7 @@ namespace h3
 		/** @brief [13D4C] */
 		INT32 necromancyRaisedAmount;
 		/** @brief [13D50] eCreatures */
-		INT32 necromancyRaisedTypeId;
+		eCreature necromancyRaisedMonsters;
 	protected:
 		/** @brief [13D54] */
 		INT cmNumWinPcxLoaded;
