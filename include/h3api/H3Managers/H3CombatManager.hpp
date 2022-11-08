@@ -296,6 +296,13 @@ namespace h3
 		_H3API_ INT32 NextCreatureToMove();
 		_H3API_ BOOL8 IsHiddenBattle();
 		_H3API_ BOOL8 IsBattleOver();
+		/**
+         * @brief Make army perform an animation.
+		 * 
+         * @param animationIndex which animation
+         * @param resetAnimationWhenDone reset animation idx to 0 or not.
+        */
+        _H3API_ VOID  ApplyAnimationToLastHitArmy(INT32 animationIndex, BOOL resetAnimationWhenDone);
 		_H3API_ VOID  AddNecromancyRaisedCreature(INT32 side);
 		_H3API_ VOID  Refresh();
 		_H3API_ VOID  Refresh(BOOL redrawScreen, INT timeDelay, BOOL redrawBackground);
@@ -304,9 +311,31 @@ namespace h3
 		_H3API_ BOOL8 IsHumanTurn();
 		_H3API_ VOID  AddStatusMessage(LPCSTR message, BOOL permanent = TRUE);
 		_H3API_ VOID  PlayMagicAnimation(INT32 id, H3CombatCreature* target, INT32 timeStep, BOOL8 showTargetBeingHit);
-		_H3API_ VOID  ReportDamageDone(H3Spell* spell, LPCSTR attackerName, INT32 damageDone, H3CombatCreature* target, INT32 killedCount);
+		/**
+		 * @brief Make a combat log template by gentext=378 or 379 for damage, 380 or 381 for killed,
+				  and some creature ability damage also use this function to generate combat log.
+
+		 * @param attackerName just name
+		 * @param add_to_log show in combat log
+		 * @param damageDone damage done
+		 * @param target target army
+		 * @param killedCount how many creature be killed
+		*/
+		_H3API_ VOID  ReportDamageDone(LPCSTR attackerName, BOOL add_to_log, INT32 damageDone, H3CombatCreature* target, INT32 killedCount);
 		_H3API_ BOOL8 ShouldCastSpellAfterHit(INT32 spellId, INT32 side, H3CombatCreature* target);
 		_H3API_ VOID ResurrectTarget(H3CombatCreature* target, INT32 hitPoints, INT32 isTemporary);
+        /**
+         * @brief Create a magical damage to target, can be used as a magical damage caculator.
+         * @param damage Basic damage
+         * @param spellId Which spell
+         * @param atkHero Attacker hero
+         * @param defHero Defender hero
+         * @param target Target creature
+         * @param trueCast If true, it will cast real spell to target and generate combat log.
+         *                 when false caculate damage but no effect.
+         * @return Damage would be done
+        */
+        _H3API_ INT32 ApplyMagicDamage(INT32 damage, INT32 spellId, H3Hero* atkHero, H3Hero* defHero, H3CombatCreature* target, BOOL trueCast);
 		_H3API_ H3CombatCreature* SummonCreature(INT32 side, INT32 creatureId, INT32 amount, INT32 position, INT32 redrawAnimation, BOOL redraw);
 		_H3API_ H3CombatCreature* GetSummonDemonTarget(INT32 side, INT32 coordinate);
 		_H3API_ VOID RaiseDemon(H3CombatCreature* caster, H3CombatCreature* target);

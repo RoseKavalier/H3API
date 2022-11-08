@@ -61,7 +61,11 @@ namespace h3
 	_H3API_ BOOL8 H3CombatManager::IsBattleOver()
 	{
 		return THISCALL_1(BOOL8, 0x465410, this);
-	}
+    }
+    _H3API_ VOID H3CombatManager::ApplyAnimationToLastHitArmy(INT32 animationIndex, BOOL resetAnimationWhenDone)
+    {
+        THISCALL_3(BOOL8, 0x468570, this, animationIndex, resetAnimationWhenDone);
+    }
 	_H3API_ VOID H3CombatManager::AddNecromancyRaisedCreature(INT32 side)
 	{
 		THISCALL_2(VOID, 0x469B00, this, side);
@@ -97,9 +101,9 @@ namespace h3
 	{
 		THISCALL_5(VOID, 0x4963C0, this, id, target, timeStep, show_hit);
 	}
-	_H3API_ VOID H3CombatManager::ReportDamageDone(H3Spell* spell, LPCSTR attackerName, INT32 damageDone, H3CombatCreature* target, INT32 killedCount)
+    _H3API_ VOID H3CombatManager::ReportDamageDone(LPCSTR attackerName, BOOL showLog, INT32 damageDone, H3CombatCreature* target, INT32 killedCount)
 	{
-		THISCALL_6(VOID, 0x469670, this, spell, attackerName, damageDone, target, killedCount);
+        THISCALL_6(VOID, 0x469670, this, attackerName, showLog, damageDone, target, killedCount);
 	}
 	_H3API_ BOOL8 H3CombatManager::ShouldCastSpellAfterHit(INT32 spellId, INT32 side, H3CombatCreature* target)
 	{
@@ -108,7 +112,11 @@ namespace h3
 	_H3API_ VOID H3CombatManager::ResurrectTarget(H3CombatCreature* target, INT32 hitPoints, INT32 isTemporary)
 	{
 		THISCALL_4(VOID, 0x5A7870, this, target, hitPoints, isTemporary);
-	}
+    }
+    _H3API_ INT32 H3CombatManager::ApplyMagicDamage(INT32 damage, INT32 spellId, H3Hero* atkHero, H3Hero* defHero, H3CombatCreature* target, BOOL trueCast)
+    {
+        return THISCALL_7(INT32, 0x5A7BF0, this, damage, spellId, atkHero, defHero, target, trueCast);
+    }
 	_H3API_ H3CombatMonster* H3CombatManager::SummonCreature(INT32 side, INT32 creatureId, INT32 amount, INT32 position, INT32 redrawAnimation, BOOL redraw)
 	{
 		return THISCALL_7(H3CombatMonster*, 0x479A30, this, side, creatureId, amount, position, redrawAnimation, redraw);
