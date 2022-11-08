@@ -50,7 +50,12 @@ namespace h3
 	_H3API_ VOID H3SoundManager::PlaySoundAsync(LPCSTR wav_name, INT32 duration /*= -1*/)
 	{
 		FASTCALL_3(VOID, 0x59A890, wav_name, duration, 3);
-	}
+    }
+
+    _H3API_ H3WavFile* H3SoundManager::PlaySoundByFileAsync(LPCSTR wav_name)
+    {
+        return FASTCALL_1(H3WavFile*, 0x59A770, wav_name);
+    }
 
 #pragma pop_macro("PlaySound")
 } /* namespace h3 */
