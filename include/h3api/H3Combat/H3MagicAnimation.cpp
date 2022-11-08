@@ -8,7 +8,7 @@
 //                                                                  //
 //////////////////////////////////////////////////////////////////////
 
-#include "h3api/H3Combat/H3MonsterAnimation.hpp"
+#include "h3api/H3Combat/H3MagicAnimation.hpp"
 
 namespace h3
 {

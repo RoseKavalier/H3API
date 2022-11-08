@@ -13,7 +13,7 @@
 #include "h3api/H3Combat/H3AdjacentSquares.hpp"
 #include "h3api/H3Combat/H3CombatCreature.hpp"
 #include "h3api/H3Combat/H3CombatSquare.hpp"
-#include "h3api/H3Combat/H3MonsterAnimation.hpp"
+#include "h3api/H3Combat/H3MagicAnimation.hpp"
 #include "h3api/H3Combat/H3Obstacle.hpp"
 #include "h3api/H3Combat/H3ObstacleInfo.hpp"
 #include "h3api/H3Combat/H3ValidCatapultTargets.hpp"
