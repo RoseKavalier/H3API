@@ -21,7 +21,7 @@ namespace h3
     struct H3MagicAnimation
     {
         _H3API_SIZE_(0x0C);
-        _H3API_VTABLE_(0x641E18);
+        _H3API_GET_INFO_(0x4DDFF2 + 2, H3MagicAnimation);
 
         LPCSTR defName;
         LPCSTR name;

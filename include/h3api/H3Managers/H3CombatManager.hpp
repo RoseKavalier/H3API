@@ -316,26 +316,25 @@ namespace h3
 				  and some creature ability damage also use this function to generate combat log.
 
 		 * @param attackerName just name
-		 * @param add_to_log show in combat log
+		 * @param numAttackers num of creature in attacker stack
 		 * @param damageDone damage done
 		 * @param target target army
 		 * @param killedCount how many creature be killed
 		*/
-		_H3API_ VOID  ReportDamageDone(LPCSTR attackerName, BOOL add_to_log, INT32 damageDone, H3CombatCreature* target, INT32 killedCount);
+		_H3API_ VOID  ReportDamageDone(LPCSTR attackerName, INT32 numAttackers, INT32 damageDone, H3CombatCreature* target, INT32 killedCount);
 		_H3API_ BOOL8 ShouldCastSpellAfterHit(INT32 spellId, INT32 side, H3CombatCreature* target);
 		_H3API_ VOID ResurrectTarget(H3CombatCreature* target, INT32 hitPoints, INT32 isTemporary);
         /**
-         * @brief Create a magical damage to target, can be used as a magical damage caculator.
+         * @brief Caculate the spell's damage on target
          * @param damage Basic damage
          * @param spellId Which spell
          * @param atkHero Attacker hero
          * @param defHero Defender hero
          * @param target Target creature
-         * @param trueCast If true, it will cast real spell to target and generate combat log.
-         *                 when false caculate damage but no effect.
-         * @return Damage would be done
+         * @param showLog generate combat log.
+         * @return Damage has been modified
         */
-        _H3API_ INT32 ApplyMagicDamage(INT32 damage, INT32 spellId, H3Hero* atkHero, H3Hero* defHero, H3CombatCreature* target, BOOL trueCast);
+        _H3API_ INT32 CalculateSpellDamageOnTarget(INT32 damage, INT32 spellId, H3Hero* atkHero, H3Hero* defHero, H3CombatCreature* target, BOOL showLog);
 		_H3API_ H3CombatCreature* SummonCreature(INT32 side, INT32 creatureId, INT32 amount, INT32 position, INT32 redrawAnimation, BOOL redraw);
 		_H3API_ H3CombatCreature* GetSummonDemonTarget(INT32 side, INT32 coordinate);
 		_H3API_ VOID RaiseDemon(H3CombatCreature* caster, H3CombatCreature* target);
