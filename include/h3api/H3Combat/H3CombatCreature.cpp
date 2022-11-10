@@ -100,6 +100,14 @@ namespace h3
     {
         return THISCALL_5(VOID, 0x444610, this, spellId, spellPower, schoolLevel, hero);
     }
+    _H3API_ BOOL8 H3CombatCreature::ApplyAfterHitSpell(H3CombatCreature* defender)
+    {
+        return THISCALL_2(BOOL8, 0x440220, this, defender);
+    }
+    _H3API_ VOID H3CombatCreature::ApplyAfterHitAbility(H3CombatCreature* defender, INT32 damage, INT32 killed, INT32 totalDefenderHp)
+    {
+        THISCALL_5(VOID, 0x4408E0, this, defender, damage, killed, totalDefenderHp);
+    }
     _H3API_ BOOL8 H3CombatCreature::CanReceiveSpell(INT32 spellId) const
     {
         return FASTCALL_2(BOOL8, 0x4477A0, spellId, this);
