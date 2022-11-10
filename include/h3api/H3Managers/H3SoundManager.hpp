@@ -56,7 +56,7 @@ namespace h3
 		 * @param wav_name The name of the file to play
 		 * @param milliseconds The maximum duration in milliseconds, -1 defaults to 10,000ms
 		*/
-		_H3API_ VOID PlaySoundAsync(LPCSTR wav_name, INT32 duration = -1);
+		_H3API_ static VOID PlaySoundAsync(LPCSTR wav_name, INT32 duration = -1);
         /**
          * @brief play a sound directly.
          * 
