@@ -109,10 +109,102 @@ namespace h3
 
         constexpr INT32 COMBATSQUARE_WIDTH  = 44;
         constexpr INT32 COMBATSQUARE_HEIGHT = 42;
+
+        namespace NMagicAnimation
+        {
+            enum eMagicAnimation : INT32
+            {
+                PRAYER,
+                LIGHTNING_BOLT,
+                AIR_SHIELD,
+                BACKLASH,
+                ANIMATE_DEAD,
+                ANTI_MAGIC,
+                BLIND,
+                COUNTERSTROKE,
+                DEATH_RIPPLE,
+                FIREBLAST,
+                DECAY,
+                FIRE_SHIELD,
+                FIRESTORM,
+                DISRUPTIVERAY_RAY,
+                DISRUPTIVERAY_BURST,
+                FEAR,
+                METEOR_SHOWER,
+                FRENZY,
+                FORTUNE,
+                MUCK_AND_MIRE,
+                MIRTH,
+                HYPNOTIZE,
+                PROTECTION_FROM_AIR,
+                PROTECTION_FROM_WATER,
+                PROTECTION_FROM_FIRE,
+                PRECISION,
+                PROTECTION_FROM_EARTH,
+                SHIELD,
+                SLAYER,
+                SACRED_BREATH,
+                SORROW,
+                TAIL_WIND,
+                FORCEFIELD_2,
+                FORCEFIELD_3,
+                REMOVE_OBSTACLE,
+                BERSERK,
+                BLESS,
+                CHAIN_LIGHTNING_BOLT,
+                CHAIN_LIGHTNING_DUST,
+                CURE,
+                CURSE,
+                DISPEL,
+                FORGETFULNESS,
+                FIREWALL_2,
+                FIREWALL_3,
+                FROSTRING,
+                ICERAY_BURST,
+                LAND_MINE,
+                MISFORTUNE,
+                LIGHTNING_DUST,
+                RESURRECTION,
+                SACRIFICE_SLAY,
+                SACRIFICE_RESURRECT,
+                SPONTANEOUS_COMBUSTION,
+                TOUGH_SKIN,
+                QUICKSAND,
+                WEAKNESS,
+                LAND_MINE_EXPLOSION,
+                DISPEL_QUICKSAND,
+                DISPEL_LAND_MINE,
+                DISPEL_FORCEFIELD_2,
+                DISPEL_FORCEFIELD_3,
+                DISPEL_FIREWALL_2,
+                DISPEL_FIREWALL_3,
+                MAGICBOLT_BURST,
+                FIREWALL_1,
+                DISPELFIREWALL_1,
+                POISON,
+                BIND,
+                DISEASE,
+                PARALYZE,
+                AGE,
+                DEATH_CLOUD,
+                DEATH_BLOW,
+                DRAIN_LIFE,
+                MAGICCHANNEL_SUCK,
+                MAGICCHANNEL_SPEW,
+                MAGIC_DRAIN,
+                MAGIC_RESISTANCE,
+                REGENERATE,
+                DEATH_STARE,
+                ACID_BREATH,
+                POOF,
+            };
+        }
+        typedef NMagicAnimation::eMagicAnimation eMagicAnimation;
     }
     typedef NH3Combat::eFortElements        eCombatFortElements;
     typedef NH3Combat::eMissiles            eCombatMissiles;
     typedef NH3Combat::eBattleAction        eCombatAction;
     typedef NH3Combat::eRelativeOrientation eCombatOrientation;
     typedef NH3Combat::eSquareAccess        eCombatSquareAccess;
+    typedef NH3Combat::eMagicAnimation      eCombatMagicAnimation;
 } /* namespace h3 */
