@@ -14,20 +14,27 @@
 
 namespace h3
 {
-    _H3API_DECLARE_(MagicAnimation);
+	_H3API_DECLARE_(MagicAnimation);
 
 #pragma pack(push, 4)
 
-    struct H3MagicAnimation
-    {
-        _H3API_SIZE_(0x0C);
-        _H3API_GET_INFO_(0x4DDFF2 + 2, H3MagicAnimation);
+	struct H3MagicAnimation
+	{
+		_H3API_SIZE_(0x0C);
+		_H3API_GET_INFO_(0x43F77B + 3, H3MagicAnimation);
 
-        LPCSTR defName;
-        LPCSTR name;
-        INT32 type;
-    };
-    _H3API_ASSERT_SIZE_(H3MagicAnimation);
+		LPCSTR defName;
+		LPCSTR name;
+		INT32 type;
+
+		/**
+		 * @brief Get spell effect animation info by spell id.
+		 * @param spellId which spell
+		 * @return if anim does not exist return nullptr
+		 */
+		_H3API_ static H3MagicAnimation* GetAnim(INT32 spellId);
+	};
+	_H3API_ASSERT_SIZE_(H3MagicAnimation);
 
 #pragma pack(pop) /* align-4 */
 
