@@ -41,6 +41,8 @@ namespace h3
 	}
 	_H3API_ H3Dlg::~H3Dlg()
 	{
+		if (background != nullptr) 
+			background->Destroy(TRUE); // clear background with buffer
 		vDestroy();
 		STDCALL_0(VOID, 0x597B50); // resume video animation
 	}
