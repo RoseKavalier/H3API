@@ -56,7 +56,14 @@ namespace h3
 		 * @param wav_name The name of the file to play
 		 * @param milliseconds The maximum duration in milliseconds, -1 defaults to 10,000ms
 		*/
-		_H3API_ VOID PlaySoundAsync(LPCSTR wav_name, INT32 duration = -1);
+		_H3API_ static VOID PlaySoundAsync(LPCSTR wav_name, INT32 duration = -1);
+        /**
+         * @brief play a sound directly.
+         * 
+         * @param wav_name The name of the file to play
+         * @return Played Wav file, WARNNING Homm3HD MOD will modify this return pointer to INT32 value as waiting timesteps
+         */
+        _H3API_ static INT64 PlaySoundByFileAsync(LPCSTR wav_name);
 	};
 	_H3API_ASSERT_SIZE_(H3SoundManager);
 

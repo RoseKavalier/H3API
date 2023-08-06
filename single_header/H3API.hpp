@@ -6,7 +6,7 @@
 //          ***You may use or distribute these files freely         //
 //             so long as this notice remains present.***           //
 //                                                                  //
-//              Automatically generated on: 2021-02-20              //
+//              Automatically generated on: 2022-11-05              //
 //                                                                  //
 //          In preparing these files, several sources were          //
 //            consulted, they are listed in no particular           //
@@ -4636,7 +4636,7 @@ namespace h3
 
 		_H3API_ H3Army();
 		_H3API_ H3Army(const H3Army& other);
-		_H3API_ VOID AddStack(INT32 type, INT32 amount, INT32 slot);
+		_H3API_ BOOL AddStack(INT32 type, INT32 amount, INT32 slot);
 		_H3API_ VOID SplitFromStackToStack(INT32 fromStack, INT32 toStack, INT32 fraction);
 		_H3API_ INT32 FirstFreeSlot();
 		_H3API_ INT32 FindExistingByIndex(INT32 index);
@@ -15385,6 +15385,12 @@ namespace h3
 		_H3API_ VOID Show();
 
 		/**
+		 * @brief Get what creature type would be raised after combat
+		 *
+		 * @return eCretures to raise
+		 */
+		_H3API_ eCreature GetNecromancyCreatureId() const;
+		/**
 		 * @brief Calculates the hero's necromancy power
 		 *
 		 * @param clamp_value Whether to cap the value at 1.0f
@@ -16281,7 +16287,7 @@ namespace h3
 	struct H3HeroSpecialty
 	{
 		_H3API_SIZE_(0x28);
-		_H3API_GET_INFO_(0x4B8AF1 + 1, H3HeroSpecialty);
+		_H3API_GET_INFO_(0x679C80, H3HeroSpecialty);
 
 		/** @brief [0]*/
 		eHeroSpecialty type;
@@ -18606,8 +18612,8 @@ namespace h3
 	public:
 		/** @brief [132A0] */
 		INT32 turnsSinceLastEnchanterCast[2];
-		/** @brief [132A8] is used to prevent other monster summon */
-		INT32 summonedMonId[2];
+		/** @brief [132A8] unique monster type to summon with magic for current combat */
+		eCreature summonedMonster[2];
 	protected:
 		h3unk8 _f_132A8[8];
 	public:
@@ -18660,7 +18666,13 @@ namespace h3
 		h3unk8 _f_13D2C[12];
 		/** @brief [132E8] */
 		RECT updateRect;
-		h3unk8 _f_13D48[12];
+		h3unk8 _f_13D48[4];
+	public:
+		/** @brief [13D4C] */
+		INT32 necromancyRaisedAmount;
+		/** @brief [13D50] eCreatures */
+		eCreature necromancyRaisedMonsters;
+	protected:
 		/** @brief [13D54] */
 		INT cmNumWinPcxLoaded;
 	public:
@@ -18749,6 +18761,7 @@ namespace h3
 		_H3API_ INT32 NextCreatureToMove();
 		_H3API_ BOOL8 IsHiddenBattle();
 		_H3API_ BOOL8 IsBattleOver();
+		_H3API_ VOID  AddNecromancyRaisedCreature(INT32 side);
 		_H3API_ VOID  Refresh();
 		_H3API_ VOID  Refresh(BOOL redrawScreen, INT timeDelay, BOOL redrawBackground);
 		_H3API_ VOID  RefreshCreatures();
@@ -26634,9 +26647,9 @@ namespace h3
 	{
 		(*this) = other;
 	}
-	_H3API_ VOID H3Army::AddStack(INT32 type, INT32 amount, INT32 slot)
+	_H3API_ BOOL H3Army::AddStack(INT32 type, INT32 amount, INT32 slot)
 	{
-		THISCALL_4(VOID, 0x44A9B0, this, type, amount, slot);
+		return THISCALL_4(BOOL, 0x44A9B0, this, type, amount, slot);
 	}
 	_H3API_ VOID H3Army::SplitFromStackToStack(INT32 fromStack, INT32 toStack, INT32 fraction)
 	{
@@ -32485,6 +32498,11 @@ namespace h3
 		THISCALL_3(VOID, 0x4D7840, this, NH3Objects::eObjectTypes::HERO, id);
 	}
 
+	_H3API_ eCreature H3Hero::GetNecromancyCreatureId() const
+	{
+		return THISCALL_1(eCreature, 0x4E3ED0, this);
+	}
+
 	_H3API_ FLOAT H3Hero::GetNecromancyPower(BOOL8 clamp_value) const
 	{
 		return THISCALL_2(FLOAT, 0x4E3F40, this, clamp_value);
@@ -34483,6 +34501,10 @@ namespace h3
 	_H3API_ BOOL8 H3CombatManager::IsBattleOver()
 	{
 		return THISCALL_1(BOOL8, 0x465410, this);
+	}
+	_H3API_ VOID H3CombatManager::AddNecromancyRaisedCreature(INT32 side)
+	{
+		THISCALL_2(VOID, 0x469B00, this, side);
 	}
 	_H3API_ VOID H3CombatManager::Refresh()
 	{

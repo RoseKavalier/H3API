@@ -146,8 +146,8 @@ namespace h3
 	public:
 		/** @brief [132A0] */
 		INT32 turnsSinceLastEnchanterCast[2];
-		/** @brief [132A8] is used to prevent other monster summon */
-		INT32 summonedMonId[2];
+		/** @brief [132A8] unique monster type to summon with magic for current combat */
+		eCreature summonedMonster[2];
 	protected:
 		h3unk8 _f_132A8[8];
 	public:
@@ -205,7 +205,7 @@ namespace h3
 		/** @brief [13D4C] */
 		INT32 necromancyRaisedAmount;
 		/** @brief [13D50] eCreatures */
-		INT32 necromancyRaisedTypeId;
+		eCreature necromancyRaisedMonsters;
 	protected:
 		/** @brief [13D54] */
 		INT cmNumWinPcxLoaded;
@@ -296,6 +296,13 @@ namespace h3
 		_H3API_ INT32 NextCreatureToMove();
 		_H3API_ BOOL8 IsHiddenBattle();
 		_H3API_ BOOL8 IsBattleOver();
+		/**
+         * @brief Make army perform an animation.
+		 * 
+         * @param animationIndex which animation
+         * @param resetAnimationWhenDone reset animation idx to 0 or not.
+        */
+        _H3API_ VOID  ApplyAnimationToLastHitArmy(INT32 animationIndex, BOOL resetAnimationWhenDone);
 		_H3API_ VOID  AddNecromancyRaisedCreature(INT32 side);
 		_H3API_ VOID  Refresh();
 		_H3API_ VOID  Refresh(BOOL redrawScreen, INT timeDelay, BOOL redrawBackground);
@@ -304,9 +311,30 @@ namespace h3
 		_H3API_ BOOL8 IsHumanTurn();
 		_H3API_ VOID  AddStatusMessage(LPCSTR message, BOOL permanent = TRUE);
 		_H3API_ VOID  PlayMagicAnimation(INT32 id, H3CombatCreature* target, INT32 timeStep, BOOL8 showTargetBeingHit);
-		_H3API_ VOID  ReportDamageDone(H3Spell* spell, LPCSTR attackerName, INT32 damageDone, H3CombatCreature* target, INT32 killedCount);
+		/**
+		 * @brief Make a combat log template by gentext=378 or 379 for damage, 380 or 381 for killed,
+				  and some creature ability damage also use this function to generate combat log.
+
+		 * @param attackerName just name
+		 * @param numAttackers num of creature in attacker stack
+		 * @param damageDone damage done
+		 * @param target target army
+		 * @param killedCount how many creature be killed
+		*/
+		_H3API_ VOID  ReportDamageDone(LPCSTR attackerName, INT32 numAttackers, INT32 damageDone, H3CombatCreature* target, INT32 killedCount);
 		_H3API_ BOOL8 ShouldCastSpellAfterHit(INT32 spellId, INT32 side, H3CombatCreature* target);
 		_H3API_ VOID ResurrectTarget(H3CombatCreature* target, INT32 hitPoints, INT32 isTemporary);
+        /**
+         * @brief Caculate the spell's damage on target
+         * @param damage Basic damage
+         * @param spellId Which spell
+         * @param atkHero Attacker hero
+         * @param defHero Defender hero
+         * @param target Target creature
+         * @param showLog generate combat log.
+         * @return Damage has been modified
+        */
+        _H3API_ INT32 CalculateSpellDamageOnTarget(INT32 damage, INT32 spellId, H3Hero* atkHero, H3Hero* defHero, H3CombatCreature* target, BOOL showLog);
 		_H3API_ H3CombatCreature* SummonCreature(INT32 side, INT32 creatureId, INT32 amount, INT32 position, INT32 redrawAnimation, BOOL redraw);
 		_H3API_ H3CombatCreature* GetSummonDemonTarget(INT32 side, INT32 coordinate);
 		_H3API_ VOID RaiseDemon(H3CombatCreature* caster, H3CombatCreature* target);
