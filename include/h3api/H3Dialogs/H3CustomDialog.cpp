@@ -41,7 +41,9 @@ namespace h3
 	}
 	_H3API_ H3Dlg::~H3Dlg()
 	{
-		THISCALL_1(VOID, 0x5FFAD0, this); // destroy all items
+		THISCALL_1(VOID, 0x5FFAD0, this); // destroy all dlg items
+		if (background)
+			this->background->Destroy(); // destroy background		
 		vDestroy();
 		STDCALL_0(VOID, 0x597B50); // resume video animation
 	}
