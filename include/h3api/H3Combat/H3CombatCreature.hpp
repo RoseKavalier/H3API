@@ -288,8 +288,33 @@ namespace h3
 		_H3API_ INT32 GetProtectiveSpellEffect(INT32 damage, INT32 spellID) const;
 		// * odds of magic resisting
 		_H3API_ INT32 MagicMirrorEffect() const;
+        /**
+         * @brief Apply physical damage to target, this damage would not be reduce by creature basic stats.
+		 * 
+         * @param amount of damage
+         * @return how many creatures killed by this damage.
+         */
 		_H3API_ INT32 ApplyPhysicalDamage(INT32 amount);
 		_H3API_ VOID  ApplySpell(INT32 spellId, INT32 spellPower, INT32 schoolLevel, H3Hero* hero);
+        /**
+         * @brief For those creature who cast spell after hit, this function only set h3::H3CombatCreature->spellToApply
+		          so spell will be executed later not right now
+		 * 
+         * @param defender target army
+         * @return if true, it will suspend target army action after success cast.
+        */
+        _H3API_ BOOL8 ApplyAfterHitSpell(H3CombatCreature* defender);
+        /**
+         * @brief For those creature: VAMPIRE_LORD, THUNDERBIRD, MIGHTY_GORGON, SERPENT_FLY, DRAGON_FLY and RUST_DRAGON, after hit target
+		 *        effect will be executed right now.
+		 * 
+         * @param defender target army
+         * @param damage physical damage done
+         * @param killed how many creature killed by physical damage
+         * @param totalDefenderLifeRemain defender army total hp
+         * @return 
+        */
+        _H3API_ VOID  ApplyAfterHitAbility(H3CombatCreature* defender, INT32 damage, INT32 killed, INT32 totalDefenderHp);
 		_H3API_ BOOL8 CanReceiveSpell(INT32 spellId) const;
 		_H3API_ BOOL  CanCastSpellAtEmptyHex(INT32 hexId) const;
 		_H3API_ BOOL8 MoveToHex(INT32 hexId);

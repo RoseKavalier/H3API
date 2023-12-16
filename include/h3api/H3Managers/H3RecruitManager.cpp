@@ -71,7 +71,7 @@ namespace h3
 		INT32 type0, INT16* amount0, INT32 type1, INT16* amount1,
 		INT32 type2, INT16* amount2, INT32 type3, INT16* amount3)
 	{
-		return THISCALL_11(H3RecruitMgr&, 0x4B0770, this, &army, is_summoning_portal, type0, amount0,
+		return THISCALL_11(H3RecruitMgr&, 0x551750, this, &army, is_summoning_portal, type0, amount0,
 			type1, amount1, type2, amount2, type3, amount3);
 	}
 	_H3API_ H3RecruitMgr& H3RecruitMgr::initialize(H3Hero* hero, INT32 type0, INT16* amount0, INT32 type1,
