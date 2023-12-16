@@ -6,7 +6,7 @@
 //          ***You may use or distribute these files freely         //
 //             so long as this notice remains present.***           //
 //                                                                  //
-//              Automatically generated on: 2022-11-05              //
+//              Automatically generated on: 2023-12-16              //
 //                                                                  //
 //          In preparing these files, several sources were          //
 //            consulted, they are listed in no particular           //
@@ -9782,12 +9782,104 @@ namespace h3
 
         constexpr INT32 COMBATSQUARE_WIDTH  = 44;
         constexpr INT32 COMBATSQUARE_HEIGHT = 42;
+
+        namespace NMagicAnimation
+        {
+            enum eMagicAnimation : INT32
+            {
+                PRAYER                 = 0,
+                LIGHTNING_BOLT         = 1,
+                AIR_SHIELD             = 2,
+                BACKLASH               = 3,
+                ANIMATE_DEAD           = 4,
+                ANTI_MAGIC             = 5,
+                BLIND                  = 6,
+                COUNTERSTROKE          = 7,
+                DEATH_RIPPLE           = 8,
+                FIREBLAST              = 9,
+                DECAY                  = 10,
+                FIRE_SHIELD            = 11,
+                FIRESTORM              = 12,
+                DISRUPTIVERAY_RAY      = 13,
+                DISRUPTIVERAY_BURST    = 14,
+                FEAR                   = 15,
+                METEOR_SHOWER          = 16,
+                FRENZY                 = 17,
+                FORTUNE                = 18,
+                MUCK_AND_MIRE          = 19,
+                MIRTH                  = 20,
+                HYPNOTIZE              = 21,
+                PROTECTION_FROM_AIR    = 22,
+                PROTECTION_FROM_WATER  = 23,
+                PROTECTION_FROM_FIRE   = 24,
+                PRECISION              = 25,
+                PROTECTION_FROM_EARTH  = 26,
+                SHIELD                 = 27,
+                SLAYER                 = 28,
+                SACRED_BREATH          = 29,
+                SORROW                 = 30,
+                TAIL_WIND              = 31,
+                FORCEFIELD_2           = 32,
+                FORCEFIELD_3           = 33,
+                REMOVE_OBSTACLE        = 34,
+                BERSERK                = 35,
+                BLESS                  = 36,
+                CHAIN_LIGHTNING_BOLT   = 37,
+                CHAIN_LIGHTNING_DUST   = 38,
+                CURE                   = 39,
+                CURSE                  = 40,
+                DISPEL                 = 41,
+                FORGETFULNESS          = 42,
+                FIREWALL_2             = 43,
+                FIREWALL_3             = 44,
+                FROSTRING              = 45,
+                ICERAY_BURST           = 46,
+                LAND_MINE              = 47,
+                MISFORTUNE             = 48,
+                LIGHTNING_DUST         = 49,
+                RESURRECTION           = 50,
+                SACRIFICE_SLAY         = 51,
+                SACRIFICE_RESURRECT    = 52,
+                SPONTANEOUS_COMBUSTION = 53,
+                TOUGH_SKIN             = 54,
+                QUICKSAND              = 55,
+                WEAKNESS               = 56,
+                LAND_MINE_EXPLOSION    = 57,
+                DISPEL_QUICKSAND       = 58,
+                DISPEL_LAND_MINE       = 59,
+                DISPEL_FORCEFIELD_2    = 60,
+                DISPEL_FORCEFIELD_3    = 61,
+                DISPEL_FIREWALL_2      = 62,
+                DISPEL_FIREWALL_3      = 63,
+                MAGICBOLT_BURST        = 64,
+                FIREWALL_1             = 65,
+                DISPELFIREWALL_1       = 66,
+                POISON                 = 67,
+                BIND                   = 68,
+                DISEASE                = 69,
+                PARALYZE               = 70,
+                AGE                    = 71,
+                DEATH_CLOUD            = 72,
+                DEATH_BLOW             = 73,
+                DRAIN_LIFE             = 74,
+                MAGICCHANNEL_SUCK      = 75,
+                MAGICCHANNEL_SPEW      = 76,
+                MAGIC_DRAIN            = 77,
+                MAGIC_RESISTANCE       = 78,
+                REGENERATE             = 79,
+                DEATH_STARE            = 80,
+                ACID_BREATH            = 81,
+                POOF                   = 82,
+            };
+        }
+        typedef NMagicAnimation::eMagicAnimation eMagicAnimation;
     }
     typedef NH3Combat::eFortElements        eCombatFortElements;
     typedef NH3Combat::eMissiles            eCombatMissiles;
     typedef NH3Combat::eBattleAction        eCombatAction;
     typedef NH3Combat::eRelativeOrientation eCombatOrientation;
     typedef NH3Combat::eSquareAccess        eCombatSquareAccess;
+    typedef NH3Combat::eMagicAnimation      eCombatMagicAnimation;
 } /* namespace h3 */
 
 namespace h3
@@ -14391,8 +14483,33 @@ namespace h3
 		_H3API_ H3Hero* GetOwner() const;
 		_H3API_ INT32 GetProtectiveSpellEffect(INT32 damage, INT32 spellID) const;
 		_H3API_ INT32 MagicMirrorEffect() const;
+        /**
+         * @brief Apply physical damage to target, this damage would not be reduce by creature basic stats.
+		 *
+         * @param amount of damage
+         * @return how many creatures killed by this damage.
+         */
 		_H3API_ INT32 ApplyPhysicalDamage(INT32 amount);
 		_H3API_ VOID  ApplySpell(INT32 spellId, INT32 spellPower, INT32 schoolLevel, H3Hero* hero);
+        /**
+         * @brief For those creature who cast spell after hit, this function only set h3::H3CombatCreature->spellToApply
+		          so spell will be executed later not right now
+		 *
+         * @param defender target army
+         * @return if true, it will suspend target army action after success cast.
+        */
+        _H3API_ BOOL8 ApplyAfterHitSpell(H3CombatCreature* defender);
+        /**
+         * @brief For those creature: VAMPIRE_LORD, THUNDERBIRD, MIGHTY_GORGON, SERPENT_FLY, DRAGON_FLY and RUST_DRAGON, after hit target
+		 *        effect will be executed right now.
+		 *
+         * @param defender target army
+         * @param damage physical damage done
+         * @param killed how many creature killed by physical damage
+         * @param totalDefenderLifeRemain defender army total hp
+         * @return
+        */
+        _H3API_ VOID  ApplyAfterHitAbility(H3CombatCreature* defender, INT32 damage, INT32 killed, INT32 totalDefenderHp);
 		_H3API_ BOOL8 CanReceiveSpell(INT32 spellId) const;
 		_H3API_ BOOL  CanCastSpellAtEmptyHex(INT32 hexId) const;
 		_H3API_ BOOL8 MoveToHex(INT32 hexId);
@@ -14493,10 +14610,21 @@ namespace h3
 
 	struct H3MagicAnimation
 	{
+		_H3API_SIZE_(0x0C);
+		_H3API_GET_INFO_(0x43F77B + 3, H3MagicAnimation);
+
 		LPCSTR defName;
 		LPCSTR name;
 		INT32 type;
+
+		/**
+		 * @brief Get spell effect animation info by spell id.
+		 * @param spellId which spell
+		 * @return if anim does not exist return nullptr
+		 */
+		_H3API_ static H3MagicAnimation* GetAnim(INT32 spellId);
 	};
+	_H3API_ASSERT_SIZE_(H3MagicAnimation);
 
 #pragma pack(pop) /* align-4 */
 
@@ -18761,6 +18889,13 @@ namespace h3
 		_H3API_ INT32 NextCreatureToMove();
 		_H3API_ BOOL8 IsHiddenBattle();
 		_H3API_ BOOL8 IsBattleOver();
+		/**
+         * @brief Make army perform an animation.
+		 *
+         * @param animationIndex which animation
+         * @param resetAnimationWhenDone reset animation idx to 0 or not.
+        */
+        _H3API_ VOID  ApplyAnimationToLastHitArmy(INT32 animationIndex, BOOL resetAnimationWhenDone);
 		_H3API_ VOID  AddNecromancyRaisedCreature(INT32 side);
 		_H3API_ VOID  Refresh();
 		_H3API_ VOID  Refresh(BOOL redrawScreen, INT timeDelay, BOOL redrawBackground);
@@ -18769,9 +18904,30 @@ namespace h3
 		_H3API_ BOOL8 IsHumanTurn();
 		_H3API_ VOID  AddStatusMessage(LPCSTR message, BOOL permanent = TRUE);
 		_H3API_ VOID  PlayMagicAnimation(INT32 id, H3CombatCreature* target, INT32 timeStep, BOOL8 showTargetBeingHit);
-		_H3API_ VOID  ReportDamageDone(H3Spell* spell, LPCSTR attackerName, INT32 damageDone, H3CombatCreature* target, INT32 killedCount);
+		/**
+		 * @brief Make a combat log template by gentext=378 or 379 for damage, 380 or 381 for killed,
+				  and some creature ability damage also use this function to generate combat log.
+
+		 * @param attackerName just name
+		 * @param numAttackers num of creature in attacker stack
+		 * @param damageDone damage done
+		 * @param target target army
+		 * @param killedCount how many creature be killed
+		*/
+		_H3API_ VOID  ReportDamageDone(LPCSTR attackerName, INT32 numAttackers, INT32 damageDone, H3CombatCreature* target, INT32 killedCount);
 		_H3API_ BOOL8 ShouldCastSpellAfterHit(INT32 spellId, INT32 side, H3CombatCreature* target);
 		_H3API_ VOID ResurrectTarget(H3CombatCreature* target, INT32 hitPoints, INT32 isTemporary);
+        /**
+         * @brief Caculate the spell's damage on target
+         * @param damage Basic damage
+         * @param spellId Which spell
+         * @param atkHero Attacker hero
+         * @param defHero Defender hero
+         * @param target Target creature
+         * @param showLog generate combat log.
+         * @return Damage has been modified
+        */
+        _H3API_ INT32 CalculateSpellDamageOnTarget(INT32 damage, INT32 spellId, H3Hero* atkHero, H3Hero* defHero, H3CombatCreature* target, BOOL showLog);
 		_H3API_ H3CombatCreature* SummonCreature(INT32 side, INT32 creatureId, INT32 amount, INT32 position, INT32 redrawAnimation, BOOL redraw);
 		_H3API_ H3CombatCreature* GetSummonDemonTarget(INT32 side, INT32 coordinate);
 		_H3API_ VOID RaiseDemon(H3CombatCreature* caster, H3CombatCreature* target);
@@ -19125,7 +19281,14 @@ namespace h3
 		 * @param wav_name The name of the file to play
 		 * @param milliseconds The maximum duration in milliseconds, -1 defaults to 10,000ms
 		*/
-		_H3API_ VOID PlaySoundAsync(LPCSTR wav_name, INT32 duration = -1);
+		_H3API_ static VOID PlaySoundAsync(LPCSTR wav_name, INT32 duration = -1);
+        /**
+         * @brief play a sound directly.
+         *
+         * @param wav_name The name of the file to play
+         * @return Played Wav file, WARNNING Homm3HD MOD will modify this return pointer to INT32 value as waiting timesteps
+         */
+        _H3API_ static INT64 PlaySoundByFileAsync(LPCSTR wav_name);
 	};
 	_H3API_ASSERT_SIZE_(H3SoundManager);
 
@@ -32026,6 +32189,14 @@ namespace h3
     {
         return THISCALL_5(VOID, 0x444610, this, spellId, spellPower, schoolLevel, hero);
     }
+    _H3API_ BOOL8 H3CombatCreature::ApplyAfterHitSpell(H3CombatCreature* defender)
+    {
+        return THISCALL_2(BOOL8, 0x440220, this, defender);
+    }
+    _H3API_ VOID H3CombatCreature::ApplyAfterHitAbility(H3CombatCreature* defender, INT32 damage, INT32 killed, INT32 totalDefenderHp)
+    {
+        THISCALL_5(VOID, 0x4408E0, this, defender, damage, killed, totalDefenderHp);
+    }
     _H3API_ BOOL8 H3CombatCreature::CanReceiveSpell(INT32 spellId) const
     {
         return FASTCALL_2(BOOL8, 0x4477A0, spellId, this);
@@ -32075,7 +32246,16 @@ namespace h3
 
 namespace h3
 {
-
+	_H3API_ H3MagicAnimation* H3MagicAnimation::GetAnim(INT32 spellId)
+	{
+		H3Spell* spellInfo = &H3Spell::Get()[spellId];
+		if (spellInfo->animationIndex < 0)
+		{
+			return nullptr;
+		}
+		H3MagicAnimation* animTable = H3MagicAnimation::Get();
+		return &animTable[spellInfo->animationIndex];
+	}
 } /* namespace h3 */
 
 namespace h3
@@ -33425,8 +33605,9 @@ namespace h3
 	}
 	_H3API_ H3Dlg::~H3Dlg()
 	{
-
-		THISCALL_1(VOID, 0x5FFAD0, this); // destroy all items
+		THISCALL_1(VOID, 0x5FFAD0, this); // destroy all dlg items
+		if (background)
+			this->background->Destroy(); // destroy background
 		vDestroy();
 		STDCALL_0(VOID, 0x597B50); // resume video animation
 	}
@@ -34503,7 +34684,11 @@ namespace h3
 	_H3API_ BOOL8 H3CombatManager::IsBattleOver()
 	{
 		return THISCALL_1(BOOL8, 0x465410, this);
-	}
+    }
+    _H3API_ VOID H3CombatManager::ApplyAnimationToLastHitArmy(INT32 animationIndex, BOOL resetAnimationWhenDone)
+    {
+        THISCALL_3(BOOL8, 0x468570, this, animationIndex, resetAnimationWhenDone);
+    }
 	_H3API_ VOID H3CombatManager::AddNecromancyRaisedCreature(INT32 side)
 	{
 		THISCALL_2(VOID, 0x469B00, this, side);
@@ -34539,9 +34724,9 @@ namespace h3
 	{
 		THISCALL_5(VOID, 0x4963C0, this, id, target, timeStep, show_hit);
 	}
-	_H3API_ VOID H3CombatManager::ReportDamageDone(H3Spell* spell, LPCSTR attackerName, INT32 damageDone, H3CombatCreature* target, INT32 killedCount)
+    _H3API_ VOID H3CombatManager::ReportDamageDone(LPCSTR attackerName, INT32 numAttackers, INT32 damageDone, H3CombatCreature* target, INT32 killedCount)
 	{
-		THISCALL_6(VOID, 0x469670, this, spell, attackerName, damageDone, target, killedCount);
+        THISCALL_6(VOID, 0x469670, this, attackerName, numAttackers, damageDone, target, killedCount);
 	}
 	_H3API_ BOOL8 H3CombatManager::ShouldCastSpellAfterHit(INT32 spellId, INT32 side, H3CombatCreature* target)
 	{
@@ -34550,7 +34735,11 @@ namespace h3
 	_H3API_ VOID H3CombatManager::ResurrectTarget(H3CombatCreature* target, INT32 hitPoints, INT32 isTemporary)
 	{
 		THISCALL_4(VOID, 0x5A7870, this, target, hitPoints, isTemporary);
-	}
+    }
+    _H3API_ INT32 H3CombatManager::CalculateSpellDamageOnTarget(INT32 damage, INT32 spellId, H3Hero* atkHero, H3Hero* defHero, H3CombatCreature* target, BOOL showLog)
+    {
+        return THISCALL_7(INT32, 0x5A7BF0, this, damage, spellId, atkHero, defHero, target, showLog);
+    }
 	_H3API_ H3CombatMonster* H3CombatManager::SummonCreature(INT32 side, INT32 creatureId, INT32 amount, INT32 position, INT32 redrawAnimation, BOOL redraw)
 	{
 		return THISCALL_7(H3CombatMonster*, 0x479A30, this, side, creatureId, amount, position, redrawAnimation, redraw);
@@ -34803,7 +34992,12 @@ namespace h3
 	_H3API_ VOID H3SoundManager::PlaySoundAsync(LPCSTR wav_name, INT32 duration /*= -1*/)
 	{
 		FASTCALL_3(VOID, 0x59A890, wav_name, duration, 3);
-	}
+    }
+
+    _H3API_ INT64 H3SoundManager::PlaySoundByFileAsync(LPCSTR wav_name)
+    {
+        return FASTCALL_1(INT64, 0x59A770, wav_name);
+    }
 
 #pragma pop_macro("PlaySound")
 } /* namespace h3 */
