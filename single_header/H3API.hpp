@@ -137,23 +137,14 @@
 	#undef max // H3API uses std::max
 #endif
 
-/* Slaps top of car. This bad boy can hold just about anything*/
 typedef void(*naked_t)();
-/* Naked function type used for basic hook types. */
 typedef void(*H3NakedFunction)();
-/* generic typedef to indicate this is a h3 function */
 typedef unsigned long h3func;
-/* 1-byte sized boolean. bool is not used as its size is not guaranteed to be 1 */
 typedef char          BOOL8;
-/* Used for unknown structure members, general 8-bit case */
 typedef char          h3unk, h3unk8;
-/* Used for unknown structure members, 16-bit case */
 typedef short         h3unk16;
-/* Used for unknown structure members, 32-bit case */
 typedef int           h3unk32;
-/* Used for alignment/padding of structure members */
 typedef char          h3align;
-/* for uniformity's sake, use a typedef instead of define */
 #ifdef VOID
 #undef VOID
 #endif
@@ -193,9 +184,7 @@ namespace h3
 	typedef unsigned int ADDRESS;
 }
 
-/* forward declaration for patcher_x86's Patcher class */
 class Patcher;
-/* forward declaration for patcher_x86's PatcherInstance class */
 class PatcherInstance;
 
 #include <algorithm>   // use STL functions instead of C-style
@@ -228,25 +217,18 @@ class PatcherInstance;
 #endif
 
 #if (__cplusplus >= 199711L || (_MSC_VER && _MSC_VER >= 1500))
-	/** @brief indicates your compiler is C++98 compatible*/
 	#define _H3API_CPLUSPLUS98_
 #endif
 
 #if (__cplusplus >= 201103L || (_MSC_VER && _MSC_VER >= 1900))
-	/**
-	 * @brief indicates your compiler is C++11 compatible
-	 * this checks for C++11 standard or Visual Studio 2015+ because VS2013 is not fully compliant
-	 */
 	#define _H3API_CPLUSPLUS11_
 #endif
 
 #if (__cplusplus >= 201402L || (_MSC_VER && _MSC_VER >= 1900))
-	/** @brief indicates your compiler is C++14 compatible*/
 	#define _H3API_CPLUSPLUS14_
 #endif
 
 #if (__cplusplus >= 201703L || (_MSC_VER && _MSC_VER >= 1910))
-	/** @brief indicates your compiler is C++17 compatible*/
 	#define _H3API_CPLUSPLUS17_
 #endif
 
@@ -277,7 +259,6 @@ class PatcherInstance;
 #endif
 
 #ifndef _H3API_ENUM_OPERATORS_
-	/* defines bitwise operators for an enum */
 	#define _H3API_ENUM_OPERATORS_(ENUM_TYPE, TYPE_SIZE)\
 		inline constexpr ENUM_TYPE operator|(ENUM_TYPE a, ENUM_TYPE b) throw()\
 		{ return ENUM_TYPE(TYPE_SIZE(a) | TYPE_SIZE(b)); }\
@@ -297,36 +278,30 @@ class PatcherInstance;
 
 #ifndef _H3API_LIBRARY_
 	#ifndef _H3API_DEPRECATED_
-		/*header-only doesn't get deprecation messages*/
 		#define _H3API_DEPRECATED_(msg)
 	#endif
 #else
 	#if _MSC_VER && _MSC_VER >= 1900
 		#ifndef _H3API_DEPRECATED_
-			/*indicates this content is deprecated and replaced by equivalent expressions*/
 			#define _H3API_DEPRECATED_(msg) [[deprecated(msg)]]
 		#endif
 	#elif _MSC_VER
 		#ifndef _H3API_DEPRECATED_
-			/*indicates this content is deprecated and replaced by equivalent expressions*/
 			#define _H3API_DEPRECATED_(msg) __declspec(deprecated(msg))
 		#endif
 	#elif defined(__GNUC__) || defined(__clang__)
 		#ifndef _H3API_DEPRECATED_
-			/*indicates this content is deprecated and replaced by equivalent expressions*/
 			#define _H3API_DEPRECATED_(msg) __attribute__((deprecated(msg)))
 		#endif
 	#else
 		#pragma message("WARNING: _H3API_DEPRECATED_ is not implemented for this compiler.")
 		#ifndef _H3API_DEPRECATED_
-			/*indicates this content is deprecated and replaced by equivalent expressions*/
 			#define _H3API_DEPRECATED_(msg)
 		#endif
 	#endif
 #endif /* _H3API_LIBRARY_ */
 
 #ifndef _H3API_NOVTABLE_
-	/*indicates that a virtual table for this class should not be created*/
 	#define _H3API_NOVTABLE_ __declspec(novtable)
 #endif
 
@@ -340,66 +315,51 @@ namespace h3
 
 #ifdef _MSC_VER
 	#ifndef _H3API_FORCEINLINE_
-		/*used to force function to be inline*/
 		#define _H3API_FORCEINLINE_ __forceinline
 	#endif
 #elif defined(__GNUC__)
 	#ifndef _H3API_FORCEINLINE_
-		/*used to force function to be inline*/
 		#define _H3API_FORCEINLINE_ inline __attribute__((__always_inline__))
 	#endif
 #elif defined(__CLANG__)
 	#if __has_attribute(__always_inline__)
 		#ifndef _H3API_FORCEINLINE_
-		/*used to force function to be inline*/
 		#define _H3API_FORCEINLINE_ inline __attribute__((__always_inline__))
 		#endif
 	#else
 		#ifndef _H3API_FORCEINLINE_
-			/*used to force function to be inline*/
 			#define _H3API_FORCEINLINE_ inline
 		#endif
 	#endif
 #else
 	#ifndef _H3API_FORCEINLINE_
-		/*used to force function to be inline*/
 		#define _H3API_FORCEINLINE_ inline
 	#endif
 #endif
 
 #ifndef _H3API_DECLARE_
 	#ifndef _H3API_UNPREFIXED_NAMES_
-		/** @brief forward-defines a struct, pointer to struct*/
 		#define _H3API_DECLARE_(NAME) struct H3 ## NAME; typedef H3 ## NAME *PH3 ## NAME
 	#else
-		/** @brief forward-defines a struct, pointer to struct and unprefixed struct*/
 		#define _H3API_DECLARE_(NAME) struct H3 ## NAME; typedef H3 ## NAME *PH3 ## NAME; typedef H3 ## NAME NAME
 	#endif /* _H3API_UNPREFIXED_NAMES_ */
 #endif
 
 #ifndef _H3API_TYPE_DECLARE_
 	#ifndef _H3API_UNPREFIXED_NAMES_
-		/** @brief declares a typedef with H3 prefix*/
 		#define _H3API_TYPE_DECLARE_(struct_type, NAME) typedef struct_type H3 ## NAME
 	#else
-		/** @brief declares a typedef with and without H3 prefix*/
 		#define _H3API_TYPE_DECLARE_(struct_type, NAME) typedef struct_type H3 ## NAME; typedef struct_type NAME
 	#endif /* _H3API_UNPREFIXED_NAMES_ */
 #endif
 
 #ifndef _H3API_TEMPLATE_DECLARE_
 	#if defined(_H3API_CPLUSPLUS11_) && defined(_H3API_UNPREFIXED_NAMES_)
-		/** @brief Used internally to know that a templated struct can be abbreviated*/
 		#define _H3API_TEMPLATE_DECLARE_
 	#endif /* _H3API_CPLUSPLUS11_ && _H3API_UNPREFIXED_NAMES_ */
 #endif /* _H3API_TEMPLATE_DECLARE_ */
 
 #ifndef _H3API_EXPORT_
-	/**
-	 * @brief exports a function without name mangling
-	 * to use, type the following within a function's definition:
-	 * #pragma _H3API_EXPORT_
-	 */
 	#define _H3API_EXPORT_ comment(linker, "/EXPORT:" __FUNCTION__ "=" __FUNCDNAME__)
 #endif
 
@@ -411,15 +371,10 @@ namespace h3
 #endif
 
 #ifndef _H3API_SIZE_
-	/** @brief Assigns a SIZE static value to a structure*/
 	#define _H3API_SIZE_(struct_size) static constexpr UINT32 SIZE = struct_size
 #endif
 
 #ifndef _H3API_GET_INFO_
-	/**
-	 * @brief Assigns a static ADDRESS pointer to known address of a structure,
-	 * TYPE typedef and defines a static Get() method to get a pointer to the structure.
-	 */
 	#define _H3API_GET_INFO_(address_pointer, struct_type) \
 	static constexpr h3::ADDRESS ADDRESS = address_pointer;\
 	static struct_type* Get() { return StructAt<struct_type>(ADDRESS); }\
@@ -428,11 +383,9 @@ namespace h3
 
 #ifndef _H3API_NAMED_STRUCT_
 	#ifndef _H3API_UNPREFIXED_NAMES_
-		/** @brief Declares a H3-named struct with a ::Get() method*/
 		#define _H3API_NAMED_STRUCT_(struct_type, NAME, address_pointer)\
 		struct H3 ## NAME : struct_type { _H3API_GET_INFO_(address_pointer, struct_type); }
 	#else
-		/** @brief Declares a H3-named struct with a ::Get() method and typedefs unprefixed name*/
 		#define _H3API_NAMED_STRUCT_(struct_type, NAME, address_pointer)\
 		struct H3 ## NAME : struct_type { _H3API_GET_INFO_(address_pointer, struct_type); };\
 		typedef struct_type NAME;
@@ -440,14 +393,12 @@ namespace h3
 #endif /* _H3API_NAMED_STRUCT_ */
 
 #ifndef _H3API_CTOR_DTOR_
-	/** @brief Assigns CONSTRUCTOR and DESTRUCTOR information to structure*/
 	#define _H3API_CTOR_DTOR_(constructor_address, destructor_address) \
 	static constexpr h3func CONSTRUCTOR = constructor_address;\
 	static constexpr h3func DESTRUCTOR  = destructor_address
 #endif
 
 #ifndef _H3API_VTABLE_
-	/** @brief Assigns VTABLE information to structure*/
 	#define _H3API_VTABLE_(virtual_table_address) \
 	static constexpr h3::ADDRESS VTABLE = virtual_table_address
 #endif /* define _H3API_VTABLE_ */
@@ -455,104 +406,42 @@ namespace h3
 namespace h3
 {
 #ifdef _H3API_CPLUSPLUS11_
-	/**
-	 * @brief Literal operator to convert a value to 8 bits.
-	 * e.g. 123_byte
-	 * @param value Unsigned value to be converted.
-	 * @return Unsigned 8-bits value.
-	 */
 	constexpr inline UINT8 operator""_byte(UINT64 value)
 	{
 		return static_cast<UINT8>(value);
 	}
-	/**
-	 * @brief Literal operator to convert a value to 16 bites.
-	 * e.g. 123456_word
-	 * @param value Unsigned value to be converted.
-	 * @return Unsigned 16-bits value.
-	 */
 	constexpr inline UINT16 operator""_word(UINT64 value)
 	{
 		return static_cast<UINT16>(value);
 	}
-	/**
-	 * @brief Literal operator to convert a value to 32 bits.
-	 * e.g. 123_dword
-	 * @param value Unsigned value to be converted.
-	 * @return Unsigned 32-bits value.
-	 */
 	constexpr inline UINT32 operator""_dword(UINT64 value)
 	{
 		return static_cast<UINT32>(value);
 	}
-	/**
-	 * @brief Literal operator to convert a value to unsigned 8 bits.
-	 * e.g. 123_u8
-	 * @param value Value to be converted.
-	 * @return Unsigned 8-bits value.
-	 */
 	constexpr inline UINT8 operator""_u8(UINT64 value)
 	{
 		return static_cast<UINT8>(value);
 	}
-	/**
-	 * @brief Literal operator to convert a value to unsigned 16 bits.
-	 * e.g. 123_u16
-	 * @param value Value to be converted.
-	 * @return Unsigned 16-bits value.
-	 */
 	constexpr inline UINT16 operator""_u16(UINT64 value)
 	{
 		return static_cast<UINT16>(value);
 	}
-	/**
-	 * @brief Literal operator to convert a value to unsigned 32 bits.
-	 * e.g. 123_u32
-	 * @param value Value to be converted.
-	 * @return Unsigned 32-bits value.
-	 */
 	constexpr inline UINT32 operator""_u32(UINT64 value)
 	{
 		return static_cast<UINT32>(value);
 	}
-	/**
-	 * @brief Literal operator to convert a value to signed 8 bits.
-	 * e.g. 123_i8
-	 * @param value Value to be converted.
-	 * @return Signed 8-bits value.
-	 */
 	constexpr inline INT8 operator""_i8(UINT64 value)
 	{
 		return static_cast<INT8>(value);
 	}
-	/**
-	 * @brief Literal operator to convert a value to signed 16 bits.
-	 * e.g. 123_i16
-	 * @param value Value to be converted.
-	 * @return Signed 16-bits value.
-	 */
 	constexpr inline INT16 operator""_i16(UINT64 value)
 	{
 		return static_cast<INT16>(value);
 	}
-	/**
-	 * @brief Literal operator to convert a value to signed 32 bits.
-	 * e.g. 123_i32
-	 * @param value Value to be converted.
-	 * @return Signed 32-bits value.
-	 */
 	constexpr inline INT32 operator""_i32(UINT64 value)
 	{
 		return static_cast<INT32>(value);
 	}
-	/**
-	 * @brief Literal operator to convert a value to 32 bits.
-	 * This should be used to indicate the the value in question
-	 * belongs to the Heroes3 address space.
-	 *
-	 * @param value Unsigned value to be converted.
-	 * @return Unsigned 32-bits value.
-	*/
 	constexpr inline ADDRESS operator""_h3(UINT64 value)
 	{
 		return static_cast<ADDRESS>(value);
@@ -565,159 +454,53 @@ namespace h3
 		return value >= 0 ? value : -value;
 	}
 
-	/**
-	 * @brief Get a reference of specific type at the specified address
-	 * @tparam T Type of data to cast to.
-	 * @param address The location of the sought data.
-	 * @return A reference of the value at the specified location.
-	 */
 	template<typename T>
 	_H3API_FORCEINLINE_ T& ValueAt(ADDRESS address) { return *reinterpret_cast<T*>(address); }
 
-	/**
-	 * @brief Get a reference of const char* at the specified address.
-	 * @param address The location of the sought data.
-	 * @return A reference of the string at the specified location.
-	 */
 	_H3API_FORCEINLINE_ LPCSTR& StrAt(ADDRESS address) { return ValueAt<LPCSTR>(address); }
-	/**
-	 * @brief Get a reference of pointer for any data.
-	 * @tparam T Type of data of the data.
-	 * @param address The location of the sought data.
-	 * @return A reference of the pointer at the specified location.
-	 */
 	template<typename T>
 	_H3API_FORCEINLINE_ UINT32& PtrAt(T data) { return ValueAt<UINT32>(ADDRESS(data)); }
-	/**
-	 * @brief Get a reference of unsigned integer at the specified address.
-	 * @param address The location of the sought data.
-	 * @return A reference of the unsigned integer at the specified location.
-	 */
 	_H3API_FORCEINLINE_ UINT32& DwordAt(ADDRESS address) { return ValueAt<UINT32>(address); }
-	/**
-	 * @brief Get a reference of signed integer at the specified address.
-	 * @param address The location of the sought data.
-	 * @return A reference of the signed integer at the specified location.
-	 */
 	_H3API_FORCEINLINE_ INT32&  IntAt(ADDRESS address) { return ValueAt<INT32>(address); }
-	/**
-	 * @brief Get a reference of unsigned short at the specified address.
-	 * @param address The location of the sought data.
-	 * @return A reference of the unsigned short at the specified location.
-	 */
 	_H3API_FORCEINLINE_ UINT16& WordAt(ADDRESS address) { return ValueAt<UINT16>(address); }
-	/**
-	 * @brief Get a reference of signed short at the specified address.
-	 * @param address The location of the sought data.
-	 * @return A reference of the signed short at the specified location.
-	 */
 	_H3API_FORCEINLINE_ INT16&  ShortAt(ADDRESS address) { return ValueAt<INT16>(address); }
-	/**
-	 * @brief Get a reference of unsigned char at the specified address.
-	 * @param address The location of the sought data.
-	 * @return A reference of the unsigned char at the specified location.
-	 */
 	_H3API_FORCEINLINE_ UINT8&  ByteAt(ADDRESS address) { return ValueAt<UINT8>(address); }
-	/**
-	 * @brief Get a reference of signed char at the specified address.
-	 * @param address The location of the sought data.
-	 * @return A reference of the signed char at the specified location.
-	 */
 	_H3API_FORCEINLINE_ INT8&   CharAt(ADDRESS address) { return ValueAt<INT8>(address); }
-	/**
-	 * @brief Get a reference of float at the specified address.
-	 * @param address The location of the sought data.
-	 * @return A reference of the float at the specified location.
-	 */
 	_H3API_FORCEINLINE_ FLOAT&  FloatAt(ADDRESS address) { return ValueAt<FLOAT>(address); }
-	/**
-	 * @brief Get a reference of double at the specified address.
-	 * @param address The location of the sought data.
-	 * @return A reference of the double at the specified location.
-	 */
 	_H3API_FORCEINLINE_ DOUBLE& DoubleAt(ADDRESS address) { return ValueAt<DOUBLE>(address); }
-	/**
-	 * @brief Get the value of the function called (or jump destination) at the specified address.
-	 * @param address The location of the call/JMP instruction.
-	 * @return The address of the destination.
-	 */
 	_H3API_FORCEINLINE_ h3func  FuncAt(ADDRESS address) { return ValueAt<h3func>(address + 1) + address + 5; }
-	/**
-	 * @brief Returns a struct pointer located at an address
-	 * @tparam T Type of the struct
-	 * @param address_pointer The location of the struct pointer
-	 * @return Casted structure pointer
-	*/
 	template<typename T>
 	_H3API_FORCEINLINE_ T* StructAt(ADDRESS address_pointer) { return *reinterpret_cast<T**>(address_pointer); }
-	/**
-	 * @brief Get the address of a specific object.
-	 * @tparam T Type of the current object.
-	 * @param value The object itself.
-	 * @return The address of the provided object.
-	 */
 	template<typename T>
 	_H3API_FORCEINLINE_ ADDRESS AddressOf(const T& value) { return reinterpret_cast<ADDRESS>(&value); }
-	/**
-	 * @brief Used to get the hexadecimal value of a type T instead of getting a casted value.
-	 * Useful to convert a FLOAT to DWORD, e.g. 0.25f is returned as 0x3E800000h instead of 0h.
-	 * @tparam T Type of data to convert
-	 * @param value Value of the data to convert.
-	 * @return Converted data as unsigned integer.
-	 */
 	template<typename T>
 	_H3API_FORCEINLINE_ UINT32 ValueAsDword(T value) { return DwordAt(AddressOf(value)); }
-	/**
-	 * @brief Get current FPU's value as float
-	 * @return The state of the FPU
-	 */
 	_H3API_FORCEINLINE_ FLOAT LoadFloatFromFPU()
 	{
 		FLOAT value = 0;
 		__asm FSTP DWORD PTR SS : [value]
 		return value;
 	}
-	/**
-	 * @brief Store a float to FPU
-	 * @param value Float to store
-	 */
 	_H3API_FORCEINLINE_ VOID StoreToFPU(FLOAT value)
 	{
 		__asm FLD DWORD PTR SS : [value]
 	}
-	/**
-	 * @brief Get current FPU's value as double
-	 * @return The state of the FPU
-	 */
 	_H3API_FORCEINLINE_ DOUBLE LoadDoubleFromFPU()
 	{
 		DOUBLE value = 0;
 		__asm FSTP QWORD PTR SS : [value]
 		return value;
 	}
-	/**
-	 * @brief Store a double to FPU
-	 * @param value Double to store
-	 */
 	_H3API_FORCEINLINE_ VOID StoreToFPU(DOUBLE value)
 	{
 		__asm FLD QWORD PTR SS : [value]
 	}
 
-	/*based on https://stackoverflow.com/a/1980156 by Gregory Pakosz*/
 #ifndef _H3API_STATIC_ASSERT_
 	#ifdef _H3API_NO_VALIDATION_
-			/**
-			 * @brief disabled compilation-time assertion
-			 * undefine _H3API_NO_VALIDATION_ to enable these checks
-			 */
 		#define _H3API_STATIC_ASSERT_(condition, message)
 	#else
 		#ifdef _H3API_CPLUSPLUS11_
-			/**
-			 * @brief compile-time assertion to ensure integrity of structure size and use of some templates
-			 * define _H3API_NO_VALIDATION_ to remove these checks
-			 */
 			#define _H3API_STATIC_ASSERT_(condition, message) static_assert(condition, message)
 		#else /* !_H3API_CPLUSPLUS11_ */
 			namespace H3Internal
@@ -729,11 +512,6 @@ namespace h3
 			#define _H3API_CONCATENATE2_(arg1, arg2)  arg1 ## arg2
 			#define _H3API_CONCATENATE1_(arg1, arg2)  _H3API_CONCATENATE2_(arg1, arg2)
 			#define _H3API_CONCATENATE_(arg1, arg2)   _H3API_CONCATENATE1_(arg1, arg2)
-			/**
-			 * @brief compile-time assertion to ensure integrity of structure size and use of some templates
-			 * $message is not used and is simply a placeholder for static_assert
-			 * define _H3API_NO_VALIDATION_ to remove these checks
-			 */
 			#define _H3API_STATIC_ASSERT_(condition, message)\
 				namespace _H3API_CONCATENATE_(NH3StaticAssert_, __COUNTER__) {\
 				struct _H3API_CONCATENATE_(H3StaticAssertion_at_line_, __LINE__)\
@@ -746,7 +524,6 @@ namespace h3
 #endif /* _H3API_STATIC_ASSERT_ */
 
 #ifndef _H3API_ASSERT_SIZE_
-	/** @brief Performs sizeof() static_assert on the named structure to guarantee library integrity*/
 	#define _H3API_ASSERT_SIZE_(name) _H3API_STATIC_ASSERT_(sizeof(name) == name::SIZE, #name " size is incorrect")
 #endif /* _H3API_ASSERT_SIZE_ */
 
@@ -756,12 +533,10 @@ namespace h3
 
 	namespace H3Internal
 	{
-		/*std::enable_if is only available as of C++11*/
 		template<bool condition, class T = VOID>
 		struct enable_if {};
 		template<class T>
 		struct enable_if<true, T> { typedef T type; };
-		/*std::remove_pointer is only available as of C++11*/
 		template<class T>
 		struct remove_pointer { typedef T type; };
 		template<class T>
@@ -1511,7 +1286,6 @@ namespace h3
 #pragma endregion
 #pragma endregion Model Functions macros
 
-	/** @brief objects marked with this should not be directly transferable*/
 	class H3Uncopyable
 	{
 	public:
@@ -1525,127 +1299,50 @@ namespace h3
 		H3Uncopyable& operator=(const H3Uncopyable&);
 #endif /* _H3API_CPLUSPLUS11_ */
 	};
-	/**
-	 * @brief template model to access data structures within h3 memory
-	 * DataPointer is not copyable and cannot be assigned to other variables.
-	 * There is an operator cast to data type as well as operator& and operator*
-	 * to achieve this task, so that your intentions may be clear.
-	 * @tparam type indicates which type of data is pointed to
-	 */
 	template<class type>
 	class H3DataPointer : public H3Uncopyable
 	{
 	public:
 		typedef type* pointer;
 		typedef type& reference;
-		/** @brief constructor is forced inline to avoid unnecessary slowdown*/
 		_H3API_FORCEINLINE_ H3DataPointer() :
 			m_address(getAddress())
 		{
 		}
-		/**
-		 * @brief dereferences pointer
-		 * @return reference to data
-		 */
 		reference operator*() { return *reinterpret_cast<pointer>(m_address); }
-		/** @brief access data methods and contents directly*/
 		pointer operator->() { return reinterpret_cast<pointer>(m_address); }
-		/**
-		 * @brief grants a pointer to data which may be needed for some methods
-		 * @return pointer to data
-		 */
 		pointer operator&() { return reinterpret_cast<pointer>(m_address); }
 #ifndef _H3API_DONT_USE_MACROS_
-		/**
-		 * @brief returns itself as a way to switch between macro and typedef mode
-		 * DataPointer-> as a macro is valid but not as typedef.
-		 * DataPointer()-> is always valid
-		 * @return itself without any modification
-		 */
 		H3DataPointer<type>& operator()() { return *this; }
 #endif
-		/**
-		 * @brief automatic cast to data type
-		 * @return pointer
-		 */
 		operator pointer() { return reinterpret_cast<pointer>(m_address); }
 	private:
 		UINT m_address;
 		_H3API_FORCEINLINE_ UINT getAddress() { return *PUINT(type::ADDRESS); }
 	};
 
-	/**
-	 * @brief template model to access data structures that are arrays within h3 memory
-	 * DataArrayPointer is not copyable and cannot be assigned to other variables.
-	 * There is an operator cast to data type as well as operator& and operator*
-	 * to achieve this task, so that your intentions may be clear.
-	 * @tparam type indicates which type of data is pointed to
-	 */
 	template<class type>
 	class H3DataArrayPointer : public H3Uncopyable
 	{
 	public:
 		typedef type* pointer;
 		typedef type& reference;
-		/** @brief constructor is forced inline to avoid unnecessary slowdown*/
 		_H3API_FORCEINLINE_ H3DataArrayPointer() :
 			m_address(getAddress())
 		{
 		}
-		/**
-		 * @brief dereferences pointer
-		 * @return reference to data
-		 */
 		reference operator*() { return *reinterpret_cast<pointer>(m_address); }
-		/** @brief access data methods and contents directly*/
 		pointer operator->() { return reinterpret_cast<pointer>(m_address); }
-		/**
-		 * @brief grants a pointer to data which may be needed for some methods
-		 * @return pointer to data
-		 */
 		pointer operator&() { return reinterpret_cast<pointer>(m_address); }
 #ifndef _H3API_DONT_USE_MACROS_
-		/**
-		 * @brief returns itself as a way to switch between macro and typedef mode
-		 * DataPointer-> as a macro is valid but not as typedef.
-		 * DataPointer()-> is always valid
-		 * @return itself without any modification
-		 */
 		H3DataArrayPointer<type>& operator()() { return *this; }
 #endif
-		/**
-		 * @brief automatic cast to start of data array
-		 * @return pointer*
-		 */
 		operator pointer*() { return reinterpret_cast<pointer*>(m_address); }
-		/**
-		 * @brief access to array items as reference
-		 * beware that there is no boundary check performed on the data
-		 * @param index unsigned position of the data to access
-		 * @return reference to data at the given index
-		 */
 		reference operator[](UINT index) { return reinterpret_cast<pointer>(m_address)[index]; }
-		/**
-		 * @brief access to array items as reference
-		 * beware that there is no boundary check performed on the data
-		 * @param index signed position of the data to access, is converted to unsigned value
-		 * @return reference to data at the given index
-		 */
 		reference operator[](INT index) { return reinterpret_cast<pointer>(m_address)[static_cast<UINT>(index)]; }
-		/**
-		 * @brief access to array items as pointer
-		 * beware that there is no boundary check performed on the data
-		 * @param index unsigned position of the data to access
-		 * @return pointer to data at the given index
-		 */
 		pointer operator()(UINT index) { return &reinterpret_cast<pointer>(m_address)[index]; }
 
 #ifdef _H3API_CPLUSPLUS11_
-		/**
-		 * @brief automatic-cast to pointer type is possible with c++11
-		 * used through static_cast<type*>(DataPointer)
-		 * @return pointer type matching start of array
-		 */
 		explicit operator pointer() { return *reinterpret_cast<pointer>(m_address); }
 #endif
 
@@ -1654,15 +1351,6 @@ namespace h3
 		_H3API_FORCEINLINE_ UINT getAddress() { return *PUINT(type::ADDRESS); }
 	};
 
-	/**
-	 * @brief template model to access data values within h3 memory
-	 * PrimitivePointer is not copyable and cannot be assigned to other variables.
-	 * There is an operator cast to data type as well as operator& and operator*
-	 * to achieve this task, so that your intentions may be clear.
-	 * Contrary to other Pointer types, this type does not have a pointer** format
-	 * @tparam type indicates which type of data is pointed to
-	 * @tparam address indicates the physical address to access the data from
-	 */
 	template<class type>
 	class H3PrimitivePointer : public H3Uncopyable
 	{
@@ -1670,55 +1358,22 @@ namespace h3
 		typedef typename type::VALUE_TYPE* pointer;
 		typedef typename type::VALUE_TYPE& reference;
 		typedef typename type::VALUE_TYPE  value_type;
-		/** @brief constructor is forced inline to avoid unnecessary slowdown*/
 		_H3API_FORCEINLINE_ H3PrimitivePointer() :
 			m_address(getAddress())
 		{
 		}
-		/**
-		 * @brief dereferences pointer
-		 * @return reference to data
-		 */
 		reference operator*() { return *reinterpret_cast<pointer>(m_address); }
-		/**
-		 * @brief grants a pointer to data which may be needed for some methods
-		 * @return pointer to data
-		 */
 		pointer operator&() { return reinterpret_cast<pointer>(m_address); }
 #ifndef _H3API_DONT_USE_MACROS_
-		/**
-		 * @brief returns itself as a way to switch between macro and typedef mode
-		 * DataPointer-> as a macro is valid but not as typedef.
-		 * DataPointer()-> is always valid
-		 * @return itself without any modification
-		 */
 		H3PrimitivePointer<type/*, value_type*/>& operator()() { return *this; }
 #endif
-		/**
-		 * @brief automatic cast to data
-		 * @return a copy of the primitive data
-		 */
 		operator value_type() { return *reinterpret_cast<pointer>(m_address); }
-		/**
-		 * @brief allows assignment of values to data
-		 * beware that you may need to allow write with VirtualProtect first
-		 * @param new_data new content to be inserted
-		 */
 		void operator=(value_type new_data) { *reinterpret_cast<pointer>(m_address) = new_data; }
 	private:
 		UINT m_address;
 		_H3API_FORCEINLINE_ UINT getAddress() { return type::ADDRESS; }
 	};
 
-	/**
-	 * @brief template model to access primitive data as arrays within h3 memory
-	 * PrimitivePointers is not copyable and cannot be assigned to other variables.
-	 * There is an operator cast to data type as well as operator& and operator*
-	 * to achieve this task, so that your intentions may be clear.
-	 * @tparam type indicates which type of data is pointed to
-	 * @tparam address indicates the physical address to access the data from
-	 * @tparam is_pointer indicates that data has **pointer format
-	 */
 	template<typename type>
 	class H3PrimitiveArrayPointer : public H3Uncopyable
 	{
@@ -1727,63 +1382,21 @@ namespace h3
 		typedef value_type* pointer;
 		typedef value_type& reference;
 
-		/** @brief constructor is forced inline to avoid unnecessary slowdown*/
 		_H3API_FORCEINLINE_ H3PrimitiveArrayPointer() :
 			m_address(getAddress())
 		{
 		}
-		/**
-		 * @brief dereferences pointer
-		 * @return reference to data
-		 */
 		reference operator*() { return *reinterpret_cast<pointer>(m_address); }
-		/**
-		 * @brief grants a pointer to data which may be needed for some methods
-		 * @return pointer to data
-		 */
 		pointer operator&() { return reinterpret_cast<pointer>(m_address); }
 
 #ifndef _H3API_DONT_USE_MACROS_
-		/**
-		 * @brief returns itself as a way to switch between macro and typedef mode
-		 * DataPointer-> as a macro is valid but not as typedef.
-		 * DataPointer()-> is always valid
-		 * @return itself without any modification
-		 */
 		H3PrimitiveArrayPointer<type>& operator()() { return *this; }
 #endif
-		/**
-		 * @brief automatic cast to start of data array
-		 * @return pointer* to array start
-		 */
 		operator pointer*() { return reinterpret_cast<pointer*>(m_address); }
-		/**
-		 * @brief access to array items as reference
-		 * beware that there is no boundary check performed on the data
-		 * @param index unsigned position of the data to access
-		 * @return reference to data at the given index
-		 */
 		reference operator[](UINT index) { return reinterpret_cast<pointer>(m_address)[index]; }
-		/**
-		 * @brief access to array items as reference
-		 * beware that there is no boundary check performed on the data
-		 * @param index signed position of the data to access, is converted to unsigned value
-		 * @return reference to data at the given index
-		 */
 		reference operator[](INT index) { return reinterpret_cast<pointer>(m_address)[static_cast<UINT>(index)]; }
-		/**
-		 * @brief access to array items as pointer
-		 * beware that there is no boundary check performed on the data
-		 * @param index unsigned position of the data to access
-		 * @return pointer to data at the given index
-		 */
 		value_type operator()(UINT index) { return reinterpret_cast<pointer>(m_address)[index]; }
 #ifdef _H3API_CPLUSPLUS11_
-		/**
-		 * @brief automatic-cast to pointer type is possible with c++11
-		 * used through static_cast<type*>(DataPointer)
-		 * @return pointer type matching start of array
-		 */
 		explicit operator pointer() { return *reinterpret_cast<pointer>(m_address); }
 #endif
 	private:
@@ -1795,7 +1408,6 @@ namespace h3
 
 namespace h3
 {
-	/* POINT is a common Win type, don't play with fire! */
 	struct H3POINT;
 	_H3API_DECLARE_(Point);
 	_H3API_DECLARE_(Position);
@@ -1805,16 +1417,11 @@ namespace h3
 	typedef H3Map<UINT16>     H3Map_UINT16;
 	typedef H3FastMap<UINT16> H3FastMap_UINT16;
 
-	/** @brief Null string ""*/
 	LPCSTR const h3_NullString = LPCSTR(0x63A608);
-	/** @brief 512 bytes of char buffer to be used for printing text*/
 	PCHAR  const h3_TextBuffer = PCHAR(0x697428);
-	/** @brief path to the main directory of the game*/
 	LPCSTR const h3_GamePath   = LPCSTR(0x698614);
-	/** @brief a text buffer used to save the game*/
 	PCHAR  const h3_SaveName   = PCHAR(0x69FC88);
 
-	/** @brief detects H3 exe version at runtime*/
 	class H3Version
 	{
 	public:
@@ -1828,38 +1435,12 @@ namespace h3
 			ERA             = 4,
 			WOG             = 5,
 		};
-		/** @brief the constructor is required to detect the exe type*/
 		_H3API_ H3Version();
-		/**
-		 * @brief returns the detected exe version
-		 *
-		 * @return GameVersion a value matching the current exe
-		 */
 		_H3API_ GameVersion version() const;
-		/**
-		 * @brief compares the exe version to Restoration of Erathia
-		 * @return true if the current exe is RoE
-		 */
 		_H3API_ BOOL roe()  const;
-		/**
-		 * @brief compares the exe version to Shadow of Death 3.2
-		 * @return true if the current exe is SoD 3.2
-		 */
 		_H3API_ BOOL sod()  const;
-		/**
-		 * @brief compares the exe version to Horn of the Abyss
-		 * @return true if the current exe is HotA
-		 */
 		_H3API_ BOOL hota() const;
-		/**
-		 * @brief compares the exe version to ERA II
-		 * @return true if the current exe is ERA
-		 */
 		_H3API_ BOOL era()  const;
-		/**
-		 * @brief compares the exe version to Wake of Gods
-		 * @return true if the current exe is WOG
-		 */
 		_H3API_ BOOL wog()  const;
 	private:
 		GameVersion m_version;
@@ -1867,57 +1448,20 @@ namespace h3
 
 	namespace H3Numbers
 	{
-		/**
-		 * @brief add thousands commas to numbers, e.g. 123,456 instead of 123456
-		 * @param num the number to format
-		 * @param out a char[] buffer to receive the formatted number
-		 * @return number of bytes written
-		 */
 		_H3API_ INT32 AddCommas(INT32 num, CHAR* out);
-		/**
-		 * @brief show a number in short scale format with specified number of decimals
-		 * e.g. 123,456,789 in short scale can be 123.5M for 1 decimal
-		 * @param num the number to format
-		 * @param out a char[] buffer to receive the formatted number
-		 * @param decimals the number of decimals to use after the period
-		 * @return number of bytes written
-		 */
 		_H3API_ INT32 MakeReadable(INT32 num, CHAR* out, INT32 decimals = 1);
 	}
 
 	namespace H3Error
 	{
-		/**
-		 * @brief displays MessageBox with custom message and title
-		 * @param message the message to be shown
-		 * @param title title of the MessageBox
-		 */
 		_H3API_ VOID ShowError(LPCSTR message, LPCSTR title = "H3Error!");
-		/**
-		 * @brief displays MessageBox with custom message, title and OK / Cancel choice
-		 * @param message the message to be shown
-		 * @param title title of the MessageBox
-		 * @return true if the user clicked OK
-		 */
 		_H3API_ BOOL ShowErrorChoice(LPCSTR message, LPCSTR title = "H3Error!");
-		/**
-		 * @brief displays MessageBox with custom UNICODE message and title
-		 * @param message the message to be shown
-		 * @param title title of the MessageBox
-		 */
 		_H3API_ VOID ShowErrorW(LPCWSTR message, LPCWSTR title = L"H3Error!");
-		/**
-		 * @brief displays MessageBox with custom UNICODE message, title and OK / Cancel choice
-		 * @param message the message to be shown
-		 * @param title title of the MessageBox
-		 * @return true if the user clicked OK
-		 */
 		_H3API_ BOOL ShowErrorChoiceW(LPCWSTR message, LPCWSTR title = L"H3Error!");
 	}
 
 #pragma pack(push, 4)
 
-	/** @brief represents a x-y point on the map, improves POINT*/
 	struct H3POINT
 	{
 		INT32 x, y;
@@ -1945,7 +1489,6 @@ namespace h3
 		_H3API_ static VOID    GetCursorPosition(H3POINT& p);
 	};
 
-	/** @brief represents a x-y-z point on the map*/
 	struct H3Point
 	{
 		INT32 x;
@@ -1971,7 +1514,6 @@ namespace h3
 		_H3API_ H3Point& DecY(INT32 dy = 1);
 	}; /* H3Point */
 
-	/** @brief stored (x,y,z) coordinates in a bitfield following h3 format*/
 	struct H3Position
 	{
 	protected:
@@ -2009,11 +1551,6 @@ namespace h3
 		_H3API_ static UINT8 UnpackZ(UINT coord);
 	}; /* H3Position */
 
-	/**
-	 * @brief represents T* array as [x][y][z] map since they are created as T* map = new T[number_cells];
-	 * maps are always square in h3 so only 1 dimension is used for x & y
-	 * @tparam T type of the map object
-	 */
 	template<typename T>
 	class H3Map
 	{
@@ -2021,89 +1558,23 @@ namespace h3
 		typedef T* pointer;
 		typedef T& reference;
 
-		/** @brief incrementable iterator to to go over the map's span*/
 		class iterator
 		{
 		public:
-			/**
-			 * @brief Construct a new iterator object
-			 * @param it an existing iterator
-			 */
 			iterator(const iterator& it);
-			/**
-			 * @brief Construct a new iterator object
-			 * @param map base array of the map
-			 * @param x 0..mapsize-1
-			 * @param y 0..mapsize-1
-			 * @param z 0..1
-			 */
 			iterator(H3Map* map, UINT x, UINT y, UINT z);
-			/**
-			 * @brief Construct a new iterator object without known coordinates
-			 * @param map base array of the map
-			 * @param item an object from the current map
-			 */
 			iterator(H3Map* map, pointer item);
-			/**
-			 * @brief equality comparison
-			 * @param it another iterator
-			 * @return BOOL whether both iterators are equal
-			 */
 			BOOL      operator==(const iterator& it) const;
-			/**
-			 * @brief inequality comparison
-			 * @param it another iterator
-			 * @return BOOL whether both iterators are different
-			 */
 			BOOL      operator!=(const iterator& it) const;
-			/**
-			 * @brief pre-increment
-			 * @return itself
-			 */
 			iterator& operator++();
-			/**
-			 * @brief post-increment
-			 * @return copy of itself before increment
-			 */
 			iterator  operator++(int);
-			/** @brief direct access to T contents and methods*/
 			pointer   operator->() const;
-			/**
-			 * @brief get address of iterator state
-			 * @return pointer address of current map cell
-			 */
 			pointer   operator&() const;
-			/**
-			 * @brief dereference iterator state
-			 * @return reference to current map cell
-			 */
 			reference operator*() const;
-			/**
-			 * @brief allows inspection of map cells at an offset from the current one
-			 * @param dx horizontal difference
-			 * @param dy vertical difference
-			 * @return reference to the map cell at specified offset
-			 */
 			reference operator()(INT32 dx, INT32 dy) const;
-			/**
-			 * @brief computes the current map cell's horizontal position
-			 * @return UINT 0..mapsize-1
-			 */
 			UINT      GetX() const;
-			/**
-			 * @brief computes the current map cell's vertical position
-			 * @return UINT 0..mapsize-1
-			 */
 			UINT      GetY() const;
-			/**
-			 * @brief computes the current map cell's level
-			 * @return UINT 0..1
-			 */
 			UINT      GetZ() const;
-			/**
-			 * @brief computes the current map cell's position
-			 * @return H3Point (x,y,z)
-			 */
 			H3Point   Get() const;
 		private:
 			pointer m_current;
@@ -2112,38 +1583,10 @@ namespace h3
 			UINT    m_z;
 			H3Map* m_map;
 		};
-		/**
-		 * @brief Construct a new H3Map object
-		 * @param base the start of the map array
-		 * @param map_size the unique dimension size since maps are square
-		 * @param has_underground whether an underground level is present
-		 */
 		H3Map(pointer base, UINT map_size, BOOL has_underground);
-		/**
-		 * @brief the first map cell of the array
-		 * @return iterator (0, 0, 0)
-		 */
 		iterator begin();
-		/**
-		 * @brief 1 beyond the last cell of the array
-		 * @return iterator (0, 0, 1 or 2) depending on underground
-		 */
 		iterator end();
-		/**
-		 * @brief obtain an iterator for the specified position
-		 * @param x 0..mapsize-1
-		 * @param y 0..mapsize-1
-		 * @param z 0..1
-		 * @return iterator the specified position
-		 */
 		iterator operator()(UINT x, UINT y, UINT z);
-		/**
-		 * @brief get a reference to the map cell at specified position
-		 * @param x 0..mapsize-1
-		 * @param y 0..mapsize-1
-		 * @param z 0..1
-		 * @return reference the specified position
-		 */
 		reference At(UINT x, UINT y, UINT z);
 
 	private:
@@ -2154,11 +1597,6 @@ namespace h3
 		UINT    m_levels;
 	};
 
-	/**
-	 * @brief same as H3Map except it doesn't keep track of coordinates
-	 * you can recover MapIterator's coordinates through H3FastMap::GetCoordinates(FastMapIterator)
-	 * @tparam T type of the map object
-	 */
 	template<typename T>
 	class H3FastMap
 	{
@@ -2166,119 +1604,31 @@ namespace h3
 		typedef T* pointer;
 		typedef T& reference;
 
-		/** @brief incrementable iterator to to go over the map's span*/
 		class iterator
 		{
 		public:
-			/**
-			 * @brief Construct a new iterator object
-			 * @param it an existing iterator
-			 */
 			iterator(const iterator& it);
-			/**
-			 * @brief Construct a new iterator object
-			 * @param map base array of the map
-			 * @param x 0..mapsize-1
-			 * @param y 0..mapsize-1
-			 * @param z 0..1
-			 */
 			iterator(H3FastMap* map, UINT x, UINT y, UINT z);
-			/**
-			 * @brief Construct a new iterator object without known coordinates
-			 * @param map base array of the map
-			 * @param item an object from the current map
-			 */
 			iterator(pointer item, UINT map_size);
-			/**
-			 * @brief equality comparison
-			 * @param it another iterator
-			 * @return BOOL whether both iterators are equal
-			 */
 			BOOL      operator==(const iterator& it) const;
-			/**
-			 * @brief inequality comparison
-			 * @param it another iterator
-			 * @return BOOL whether both iterators are different
-			 */
 			BOOL      operator!=(const iterator& it) const;
-			/**
-			 * @brief pre-increment
-			 * @return itself
-			 */
 			iterator& operator++();
-			/**
-			 * @brief post-increment
-			 * @return copy of itself before increment
-			 */
 			iterator  operator++(int);
-			/**
-			 * @brief allows inspection of map cells at an offset from the current one
-			 * @param dx horizontal difference
-			 * @param dy vertical difference
-			 * @return reference to the map cell at specified offset
-			 */
 			reference operator()(INT32 dx, INT32 dy) const;
-			/**
-			 * @brief dereference iterator state
-			 * @return reference to current map cell
-			 */
 			reference operator*() const;
-			/**
-			 * @brief get address of iterator state
-			 * @return pointer address of current map cell
-			 */
 			pointer   operator&() const;
-			/** @brief direct access to T contents and methods*/
 			pointer   operator->() const;
 		private:
 			pointer m_current;
 			UINT    m_dimensions;
 		};
 
-		/**
-		 * @brief Construct a new H3FastMap object
-		 * @param base the start of the map array
-		 * @param map_size the unique dimension size since maps are square
-		 * @param has_underground whether an underground level is present
-		 */
 		H3FastMap(pointer base, UINT map_size, BOOL has_underground);
-		/**
-		 * @brief the first map cell of the array
-		 * @return iterator (0, 0, 0)
-		 */
 		iterator  begin();
-		/**
-		 * @brief 1 beyond the last cell of the array
-		 * @return iterator (0, 0, 1 or 2) depending on underground
-		 */
 		iterator  end();
-		/**
-		 * @brief obtain an iterator for the specified position
-		 * @param x 0..mapsize-1
-		 * @param y 0..mapsize-1
-		 * @param z 0..1
-		 * @return iterator the specified position
-		 */
 		iterator  operator()(UINT x, UINT y, UINT z);
-		/**
-		 * @brief get a reference to the map cell at specified position
-		 * @param x 0..mapsize-1
-		 * @param y 0..mapsize-1
-		 * @param z 0..1
-		 * @return reference the specified position
-		 */
 		reference At(UINT x, UINT y, UINT z);
-		/**
-		 * @brief Calculate coordinates from an iterator
-		 * @param it an iterator of the current map
-		 * @return H3Point (x, y, z) position of the iterator
-		 */
 		H3Point   GetCoordinates(const iterator& it) const;
-		/**
-		 * @brief Get coordinates from a map cell
-		 * @param item a cell from the current map
-		 * @return H3Point (x, y, z) position of the iterator
-		 */
 		H3Point   GetCoordinates(const pointer item) const;
 	private:
 		pointer at(UINT x, UINT y, UINT z);
@@ -2561,48 +1911,18 @@ namespace h3
 	using UniquePtr       = H3UniquePtr<T, Allocator>;
 #endif /* _H3API_TEMPLATE_DECLARE_ */
 
-	/** @brief Common allocator type for Byte objects */
 	typedef H3ObjectAllocator<BYTE> ByteAllocator;
-	/** @brief Common allocator type for char objects */
 	typedef H3ObjectAllocator<CHAR> CharAllocator;
 
 #pragma pack(push, 4)
 
-	/**
-	 * @brief heap realloc using H3 assets
-	 * @param obj memory block previously allocated by H3
-	 * @param new_size the sought size of the new memory block
-	 * @return reallocated memory block
-	 */
 	_H3API_ PVOID H3Realloc(PVOID obj, UINT new_size);
-	/**
-	 * @brief calloc using H3 assets
-	 * @param count the number of objects to allocate and null
-	 * @param size sizeof() these objects
-	 * @return allocated memory block initiated to 0s
-	 */
 	_H3API_ PVOID H3Calloc(UINT count, UINT size = 1);
-	/**
-	 * @brief heapalloc using H3 assets
-	 * @param size the sought size of the memory block
-	 * @return VOID* allocated memory nlock
-	 */
 	_H3API_ PVOID H3Malloc(UINT size);
-	/**
-	 * @brief heapfree using H3 assets
-	 * @param obj a memory block previously allocated by H3
-	 */
 	_H3API_ VOID H3Free(PVOID obj);
-	/**
-	 * @brief Allocates an object using h3's malloc
-	 * @tparam Type Object to be allocated
-	 * @param count Number of objects to allocate
-	 * @return Number of objects requested
-	 */
 	template<typename Type>
 	inline Type* H3Alloc(UINT count = 1);
 
-	/** @brief base structure to let structures use H3 operators new, delete, new[] and delete[] */
 	struct H3Allocator
 	{
 		_H3API_ static PVOID operator new(const size_t sz);
@@ -2611,10 +1931,6 @@ namespace h3
 		_H3API_ static VOID  operator delete[](PVOID block);
 	};
 
-	/**
-	 * @brief An allocator to simulate H3's new & delete on objects
-	 * @tparam T any type of data that will interact with H3 code
-	 */
 	template <typename T>
 	struct H3ObjectAllocator
 	{
@@ -2626,73 +1942,27 @@ namespace h3
 		typedef size_t   size_type;
 
 		H3ObjectAllocator() noexcept;
-		/**
-		 * @brief allocates an object
-		 * @param number how many objects you wish to allocate, by default 1
-		 * @return T* a memory block of \p number objects
-		 */
 		T* allocate(size_t number = 1) const noexcept;
-		/**
-		 * @brief deallocates a memory block previously allocated using H3 allocator
-		 * @param block the object to deallocate
-		 */
 		VOID deallocate(T* block) const noexcept;
-		/**
-		 * @brief same as deallocate(T*), is a requirement for named allocators
-		 * https://en.cppreference.com/w/cpp/named_req/Allocator
-		 */
 		VOID deallocate(T* block, size_t number) const noexcept;
-		/**
-		 * @brief calls default constructor on an allocated object
-		 * @param block the object to construct
-		 */
 		VOID construct(T* block) const noexcept;
-		/**
-		 * @brief calls constructor with argument of matching type
-		 * @param block the object to construct
-		 * @param value the base argument to pass to the constructor
-		 */
 		VOID construct(T* block, const T& value) const noexcept;
-		/**
-		 * @brief calls constructor with argument of a different type
-		 * @tparam U a type different than T
-		 * @param block the object to construct
-		 * @param arg an argument to pass to the constructor
-		 */
 		template<typename U>
 		VOID construct(T* block, const U& arg) const noexcept;
-		/**
-		 * @brief calls default destructor
-		 * @param block the object to destruct
-		 */
 		VOID destroy(T* block) const noexcept;
-		/** @brief Requirement for named constructors */
 		template <typename U>
 		H3ObjectAllocator(const H3ObjectAllocator<U>&) noexcept;
-		/** @brief Requirement for named constructors */
 		template <typename U>
 		bool operator==(const H3ObjectAllocator<U>&) const noexcept;
-		/** @brief Requirement for named constructors */
 		template <typename U>
 		bool operator!=(const H3ObjectAllocator<U>&) const noexcept;
 
 #ifdef _H3API_CPLUSPLUS11_
-		/**
-		 * @brief calls constructor with arbitrary number of arguments
-		 * @tparam Args any arguments list necessary
-		 * @param block the object to construct
-		 * @param args the arguments to pass to the constructor
-		 */
 		template<typename... Args>
 		VOID construct(T* block, Args&&... args);
 #endif
 	};
 
-	/**
-	 * @brief An allocator to simulate H3's new[] & delete[] on object arrays
-	 * The amount of objects is stored at array[-1]
-	 * @tparam T any type of data that will interact with H3 code
-	 */
 	template <typename T>
 	struct H3ArrayAllocator
 	{
@@ -2707,62 +1977,26 @@ namespace h3
 		size_t getArraySize(T* block) const noexcept;
 	public:
 		H3ArrayAllocator() noexcept;
-		/**
-		 * @brief allocates an object
-		 * @param number how many objects you wish to allocate, by default 1
-		 * @return T* a memory block of \p number objects
-		 */
 		T* allocate(size_t number = 1) const noexcept;
-		/**
-		 * @brief deallocates a memory block previously allocated using H3 allocator
-		 * @param block the object to deallocate
-		 */
 		VOID deallocate(T* block) const noexcept;
-		/**
-		 * @brief calls default constructor on an allocated object
-		 * @param block the object to construct
-		 */
 		VOID construct(T* block) const noexcept;
-		/**
-		 * @brief calls constructor with argument of matching type
-		 * @param block the object to construct
-		 * @param value the base argument to pass to the constructor
-		 */
 		VOID construct(T* block, const T& value) const noexcept;
-		/**
-		 * @brief calls constructor with argument of a different type
-		 * @tparam U a type different than T
-		 * @param block the object to construct
-		 * @param arg an argument to pass to the constructor
-		 */
 		template<typename U>
 		VOID construct(T* block, const U& arg) const noexcept;
-		/**
-		 * @brief calls default destructor on all objects
-		 * @param block the object array to destruct
-		 */
 		VOID destroy(T* block) const noexcept;
-		/** @brief Requirement for named constructors */
 		template <typename U>
 		H3ArrayAllocator(const H3ArrayAllocator<U>&) noexcept;
-		/** @brief Requirement for named constructors */
 		template <typename U>
 		bool operator==(const H3ArrayAllocator<U>&) const noexcept;
-		/** @brief Requirement for named constructors */
 		template <typename U>
 		bool operator!=(const H3ArrayAllocator<U>&) const noexcept;
 
 #ifdef _H3API_CPLUSPLUS11_
-		/** @brief calls constructor with arbitrary number of arguments */
 		template<typename... Args>
 		VOID construct(T* block, Args&&... args);
 #endif
 	};
 #pragma pack(push, 4)
-	/**
-	 * @brief Stand-in for std::auto_ptr, mainly used for objects with virtual destructors
-	 * @tparam T type for which a pointer is held
-	 */
 	template<typename T>
 	struct H3AutoPtr
 	{
@@ -2773,48 +2007,17 @@ namespace h3
 	public:
 		H3AutoPtr(T* _Ptr = 0);
 		~H3AutoPtr();
-		/**
-		 * @brief get a pointer to managed object
-		 * @return T* current pointer, may be NULL
-		 */
 		T* Get();
-		/** @brief access the managed object and its methods directly */
 		T* operator->();
-		/**
-		 * @brief releases the managed object, replacing it with nullptr
-		 * you become responsible of destroying and deallocating the returned object
-		 * @return T* the managed object
-		 */
 		T* Release();
-		/**
-		 * @brief check the existence of an managed object
-		 * @return BOOL8 whether there is a managed object
-		 */
 		BOOL8 Exists() const;
-		/**
-		 * @brief allows use of if (pointer)
-		 * @return BOOL whether there is a managed object
-		 */
 		operator BOOL() const;
-		/**
-		 * @brief allows the use of if (!pointer)
-		 * @return BOOL8 whether there is no managed object
-		 */
 		BOOL operator!() const;
-		/**
-		 * @brief dereference the managed object
-		 * @return T& reference to managed object
-		 */
 		T& operator*() const;
 	}; /* H3AutoPtr<> */
 	_H3API_ASSERT_SIZE_(H3AutoPtr<h3unk>);
 #pragma pack(pop)
 
-	/**
-	 * @brief simili std::unique_ptr without C++11 requirements
-	 * @tparam T type of object to manage
-	 * @tparam H3ObjectAllocator<T> the allocator type to use, defaulted to H3ObjectAllocator
-	 */
 	template<typename T, typename Allocator = H3ObjectAllocator<T>>
 	struct H3UniquePtr
 	{
@@ -2823,64 +2026,19 @@ namespace h3
 		void destroy(T* block = nullptr);
 
 	public:
-		/**
-		 * @brief Construct a new H3UniquePtr object
-		 * data is initialized as nullptr
-		 */
 		H3UniquePtr();
-		/**
-		 * @brief Construct a new H3UniquePtr object
-		 * @param source the data with which to initiate the data pointer
-		 */
 		H3UniquePtr(T* source);
-		/** @brief Destruct and deallocates any managed object */
 		~H3UniquePtr();
-		/**
-		 * @brief sets a new managed object
-		 * if an object is already managed, it is destructed and deallocated
-		 * @param source new object to manage
-		 */
 		void Set(T* source);
-		/**
-		 * @brief get access to the managed object, if it exists
-		 * @return T* the managed object
-		 */
 		T* Get();
-		/** @brief access the managed object and its methods directly */
 		T* operator->();
-		/**
-		 * @brief releases the managed object, replacing it with nullptr
-		 * you become responsible of destroying and deallocating the returned object
-		 * @return T* the managed object
-		 */
 		T* Release();
-		/**
-		 * @brief Swaps the pointer's managed object with another pointer
-		 * @param other the other pointer with which to swap contents
-		 */
 		void Swap(H3UniquePtr<T>& other);
-		/**
-		 * @brief allows the use of if (!pointer)
-		 * @return BOOL whether there is no managed object
-		 */
 		BOOL operator!() const;
-		/**
-		 * @brief allows use of if (pointer)
-		 * @return BOOL whether there is a managed object
-		 */
 		operator BOOL() const;
 
 #ifdef _H3API_CPLUSPLUS11_
-		/**
-		 * @brief Construct a new H3UniquePtr object, taking ownership over its managed object
-		 * @param other the pointer from which ownership should be taken
-		 */
 		H3UniquePtr(H3UniquePtr<T, Allocator>&& other);
-		/**
-		 * @brief Take control of another pointer's managed object
-		 * @param other the pointer from which ownership should be taken
-		 * @return H3UniquePtr<T, Allocator>& itself
-		 */
 		H3UniquePtr<T, Allocator>& operator=(H3UniquePtr<T, Allocator>&& other);
 		H3UniquePtr<T, Allocator>& operator=(const H3UniquePtr<T, Allocator>& other) = delete;
 #else
@@ -2895,8 +2053,6 @@ namespace h3
 
 	namespace H3Internal
 	{
-		/* Based on https://isocpp.org/files/papers/N3656.txt */
-		/* Author: Stephan T. Lavavej (aka STL)*/
 
 		template<typename T, typename Allocator>
 		struct H3UniqueIf
@@ -3270,17 +2426,8 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/**
-	 * @brief DWORD used as a bitfield
-	 * can be used as an array of bitfields (no bound checking)
-	 * for a safer and more developped version with iterators, use H3Bitset
-	 */
 	struct H3Bitfield
 	{
-		/**
-		 * @brief similar to bitset::reference
-		 * holds a pointer to Bitfield start and allows specific operations on indexed bits
-		 */
 		struct reference
 		{
 		protected:
@@ -3289,110 +2436,30 @@ namespace h3
 		public:
 			_H3API_ reference(H3Bitfield* bitfield);
 			_H3API_ reference(H3Bitfield* bitfield, UINT position);
-			/**
-			 * @brief pre-increment
-			 * @return itself, the next reference
-			 */
 			_H3API_ reference& operator++();
-			/**
-			 * @brief post-increment
-			 * @return a copy of the current reference
-			 */
 			_H3API_ reference operator++(int);
-			/**
-			 * @brief flips the current bit
-			 * @return itself
-			 */
 			_H3API_ reference& operator~();
-			/**
-			 * @brief allows if (reference) condition to be used
-			 * @return true if the current bit is set, false otherwise
-			 */
 			_H3API_ operator BOOL();
-			/**
-			 * @brief allows if (!reference) condition to be used
-			 * @return true if the current bit is not set, false otherwise
-			 */
 			_H3API_ BOOL operator!();
-			/**
-			 * @brief set the state of the current bit
-			 * @param state true (on) or false (off)
-			 */
 			_H3API_ VOID operator=(BOOL state);
-			/** @brief sets the current bit to true (on)*/
 			_H3API_ VOID Set();
-			/** @brief sets the current bit to false (off)*/
 			_H3API_ VOID Reset();
-			/** @brief Flips the current bit*/
 			_H3API_ VOID Flip();
 		};
 
 	protected:
 		UINT m_bf;
 	public:
-		/**
-		 * @brief returns whether bit at position is set or not
-		 * @param position can exceed the scope of bitfield, meaning greater than 32 bits
-		 * @return true if the specified bit is set
-		 */
 		_H3API_ BOOL GetState(UINT32 position) const;
-		/**
-		 * @brief Set the state of the specified bit
-		 * @param position can exceed the scope of bitfield, meaning greater than 32 bits
-		 * @param state true (on) or false (off)
-		 */
 		_H3API_ VOID SetState(UINT32 position, BOOL state);
-		/**
-		 * @brief Sets the underlying DWORD to the specified value*
-		 * @param value the new bitfield state
-		 */
 		_H3API_ VOID Set(UINT32 value);
-		/**
-		 * @brief Get underlying DWORD value*
-		 * @return the current state of the bitfield
-		 */
 		_H3API_ UINT Get() const;
-		/**
-		 * @brief flips bit at position*
-		 * @param position can exceed the scope of bitfield, meaning greater than 32 bits
-		 * @return _H3API_
-		 */
 		_H3API_ VOID Flip(UINT32 position);
-		/**
-		 * @brief get reference at position
-		 * using reference allows expressions that would otherwise be impossible such as:
-		 * Bitfield[33] = true;
-		 * @param position can exceed the scope of bitfield, meaning greater than 32 bits
-		 * @return a reference to the specified position
-		 */
 		_H3API_ reference operator[](UINT32 position);
-		/**
-		 * @brief state of bit at position
-		 * @param position can exceed the scope of bitfield, meaning greater than 32 bits
-		 * @return true if the bit is set/on, false otherwise
-		 */
 		_H3API_ BOOL operator()(UINT position);
-		/**
-		 * @brief the end mask of unusable bits for a bitfield with specified number of bits
-		 * @param number_bits the total number of bits in the bitset represented
-		 * @return the value of the end mask, that is all bits that are not part of the last 32 bits
-		 */
 		_H3API_ static UINT Mask(UINT number_bits);
 	}; /* H3Bitfield */
 
-	/**
-	 * @brief 8x6 mask for properties and drawing of adventure map objects
-	 * (0,0) is bottom right corner and corresponds to bit 0
-	 * bit increments go left to right and then bottom to top
-	 *
-	 * 47:(7,5) 46:(6,5) 45:(5,5) 44:(4,5) 43:(3,5) 42:(2,5) 41:(1,5) 40:(0,5)
-	 * 39:(7,4) 38:(6,4) 37:(5,4) 36:(4,4) 35:(3,4) 34:(2,4) 33:(1,4) 32:(0,4)
-	 * 31:(7,3) 30:(6,3) 29:(5,3) 28:(4,3) 27:(3,3) 26:(2,3) 25:(1,3) 24:(0,3)
-	 * 23:(7,2) 22:(6,2) 21:(5,2) 20:(4,2) 19:(3,2) 18:(2,2) 17:(1,2) 16:(0,2)
-	 * 15:(7,1) 14:(6,1) 13:(5,1) 12:(4,1) 11:(3,1) 10:(2,1)  9:(1,1)  8:(0,1)
-	 *  7:(7,0)  6:(6,0)  5:(5,0)  4:(4,0)  3:(3,0)  2:(2,0)  1:(1,0)  0:(0,0)
-	 *
-	 */
 	struct H3ObjectMask
 	{
 		union
@@ -3401,7 +2468,6 @@ namespace h3
 			UINT64     m_bitsPacked;
 		};
 
-		/** @brief an incrementable structure over the object mask with additional functionality*/
 		class iterator
 		{
 		private:
@@ -3411,115 +2477,27 @@ namespace h3
 			_H3API_ iterator(const iterator& it);
 			_H3API_ iterator(H3ObjectMask* mask);
 			_H3API_ iterator(H3ObjectMask* mask, UINT32 index);
-			/**
-			 * @brief pre-increment
-			 * @return itself
-			 */
 			_H3API_ iterator& operator++();
-			/**
-			 * @brief post-increment
-			 * @return a copy of itself before increment
-			 */
 			_H3API_ iterator operator++(int);
-			/**
-			 * @brief flips current bit from on to off and vice-versa
-			 * @return itself
-			 */
 			_H3API_ iterator& operator~();
-			/**
-			 * @brief allows if (iterator) condition to be used
-			 * @return BOOL true if the current bit is set, otherwise false
-			 */
 			_H3API_ operator BOOL() const;
-			/**
-			 * @brief allows if (!iterator) condition to be used
-			 * @return BOOL true if the current bit is not set, otherwise false
-			 */
 			_H3API_ BOOL operator!() const;
-			/**
-			 * @brief set the state of the current bit
-			 * @param state TRUE/on or FALSE/off
-			 */
 			_H3API_ VOID operator=(BOOL state);
-			/**
-			 * @brief Get the state of the current bit
-			 * @return BOOL true if the bit is set, false otherwise
-			 */
 			_H3API_ BOOL GetState() const;
-			/**
-			 * @brief set the state of the current bit
-			 * @param state TRUE/on or FALSE/off
-			 */
 			_H3API_ VOID SetState(BOOL state);
-			/** @brief set the current bit as ON / true*/
 			_H3API_ VOID Set();
-			/** @brief set the current bit as OFF / false*/
 			_H3API_ VOID Reset();
-			/** @brief flips current bit from on to off and vice-versa*/
 			_H3API_ VOID Flip();
-			/**
-			 * @brief equality comparison between two iterators
-			 * @param it another iterator
-			 * @return BOOL whether both iterators are at the same position
-			 */
 			_H3API_ BOOL operator==(const iterator& it);
-			/**
-			 * @brief inequality comparison between two iterators
-			 * @param it another iterator
-			 * @return BOOL whether both iterators are not at the same position
-			 */
 			_H3API_ BOOL operator!=(const iterator& it);
 		};
-		/**
-		 * @brief copies another object mask state
-		 * @param other a second object mask
-		 */
 		_H3API_ VOID operator=(const H3ObjectMask& other);
-		/**
-		 * @brief copies 64 bits of data to current state
-		 * note that only 48 bits are used, the remaining 16 have no impact whatsoever
-		 * @param value the new state of the mask to use
-		 */
 		_H3API_ VOID operator=(UINT64 value);
-		/**
-		 * @brief get access to the internal bitfield
-		 * Used for Lod-type H3Msk assignment
-		 * @param index 0..1
-		 * @return H3Bitfield the first or second bitfield of the object
-		 */
 		_H3API_ H3Bitfield& operator[](UINT index);
-		/**
-		 * @brief get access to the internal bitfield
-		 * @param index 0..1
-		 * @return H3Bitfield the first or second bitfield of the object
-		 */
 		_H3API_ const H3Bitfield& operator[](UINT index) const;
-		/**
-		 * @brief an incrementable iterator matching H3 access order start
-		 * @return iterator for bottom right corner
-		 */
 		_H3API_ iterator begin();
-		/**
-		 * @brief an incrementable iterator matching H3 access order end
-		 * @return iterator for 6th row (counting from 0)
-		 */
 		_H3API_ iterator end();
-		/**
-		 * @brief an iterator to the specified position
-		 * allows some extra access e.g.
-		 * mask(0) = true;
-		 * @param index 0..47 starting from bottom right
-		 * @return iterator to specified position
-		 */
 		_H3API_ iterator operator()(UINT8 index);
-		/**
-		 * @brief an iterator to the specified coordinates
-		 * allows some extra access e.g.
-		 * mask(0, 0) = true;
-		 * @param column 0..7 counting from right to left
-		 * @param row 0..5 counting from bottom to top
-		 * @return iterator to specified coordinates
-		 */
 		_H3API_ iterator operator()(UINT8 column, UINT8 row);
 	}; /* H3ObjectMask */
 
@@ -3594,95 +2572,50 @@ namespace h3
 		{
 			struct
 			{
-				/** @brief [00]*/
 				unsigned mageGuild1   : 1;
-				/** @brief [01]*/
 				unsigned mageGuild2   : 1;
-				/** @brief [02]*/
 				unsigned mageGuild3   : 1;
-				/** @brief [03]*/
 				unsigned mageGuild4   : 1;
-				/** @brief [04]*/
 				unsigned mageGuild5   : 1;
-				/** @brief [05]*/
 				unsigned tavern       : 1;
-				/** @brief [06]*/
 				unsigned wharf        : 1;
-				/** @brief [07]*/
 				unsigned fort         : 1;
-				/** @brief [08]*/
 				unsigned citadel      : 1;
-				/** @brief [09]*/
 				unsigned castle       : 1;
-				/** @brief [10]*/
 				unsigned villageHall  : 1;
-				/** @brief [11]*/
 				unsigned townHall     : 1;
-				/** @brief [12]*/
 				unsigned cityHall     : 1;
-				/** @brief [13]*/
 				unsigned capitol      : 1;
-				/** @brief [14]*/
 				unsigned market       : 1;
-				/** @brief [15]*/
 				unsigned resourceSilo : 1;
-				/** @brief [16]*/
 				unsigned blacksmith   : 1;
-				/** @brief [17]*/
 				unsigned special17    : 1;
-				/** @brief [18]*/
 				unsigned horde1       : 1;
-				/** @brief [19]*/
 				unsigned horde1u      : 1;
-				/** @brief [20]*/
 				unsigned wharf2       : 1;
-				/** @brief [21]*/
 				unsigned special21    : 1;
-				/** @brief [22]*/
 				unsigned special22    : 1;
-				/** @brief [23]*/
 				unsigned special23    : 1;
-				/** @brief [24]*/
 				unsigned horde2       : 1;
-				/** @brief [25]*/
 				unsigned horde2u      : 1;
-				/** @brief [26]*/
 				unsigned grail        : 1;
-				/** @brief [27]*/
 				unsigned decor27      : 1;
-				/** @brief [28]*/
 				unsigned decor28      : 1;
-				/** @brief [29]*/
 				unsigned decor29      : 1;
-				/** @brief [30]*/
 				unsigned dwelling1    : 1;
-				/** @brief [31]*/
 				unsigned dwelling2    : 1;
-				/** @brief [32]*/
 				unsigned dwelling3    : 1;
-				/** @brief [33]*/
 				unsigned dwelling4    : 1;
-				/** @brief [34]*/
 				unsigned dwelling5    : 1;
-				/** @brief [35]*/
 				unsigned dwelling6    : 1;
-				/** @brief [36]*/
 				unsigned dwelling7    : 1;
-				/** @brief [37]*/
 				unsigned dwelling1u   : 1;
-				/** @brief [38]*/
 				unsigned dwelling2u   : 1;
-				/** @brief [39]*/
 				unsigned dwelling3u   : 1;
-				/** @brief [40]*/
 				unsigned dwelling4u   : 1;
-				/** @brief [41]*/
 				unsigned dwelling5u   : 1;
-				/** @brief [42]*/
 				unsigned dwelling6u   : 1;
-				/** @brief [43]*/
 				unsigned dwelling7u   : 1;
-				/** @brief [44]*/
 				unsigned unused       : 20;
 			};
 			UINT64 value;
@@ -3757,34 +2690,13 @@ namespace h3
 			INT32 string_length, PCHAR buffer, INT32 buffer_length, PCHAR default_char, BOOL* default_used);
 	} /* namespace libc */
 
-	/**
-	 * @brief Waits for the specified time in async-like fashion, having app messages still be parsed
-	 * @param milliseconds Duration of wait time
-	 */
 	_H3API_ VOID WaitFor(DWORD milliseconds);
 
-	/** @brief TimeGetTime()*/
 	_H3API_ DWORD GetTime();
-	/**
-	 * @brief Clamps a value in between two bounds
-	 * @param min_value Lower bound
-	 * @param value Value to clamp
-	 * @param max_value Upper bound
-	 * @return Clamped value [min_value, max_value]
-	*/
 	_H3API_ INT32 Clamp(INT32 min_value, INT32 value, INT32 max_value);
-	/**
-	 * @brief used to get coordinates of map data that is stored as an array
-	 * @tparam T H3MapItems, RMG_MapItems, H3TileVision, etc.
-	 * @param current_point The point from which to determine the coordinates
-	 * @param base_point The first item in the array (&array[0][0][0])
-	 * @param map_size The map size for the map related to the current format
-	 * @return H3Point x-y-z coordinates
-	*/
 	template<typename T>
 	H3Point ReverseCoordinates(const T* current_point, const T* base_point, UINT map_size);
 
-	/** @brief Houses utf8, ansi and unicode conversions*/
 	struct H3Encoding
 	{
 		typedef H3UniquePtr<WCHAR> WCHARPtr;
@@ -3816,23 +2728,16 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief access data about objects on the adventure map*/
 	struct H3GlobalObjectSettings
 	{
 		_H3API_SIZE_(0x10);
 		_H3API_GET_INFO_(0x660428, H3GlobalObjectSettings);
 
-		/** @brief [00]*/
 		BOOL8  cannotEnter;
-		/** @brief [01]*/
 		BOOL8  exitTop;
-		/** @brief [02] used at 0x548362*/
 		BOOL8  canBeRemoved;
-		/** @brief [04]*/
 		LPCSTR objectName;
-		/** @brief [08]*/
 		INT32  objectID;
-		/** @brief [0C] is it a decorative item?*/
 		BOOL32 decor;
 	};
 	_H3API_ASSERT_SIZE_(H3GlobalObjectSettings);
@@ -3851,9 +2756,6 @@ namespace h3
 	_H3API_DECLARE_(WString);
 
 #pragma pack(push, 4)
-	/**
-	 * @brief std::string in h3 format
-	*/
 	struct H3String : H3Allocator
 	{
 		_H3API_SIZE_(0x10);
@@ -4039,39 +2941,11 @@ namespace h3
 		_H3API_ H3String& Printf(LPCSTR format, ...);
 		_H3API_ H3String& PrintfAppend(LPCSTR format, ...);
 
-		/**
-		 * @brief Get Local Time as a string
-		 * @return H3String formatted time
-		 */
 		_H3API_ static H3String GetLocalTime();
-		/**
-		 * @brief Adds commas after every 3 digits of a number
-		 * @param number any integer
-		 * @return formatted number
-		 */
 		_H3API_ static H3String FormatNumber(INT32 number);
-		/**
-		 * @brief Changes a number to use short scale format, e.g. 123k, 123.4k
-		 * @param number any integer
-		 * @param decimals How many decimals to show
-		 * @return formatted short scale number
-		 */
 		_H3API_ static H3String ShortScale(INT32 number, INT32 decimals);
-		/**
-		 * @brief sprintf for any buffer size, uses _snprintf to determine length
-		 * @param format String format
-		 * @param ... arguments
-		 * @return formatted text
-		 */
 		_H3API_ static H3String Format(LPCSTR format, ...);
 		_H3API_ static H3String Format(LPCSTR format, va_list args);
-		/**
-		 * @brief sprintf using H3 assets and a buffer of size 512
-		 * Faster than ::Format but riskier
-		 * @param format String format
-		 * @param ... arguments
-		 * @return formatted text
-		 */
 		_H3API_ static H3String PrintfH3(LPCSTR format, ...);
 
 	#ifdef _H3API_STD_CONVERSIONS_
@@ -4084,11 +2958,6 @@ namespace h3
 		_H3API_ std::string to_std_string() const;
 	#endif /* _H3API_STD_CONVERSIONS_ */
 
-		/*
-		*
-		* Non-member functions
-		*
-		*/
 
 		friend inline H3String operator+(const H3String& lhs, const H3String& rhs);
 #ifdef _H3API_CPLUSPLUS11_
@@ -4121,9 +2990,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3String);
 
-	/**
-	 * @brief std::wstring in h3 format
-	*/
 	struct H3WString : H3Allocator
 	{
 		_H3API_SIZE_(0x10);
@@ -4216,11 +3082,6 @@ namespace h3
 		_H3API_ BOOL operator==(LPCWSTR msg);
 		_H3API_ BOOL operator==(WCHAR ch);
 
-		/*
-		*
-		* Non-member functions
-		*
-		*/
 
 		friend inline H3WString operator+(const H3WString& lhs, const H3WString& rhs);
 #ifdef _H3API_CPLUSPLUS11_
@@ -4604,7 +3465,6 @@ namespace h3
 	struct H3MapitemMonster;
 
 #pragma pack(push, 4)
-	/** @brief The arrangement of 7 creatures on various H3 structures*/
 	struct H3Army
 	{
 		_H3API_SIZE_(0x38);
@@ -4629,9 +3489,7 @@ namespace h3
 			_H3API_ INT32& Count();
 			_H3API_ INT32  Count() const;
 		};
-		/** @brief [00] eCreatures*/
 		INT32 type[7];
-		/** @brief [1C]*/
 		INT32 count[7];
 
 		_H3API_ H3Army();
@@ -4654,26 +3512,7 @@ namespace h3
 		_H3API_ iterator end();
 		_H3API_ H3Army& operator=(const H3Army& other);
 		_H3API_ iterator operator[](UINT index);
-		/**
-		 * @brief Swaps two stacks positions
-		 * @param from first stack to swap
-		 * @param to second stack to swap
-		 */
 		_H3API_ VOID Swap(UINT from, UINT to);
-		/**
-		 * @brief Returns the army split when facing wandering creatures on the map
-		 * @param p The location of the battle to take place
-		 * @param hero The current selected hero
-		 * @param type0 The main type of creature
-		 * @param amount0 The main amount of creature
-		 * @param type1 Secondary creature type (Pyramid = DIAMOND_GOLEM)
-		 * @param amount1 Secondary creature amount (Pyramid = 20)
-		 * @param stacks1 Secondary creature number of stacks (Pyramid = 2)
-		 * @param type2 Tertiary creature type (never used)
-		 * @param amount2 Tertiary creature amount (never used)
-		 * @param stacks2 Tertiary creature stacks (never used)
-		 * @return H3Army split according to the fight specifics
-		 */
 		_H3API_ static H3Army SplitCreatures(const H3Point& p, H3Hero* hero, INT32 type0, INT32 amount0,
 			INT32 type1 = -1, INT32 amount1 = 0, INT32 stacks1 = 0,
 			INT32 type2 = -1, INT32 amount2 = 0, INT32 stacks2 = 0);
@@ -4692,46 +3531,31 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief if a mapartifact has a custom setup, this is the referenced data*/
 	struct H3MapArtifact
 	{
 		_H3API_SIZE_(0x4C);
-		/** @brief [0] */
 		H3String message;
-		/** @brief [10] */
 		BOOL8 isGuarded;
-		/** @brief [14] */
 		H3Army guardians;
 	};
 	_H3API_ASSERT_SIZE_(H3MapArtifact);
 
-	/** @brief data for artifact on the map*/
 	struct H3MapitemArtifact
 	{
 		enum eType
 		{
-			/** @brief free selection*/
 			FREE,
-			/** @brief buy for 2000 gold*/
 			GOLD2000,
-			/** @brief wisdom sec skill is required*/
 			WISDOM,
-			/** @brief leadership sec skill is required*/
 			LEADERSHIP,
-			/** @brief buy for 2500 gold and 3 wood*/
 			GOLD2500_WOOD3,
-			/** @brief buy for 3000 gold and 5 wood*/
 			GOLD3000_WOOD5,
-			/** @brief fight is triggered*/
 			FIGHT,
 		};
 
-		/** @brief [00] RoE-style artifact pickup requirements, see eType*/
 		unsigned type     : 4;
 		unsigned _u1      : 15;
-		/** @brief [19] index of custom setup, up to 4096*/
 		unsigned id       : 12;
-		/** @brief [31] monster has a custom setup*/
 		unsigned hasSetup : 1;
 
 		_H3API_ H3MapArtifact* Get();
@@ -4975,7 +3799,6 @@ namespace h3
 	struct H3Main;
 
 #pragma pack(push, 4)
-	/** @brief black market is an array of 7 artifacts*/
 	struct H3BlackMarket
 	{
 		INT32 artifacts[7];
@@ -4985,7 +3808,6 @@ namespace h3
 	{
 	};
 
-	/** @brief data for Black Markets on adventure map*/
 	struct H3MapitemBlackMarket
 	{
 		UINT id;
@@ -5009,44 +3831,29 @@ namespace h3
 	struct H3Boat // size 0x28 from 0x4CE5C0
 	{
 		_H3API_SIZE_(0x28);
-		/** @brief [00]*/
 		INT16 x;
-		/** @brief [02]*/
 		INT16 y;
-		/** @brief [04]*/
 		INT16 z;
-		/** @brief [06]*/
 		INT8 visible;
-		/** @brief [07] no clue how to get this offset without align-1, may be substructure*/
 		H3MapItem* item;
 	protected:
 		h3unk8 _f_0B;
 	public:
-		/** @brief [0C]*/
 		INT32 objectType;
-		/** @brief [10]*/
 		INT8 objectFlag;
 	protected:
 		h3unk8 _f_11[3];
 	public:
-		/** @brief [14]*/
 		INT32 objectSetup;
-		/** @brief [18]*/
 		INT8 exists;
-		/** @brief [19]*/
 		INT8 index;
-		/** @brief [1A]*/
 		INT8 par1;
-		/** @brief [1B]*/
 		INT8 par2;
-		/** @brief [1C]*/
 		INT8 owner;
 	protected:
 		h3unk8 _f_1D[3];
 	public:
-		/** @brief [20]*/
 		INT32 heroId;
-		/** @brief [24]*/
 		BOOL8 hasHero;
 	protected:
 		h3unk8 _f_25[3];
@@ -5074,11 +3881,9 @@ namespace h3
     {
         enum eResource : INT32
         {
-            /* campaign */
             WOOD_AND_ORE = -3,
             ALL_SPECIAL  = -2,
 
-            /* regular */
 
             WOOD    = 0,
             MERCURY = 1,
@@ -5098,12 +3903,9 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for campfire on adventure map*/
 	struct H3MapitemCampfire
 	{
-		/** @brief [00] 0..5 resource type*/
 		unsigned  resType : 4;
-		/** @brief [04] 4..6 number of resources. Multiply by 100 for gold value*/
 		unsigned  resValue : 28;
 
 		_H3API_ eResource GetType();
@@ -5121,18 +3923,12 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for corpse on adventure map*/
 	struct H3MapitemCorpse
 	{
-		/** @brief [00] 0..31 corpse index*/
 		unsigned  id          : 5;
-		/** @brief [05]*/
 		unsigned _u1          : 1;
-		/** @brief [06] 0..1023 artifact ID*/
 		unsigned  artifactID  : 10;
-		/** @brief [16] whether the Corpse contains an artifact*/
 		unsigned  hasArtifact : 1;
-		/** @brief [17]*/
 		unsigned _u2          : 15;
 
 		_H3API_ eArtifact GetArtifact();
@@ -5206,10 +4002,6 @@ namespace h3
 	_H3API_DECLARE_(IndexVector);
 
 #pragma pack(push, 4)
-	/**
-	 * @brief a vector following the H3 format
-	 * @tparam _Elem type of element to store
-	*/
 	template<typename _Elem>
 	struct H3Vector : H3Allocator
 	{
@@ -5310,7 +4102,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3Vector<h3unk>);
 
-	/** @brief to choose a random index within a range, without repeating results*/
 	struct H3IndexVector
 	{
 		_H3API_SIZE_(0x18);
@@ -5331,20 +4122,12 @@ namespace h3
 
 #pragma pack(pop) /* align-4 */
 
-/******************************************************************************************
-*
-*						Using std::vector in place of H3Vector
-*
-******************************************************************************************/
 
 #ifdef _H3API_STD_VECTOR_
 #if defined(_MSC_VER) && (_MSC_VER >= 1800) // in VS2008, std::vector has size 20~24 which is not compatible.
 
 #ifndef _DEBUG
 #pragma pack(push, 4)
-	/**
-	 * @brief Required padding for H3StdVector<> to match H3Vector<> format
-	*/
 	class H3AllocatorReference
 	{
 		h3unk m_allocatorReference;
@@ -5353,19 +4136,9 @@ namespace h3
 #endif
 
 #ifdef _DEBUG // debug std::vector can be used directly as H3Vector
-	/**
-	 * @brief std::vector that is valid to be used as a H3Vector in debug format
-	 *
-	 * @tparam T type of element to store
-	*/
 	template<typename T>
 	struct H3StdVector : public std::vector<T, H3ObjectAllocator<T>>
 #else // non-debug std::vector requires padding to use as H3Vector
-	/**
-	 * @brief std::vector that is valid to be used as a H3Vector in non-debug format
-	 *
-	 * @tparam T type of element to store
-	*/
 	template<typename T>
 	struct H3StdVector : H3AllocatorReference, public std::vector<T, H3ObjectAllocator<T>>
 
@@ -6315,15 +5088,10 @@ namespace h3
 	struct H3CreatureBank
 	{
 		_H3API_SIZE_(0x6C);
-		/** @brief [0] */
 		H3Army guardians;
-		/** @brief [38] */
 		H3Resources resources;
-		/** @brief [54] */
 		INT32 creatureRewardType;
-		/** @brief [58] */
 		INT8 creatureRewardCount;
-		/** @brief [5C] */
 		H3Vector<INT32> artifacts;
 
 		_H3API_ BOOL HasUpgradedStack();
@@ -6335,19 +5103,12 @@ namespace h3
 	struct H3CreatureBankState
 	{
 		_H3API_SIZE_(0x60);
-		/** @brief [0] */
 		H3Army guardians;
-		/** @brief [38] */
 		H3Resources resources;
-		/** @brief [54] */
 		INT32 creatureRewardType;
-		/** @brief [58] */
 		INT8 creatureRewardCount;
-		/** @brief [59] */
 		INT8 chance;
-		/** @brief [5A] */
 		INT8 upgrade;
-		/** @brief [5B] */
 		INT8 artifactTypeCounts[4];
 	};
 	_H3API_ASSERT_SIZE_(H3CreatureBankState);
@@ -6360,18 +5121,12 @@ namespace h3
 		H3CreatureBankState states[4];
 	};
 
-	/** @brief data for creature banks on adventure map*/
 	struct H3MapitemCreatureBank
 	{
-		/** @brief [00]*/
 		unsigned _u1      : 5;
-		/** @brief [05] which players have come by*/
 		unsigned  visited : 8;
-		/** @brief [13] 0..4095 Creature Bank setup index*/
 		unsigned  id      : 12;
-		/** @brief [25] whether the bank was cleared*/
 		unsigned  taken   : 1;
-		/** @brief [26]*/
 		unsigned _u2      : 6;
 
 		_H3API_ H3CreatureBank* Get();
@@ -6495,38 +5250,23 @@ namespace h3
 	struct H3PandorasBox
 	{
 		_H3API_SIZE_(0xE4);
-		/** @brief [0] */
 		H3String message;
-		/** @brief [10] */
 		BOOL8 customizedGuards;
-		/** @brief [14] */
 		H3Army guardians;
-		/** @brief [4C] */
 		BOOL8 hasMessageOrGuardians;
-		/** @brief [50] */
 		INT32 experience;
-		/** @brief [54] */
 		INT32 spellPoints;
-		/** @brief [58] */
 		INT8 morale;
-		/** @brief [59] */
 		INT8 luck;
-		/** @brief [5C] */
 		H3Resources resources;
-		/** @brief [78] */
 		H3PrimarySkills pSkill;
-		/** @brief [7C] */
 		H3Vector<H3SecondarySkill> sSkills;
-		/** @brief [8C] */
 		H3Vector<INT32> artifacts;
-		/** @brief [9C] */
 		H3Vector<INT32> spells;
-		/** @brief [AC] */
 		H3Army creatureReward;
 	};
 	_H3API_ASSERT_SIZE_(H3PandorasBox);
 
-	/** @brief data for pandora's boxes on adventure map*/
 	struct H3MapitemPandorasBox
 	{
 		unsigned id : 10;
@@ -6551,18 +5291,12 @@ namespace h3
 	{
 	};
 
-	/** @brief data for event and Pandora's Box on adventure map*/
 	struct H3MapitemEvent
 	{
-		/** @brief [00] 0..1023 custom setups*/
 		unsigned  id        : 10;
-		/** @brief [10] which players can activate it?*/
 		unsigned  enabled   : 8;
-		/** @brief [18] can AI activate it?*/
 		unsigned  aiEnabled : 1;
-		/** @brief [19] cancel after 1 visit*/
 		unsigned  oneVisit  : 1;
-		/** @brief [20] ?unused? ==> could be used to expand number of uniques*/
 		unsigned _u1        : 12;
 
 		_H3API_ H3Event*          Get();
@@ -6581,7 +5315,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for Flotsam on adventure map*/
 	struct H3MapitemFlotsam
 	{
 		enum eType : INT32
@@ -6607,16 +5340,11 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for Fountain of Fortune on adventure map*/
 	struct H3MapitemFountainFortune
 	{
-		/** @brief [00]*/
 		unsigned _u1       : 5;
-		/** @brief [05] which players have come by*/
 		unsigned visited   : 8;
-		/** @brief [13] -1..3 luck bonus */
 		  signed bonusLuck : 4;
-		  /** @brief [17]*/
 		unsigned _u2       : 15;
 
 		_H3API_ H3PlayersBitfield GetVisiters();
@@ -6635,21 +5363,14 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief garrison data on adventure map*/
 	struct H3Garrison
 	{
 		_H3API_SIZE_(0x40);
-		/** @brief [0] */
 		INT8 owner;
-		/** @brief [4] */
 		H3Army army;
-		/** @brief [3C] */
 		BOOL8 canRemoveCreatures;
-		/** @brief [3D] */
 		UINT8 x;
-		/** @brief [3E] */
 		UINT8 y;
-		/** @brief [3F] */
 		UINT8 z;
 	};
 	_H3API_ASSERT_SIZE_(H3Garrison);
@@ -6675,37 +5396,25 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data of creature dwelling on adventure map*/
 	struct H3Generator
 	{
 		_H3API_SIZE_(0x5C);
-		/** @brief [0] */
 		INT8 type;
-		/** @brief [1] used to retrieve name*/
 		INT8 subtype;
-		/** @brief [4] */
 		INT32 creatureTypes[4];
-		/** @brief [14] */
 		INT16 creatureCounts[4];
-		/** @brief [1C] */
 		H3Army defenders;
-		/** @brief [54] */
 		UINT8 x;
-		/** @brief [55] */
 		UINT8 y;
-		/** @brief [56] */
 		UINT8 z;
-		/** @brief [57] */
 		INT8 ownerID;
 	protected:
 		h3unk8 _f58;
 	};
 	_H3API_ASSERT_SIZE_(H3Generator);
 
-	/** @brief creature generators type 1 and 4 (2&3 don't exist)*/
 	struct H3MapitemGenerator
 	{
-		/** @brief [00] setup index*/
 		INT32 id;
 
 		_H3API_ H3Generator* Get();
@@ -6724,10 +5433,8 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for hero on adventure map*/
 	struct H3MapitemHero
 	{
-		/** @brief [00] hero's identity*/
 		INT32 index;
 
 		_H3API_ H3Hero* Get();
@@ -6765,18 +5472,12 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for lean to on adventure map*/
 	struct H3MapitemLeanTo
 	{
-		/** @brief [00] 0..31 individual IDs*/
 		unsigned  id : 5;
-		/** @brief [05]*/
 		unsigned _u1 : 1;
-		/** @brief [06] 1..5 resource amount, 0 if taken*/
 		unsigned  resValue : 4;
-		/** @brief [10] 0..6 resource type, no gold*/
 		unsigned  resType : 4;
-		/** @brief [14]*/
 		unsigned _u2 : 18;
 
 		_H3API_ eResource GetType();
@@ -6793,10 +5494,8 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for learning stone on adventure map*/
 	struct H3MapitemLearningStone
 	{
-		/** @brief [00] heroes can only visit 32 learning stones*/
 		INT32 id;
 	};
 
@@ -6815,29 +5514,20 @@ namespace h3
 	struct H3Mine
 	{
 		_H3API_SIZE_(0x40);
-		/** @brief [0] -1 no owner*/
 		INT8 owner;
-		/** @brief [1] mine type. 0..6 resource, 7 abandonned*/
 		INT8 type;
-		/** @brief [02] whether the mine is of abandoned type*/
 		BOOL8 abandoned;
-		/** @brief [4] garrisoned army*/
 		H3Army army;
-		/** @brief [3C] */
 		UINT8 x;
-		/** @brief [3D] */
 		UINT8 y;
-		/** @brief [3E] */
 		UINT8 z;
 
 		_H3API_ BOOL IsAbandonned() const;
 	};
 	_H3API_ASSERT_SIZE_(H3Mine);
 
-	/** @brief data for mine/lighthouse on adventure map*/
 	struct H3MapitemMine
 	{
-		/** @brief [00] index of custom setup*/
 		INT32 index;
 
 		_H3API_ H3Mine* Get();
@@ -6969,7 +5659,6 @@ namespace h3
                 EARTH_ELEMENTAL       = 67,
                 WATER_ELEMENTAL       = 68,
                 AIR_ELEMENTAL         = 69,
-                /* These abilities are not available to heroes */
                 STONE                 = 70,
                 POISON                = 71,
                 BIND                  = 72,
@@ -6996,14 +5685,10 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for magic shrine on adventure map*/
 	struct H3MapitemMagicShrine
 	{
-		/** @brief [00]*/
 		unsigned _u1    : 13;
-		/** @brief [13] 0..1023 spell ID*/
 		unsigned  spell : 10;
-		/** @brief [23]*/
 		unsigned _u2    : 9;
 
 		_H3API_ eSpell GetSpell();
@@ -7019,16 +5704,11 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for magic spring on adventure map*/
 	struct H3MapitemMagicSpring
 	{
-		/** @brief [00] 0..31 Magic Spring index*/
 		unsigned  id : 5;
-		/** @brief [05]*/
 		unsigned _u1 : 1;
-		/** @brief [06] did a hero already visit this week*/
 		unsigned  used : 1;
-		/** @brief [07]*/
 		unsigned _u2 : 25;
 	};
 
@@ -7042,10 +5722,8 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for monoliths on adventure map*/
 	struct H3MapitemMonolith
 	{
-		/** @brief [00] only really used for 2-way monoliths, such that entrance != exit*/
 		INT32 index;
 
 		_H3API_ INT32 GetSubtype();
@@ -7063,35 +5741,23 @@ namespace h3
 	struct H3Hero;
 
 #pragma pack(push, 4)
-	/** @brief if a wandering monster has a custom setup, this is the referenced data*/
 	struct H3Monster
 	{
 		_H3API_SIZE_(0x30);
-		/** @brief [0] */
 		H3String message;
-		/** @brief [10] */
 		H3Resources resources;
-		/** @brief [2C] */
 		INT32 artifact;
 	};
 	_H3API_ASSERT_SIZE_(H3Monster);
 
-	/** @brief data for wandering monsters on adventure map*/
 	struct H3MapitemMonster
 	{
-		/** @brief [00] max 4095 creatures*/
 		unsigned  count : 12;
-		/** @brief [12] for diplomacy*/
 		signed  aggression : 5;
-		/** @brief [17] monsters cannot run option*/
 		unsigned  noRun : 1;
-		/** @brief [18] monsters cannot grow option*/
 		unsigned  noGrowth : 1;
-		/** @brief [19] up to 256 individual messages/prizes*/
 		unsigned  setupIndex : 8;
-		/** @brief [27] remainder of the division by 10 for growth*/
 		unsigned  growthRemainder : 4;
-		/** @brief [31] monster has a custom setup*/
 		unsigned  hasSetup : 1;
 
 		_H3API_ H3Monster* Get() const;
@@ -7099,23 +5765,13 @@ namespace h3
 		_H3API_ INT32 CreatureType() const;
 		_H3API_ INT32 DiploJoinCost(H3Hero* hero) const;
 	};
-	/** @brief data for wandering monsters on adventure map, as of SoD_SP 1.18*/
 	struct SODSP_MapMonster
 	{
-		/** @brief [00] max 4095 creatures*/
 		unsigned  count : 12;
-		/** @brief [12] for diplomacy*/
 		signed  aggression : 5;
-		/** @brief [17] monsters cannot run option*/
 		unsigned  noRun : 1;
-		/** @brief [18] monsters cannot grow option*/
 		unsigned  noGrowth : 1;
-		/**
-		 * @brief [19] up to 4096 individual messages/prizes
-		 * Extra growth is handled using the same game logic, just not stored
-		 */
 		unsigned  setupIndex : 12;
-		/** @brief [31] monster has a custom setup*/
 		unsigned  hasSetup : 1;
 
 		_H3API_ H3Monster* Get();
@@ -7133,18 +5789,12 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for mystic garden on adventure map*/
 	struct H3MapitemMysticGarden
 	{
-		/** @brief [00] 0..31 unique ID*/
 		unsigned  id      : 5;
-		/** @brief [05]*/
 		unsigned _u1      : 1;
-		/** @brief [06] 5..6 gems or gold*/
 		unsigned  resType : 4;
-		/** @brief [10] whether the garden contains anything this week*/
 		unsigned  hasRes  : 1;
-		/** @brief [11]*/
 		unsigned _u2      : 21;
 
 		_H3API_ INT32     GetAmount();
@@ -7161,7 +5811,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for obelisks on adventure map*/
 	struct H3MapitemObelisk
 	{
 		UINT32 id;
@@ -7179,7 +5828,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief custom text for signpost*/
 	struct H3Signpost
 	{
 		_H3API_SIZE_(0x14);
@@ -7188,7 +5836,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3Signpost);
 
-	/** @brief data for sign posts and ocean bottles on adventure map*/
 	struct H3MapitemSign
 	{
 		INT32 id;
@@ -7239,18 +5886,12 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for pyramid on adventure map*/
 	struct H3MapitemPyramid
 	{
-		/** @brief [00] whether the Pyramid is still up for grabs*/
 		unsigned  available : 1;
-		/** @brief [01] 0..15*/
 		unsigned  id        : 4;
-		/** @brief [05] which players have come by*/
 		unsigned  visited   : 8;
-		/** @brief [13] 0..69 spell id, reserved for level 5 spells*/
 		unsigned  spell     : 8;
-		/** @brief [21]*/
 		unsigned _u1        : 11;
 
 		_H3API_ H3PlayersBitfield GetVisiters();
@@ -7316,7 +5957,6 @@ namespace h3
 	struct H3Resources;
 
 #pragma pack(push, 4)
-	/** @brief quest in memory, used for seer's hut and quest guards*/
 	struct H3Quest
 	{
 		_H3API_SIZE_(0x60);
@@ -7353,21 +5993,13 @@ namespace h3
 			h3func vt14;
 		}*vTable;
 
-		/** @brief [0] */
 
-		/** @brief [4] 0 = quest guard, 1 = seer hut*/
 		BOOL hasReward;
-		/** @brief [8] */
 		H3String messageProposal;
-		/** @brief [18] */
 		H3String messageProgress;
-		/** @brief [28] */
 		H3String messageCompletion;
-		/** @brief [38] */
 		INT32 stringId;
-		/** @brief [3C] */
 		INT32 lastDay;
-		/** @brief [40] size 20h, varies depending on quest type*/
 		union QuestData
 		{
 			INT32 achieveLevel;						// achieve level
@@ -7405,7 +6037,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3Quest);
 
-	/** @brief data for quest guards on adventure map*/
 	struct H3MapitemQuestGuard
 	{
 		UINT id;
@@ -7417,7 +6048,6 @@ namespace h3
 #pragma pack(pop) /* align-4 */
 
 #pragma pack(push, 1)
-	/** @brief quest guard is a quest plus a byte to show who visited*/
 	struct H3QuestGuard
 	{
 		_H3API_SIZE_(0x5);
@@ -7437,7 +6067,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for refugee camps on adventure map*/
 	struct H3MapitemRefugeeCamp
 	{
 		INT32 amount;
@@ -7457,19 +6086,14 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief if a mapresource has a custom setup, this is the referenced data*/
 	struct H3MapResource : H3MapArtifact
 	{
 	};
 
-	/** @brief data for resource on adventure map*/
 	struct H3MapitemResource
 	{
-		/** @brief [00] up to 524,287*/
 		unsigned value      : 19;
-		/** @brief [19] index of custom setup for guardians and message*/
 		unsigned setupIndex : 12;
-		/** @brief [31] resource has a custom setup*/
 		unsigned hasSetup   : 1;
 
 		_H3API_ H3MapResource* Get();
@@ -7487,7 +6111,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for scholar on adventure map*/
 	struct H3MapitemScholar
 	{
 		enum eType
@@ -7497,13 +6120,9 @@ namespace h3
 			SPELL,
 		};
 
-		/** @brief [00] 0 Primary, 1 Secondary, 2 Spell*/
 		unsigned  type   : 3;
-		/** @brief [03] 0..3 primary skill id*/
 		unsigned  pSkill : 3;
-		/** @brief [06] 0..27 secondary skill id*/
 		unsigned  sSkill : 7;
-		/** @brief [13] 0..69 spell id*/
 		unsigned  spell  : 10;
 		unsigned _u1     : 9;
 
@@ -7523,20 +6142,15 @@ namespace h3
 	struct H3Main;
 
 #pragma pack(push, 4)
-	/** @brief custom setup if any for map artifact*/
 	struct H3MapScroll : H3MapArtifact
 	{
 	};
 
-	/** @brief data for spell scroll on the map*/
 	struct H3MapitemScroll
 	{
-		/** @brief [00] spell id*/
 		unsigned  type     : 8;
 		unsigned _u1       : 11;
-		/** @brief [19] index of custom setup, up to 4096*/
 		unsigned  id       : 12;
-		/** @brief [31] scroll has a custom setup*/
 		unsigned  hasSetup : 1;
 
 		_H3API_ H3MapArtifact* Get();
@@ -7553,7 +6167,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for sea chest on adventure map*/
 	struct H3MapitemSeaChest
 	{
 		enum eType
@@ -7563,13 +6176,9 @@ namespace h3
 			GOLD1000_ARTIFACT,
 		};
 
-		/** @brief [00] 0 empty, 1 1500 gold, 2 1000 gold & artifact*/
 		unsigned level      : 2;
-		/** @brief [02]*/
 		unsigned _u1        : 1;
-		/** @brief [03] 0..1023 artifact IDs*/
 		unsigned artifactID : 10;
-		/** @brief [13]*/
 		unsigned _u2        : 19;
 
 		_H3API_ eType     GetType();
@@ -7585,20 +6194,14 @@ namespace h3
 	_H3API_DECLARE_(MapitemSeerHut);
 
 #pragma pack(push, 1)
-	/** @brief seer hut is a quest guard plus some information about reward*/
 	struct H3SeerHut : H3QuestGuard
 	{
 		_H3API_SIZE_(0x13);
 
-		/** @brief [5] */
 		INT32 rewardType;
-		/** @brief [9] */
 		INT32 rewardValue;
-		/** @brief [D] */
 		INT32 rewardValue2;
-		/** @brief [11] */
 		BYTE seerNameId;
-		/** @brief [12] */
 		h3unk8 _f_12;
 
 		_H3API_ WORD  CreatureCount() const;
@@ -7612,7 +6215,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for seer huts on adventure map*/
 	struct H3MapitemSeerHut
 	{
 		UINT id;
@@ -7631,7 +6233,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for shipwreck survivors on adventure map*/
 	struct H3MapitemShipwreckSurvivor
 	{
 		INT32 artifactId;
@@ -7663,7 +6264,6 @@ namespace h3
 
         namespace NPlayerBit
         {
-            /** @brief Player data is often set in bitfield mode to save space, e.g. visiting players*/
             enum ePlayerBit : UINT8
             {
                 BIT_RED    = 0x01,
@@ -7688,16 +6288,11 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for shipyard on adventure map*/
 	struct H3MapitemShipyard
 	{
-		/** @brief [00] current owner 0..8 */
 		unsigned  owner : 8;
-		/** @brief [08]*/
 		unsigned  x : 8;
-		/** @brief [16]*/
 		unsigned  y : 8;
-		/** @brief [24]*/
 		unsigned _u3 : 8;
 
 		_H3API_ ePlayer GetOwner();
@@ -7715,7 +6310,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for towns on adventure map*/
 	struct H3MapitemTown
 	{
 		INT32 id;
@@ -7734,16 +6328,11 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for treasure chest on adventure map*/
 	struct H3MapitemTreasureChest
 	{
-		/** @brief [00] 0..1023 artifact IDs*/
 		unsigned artifactID : 10;
-		/** @brief [10] whether this chest contains an artifact*/
 		unsigned hasArtifact : 1;
-		/** @brief [11] 2..4 multiply by 500 to get gold amount, -500 to get experience*/
 		unsigned bonus : 4;
-		/** @brief [15]*/
 		unsigned _u1 : 17;
 
 		eArtifact GetArtifact();
@@ -7761,7 +6350,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for tree of knowledge on adventure map*/
 	struct H3MapitemTreeOfKnowledge
 	{
 		enum eType
@@ -7771,13 +6359,9 @@ namespace h3
 			GEMS10,
 		};
 
-		/** @brief [00] 0..31 individual IDs*/
 		unsigned  id      : 5;
-		/** @brief [05] which players have come by*/
 		unsigned  visited : 8;
-		/** @brief [13] cost: 0 free, 1 2000 gold, 2 10 gems*/
 		unsigned  type    : 2;
-		/** @brief [15]*/
 		unsigned _u1      : 17;
 
 		_H3API_ H3PlayersBitfield GetVisiters();
@@ -7797,7 +6381,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief university is an array of 4 sskills*/
 	struct H3University
 	{
 		_H3API_SIZE_(0x10);
@@ -7809,16 +6392,11 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3University);
 
-	/** @brief data for university on adventure map*/
 	struct H3MapitemUniversity
 	{
-		/** @brief [00]*/
 		unsigned _u1      : 5;
-		/** @brief [05] which players have come by*/
 		unsigned  visited : 8;
-		/** @brief [13] 0..4095*/
 		unsigned  id      : 12;
-		/** @brief [25]*/
 		unsigned _u2      : 7;
 
 		_H3API_ H3University*     Get();
@@ -7837,22 +6415,14 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for wagon on adventure map*/
 	struct H3MapitemWagon
 	{
-		/** @brief [00] 2..5 amount of resources*/
 		unsigned  resValue    : 5;
-		/** @brief [05] which players have come by*/
 		unsigned  visited     : 8;
-		/** @brief [13] whether the wagon contains anything at all*/
 		unsigned  hasBonus    : 1;
-		/** @brief [14] does wagon contain an artifact*/
 		unsigned  hasArtifact : 1;
-		/** @brief [15] 0..1023 artifact ID*/
 		unsigned  artifactID  : 10;
-		/** @brief [25] 0..6 resource type, never gold*/
 		unsigned  resType     : 4;
-		/** @brief [29]*/
 		unsigned _u3          : 3;
 
 		_H3API_ H3PlayersBitfield GetVisiters();
@@ -7872,18 +6442,12 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for warrior's tomb on adventure map*/
 	struct H3MapitemWarriorsTomb
 	{
-		/** @brief [00] does the tomb contains an artifact*/
 		unsigned  hasArt : 1;
-		/** @brief [01] */
 		unsigned _u1 : 4;
-		/** @brief [05] which players have come by*/
 		unsigned  visited : 8;
-		/** @brief [13] 0..1023 artifact IDs */
 		unsigned  artifactID : 10;
-		/** @brief [23] */
 		unsigned _u2 : 9;
 
 		_H3API_ eArtifact         GetArtifact();
@@ -7901,14 +6465,10 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for water mill on adventure map*/
 	struct H3MapitemWaterMill
 	{
-		/** @brief [00] 0..2 multiply by 500 to get gold amount*/
 		unsigned  bonus   : 5;
-		/** @brief [05] which players have come by*/
 		unsigned  visited : 8;
-		/** @brief [13]*/
 		unsigned _u1      : 19;
 
 		_H3API_ H3PlayersBitfield GetVisiters();
@@ -7926,16 +6486,11 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for windmill on adventure map*/
 	struct H3MapitemWindmill
 	{
-		/** @brief [00] 1..5, no wood or gold*/
 		unsigned  resType  : 4;
-		/** @brief [04]*/
 		unsigned _u1       : 9;
-		/** @brief [13] 3..6 amount of resource, 0 if empty*/
 		unsigned  resValue : 4;
-		/** @brief [17]*/
 		unsigned _u2       : 15;
 
 		_H3API_ eResource GetType();
@@ -7952,16 +6507,11 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for witch's hut on adventure map*/
 	struct H3MapitemWitchHut
 	{
-		/** @brief [00]*/
 		unsigned _u1      : 5;
-		/** @brief [05] which players have come by*/
 		signed    visited : 8;
-		/** @brief [13] 0..27 secondary skill id*/
 		signed    sSkill  : 7;
-		/** @brief [20]*/
 		unsigned _u2      : 12;
 
 		_H3API_ eSecondary        GetSkill();
@@ -7979,39 +6529,21 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/*
-	 * Modeled after H3M_OA_ENTRY in h3m format
-	 * https://github.com/potmdehex/homm3tools/blob/master/h3m/h3mlib/h3m_structures/object_attributes/h3m_oa.h#L20
-	 * https://github.com/potmdehex/homm3tools/blob/master/h3m/h3mlib/h3m_structures/object_attributes/h3m_oa_body.h#L13
-	 * https://github.com/ethernidee/era-editor/blob/master/Patch/Common.pas#L39 from mapeditor format
-	 */
 	struct H3ObjectAttributes
 	{
 		_H3API_SIZE_(0x44);
 
-		/** @brief [0] name of the DEF*/
 		H3String defName;
-		/** @brief [10] width of object, read from LoD @ 0x503ED5*/
 		UINT8 width;
-		/** @brief [11] height of object, read from LoD @ 0x503EE2*/
 		UINT8 height;
-		/** @brief [14] object's presence, color-wise*/
 		H3ObjectMask colors;
-		/** @brief [1C] object's passability*/
 		H3ObjectMask passability;
-		/** @brief [24] object's shadow*/
 		H3ObjectMask shadows;
-		/** @brief [2C] object's yellow entrance tiles*/
 		H3ObjectMask entrances;
-		/** @brief [34] valid terrains for this object*/
 		H3TerrainBitfield maskTerrain;
-		/** @brief [38] type of object, 0..232*/
 		INT32 type;
-		/** @brief [3C] subtype of object, depends on type*/
 		INT32 subtype;
-		/** @brief [40] is the object flat on the adventure map? e.g. cursed ground*/
 		BOOL8 flat;
-		/** @brief [42] referenced a few places, e.g. 0x50663A*/
 		UINT16 defIndex;
 	};
 	_H3API_ASSERT_SIZE_(H3ObjectAttributes);
@@ -8027,18 +6559,11 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data of objects to be drawn at a given map tile*/
 	struct H3ObjectDraw
 	{
 		_H3API_SIZE_(0x4);
-		/** @brief [0] index of H3ObjectAttributes*/
 		UINT16 sprite;
-		/**
-		 * @brief [2] which square of the DEF
-		 * bottom right = 0, then left to right, down to top. Row 1: 0x10 and so on
-		 */
 		UINT8 tileID;
-		/** @brief [3] 0..6 drawing layer, 6 being top and 0 bottom*/
 		UINT8 layer;
 
 		_H3API_ H3ObjectDraw(UINT16 sprite, UINT8 tile_id, UINT8 layer);
@@ -8049,12 +6574,10 @@ namespace h3
 
 #pragma pack(push, 1)
 
-	/** @brief data on a given tile on the adventure map*/
 	struct H3MapItem
 	{
 		_H3API_SIZE_(0x26);
 
-		/** @brief [0] union of all data types*/
 		union
 		{
 			UINT32                     setup;
@@ -8105,22 +6628,15 @@ namespace h3
 			H3MapitemWitchHut          witchHut;
 			SODSP_MapMonster           sodspWanderingCreature;
 		};
-		/** @brief [4] */
 		INT8 land;
-		/** @brief [5] */
 		INT8 landSprite;
-		/** @brief [6] */
 		INT8 river;
-		/** @brief [7] the id of river DEF sprite*/
 		INT8 riverSprite;
-		/** @brief [8] none, dirt, gravel, ...*/
 		INT8 road;
-		/** @brief [the id of road DEF sprite] */
 		INT8 roadSprite;
 	protected:
 		h3unk16 _f_0A;
 	public:
-		/** @brief [0C] mirror effect of terrain defs*/
 		union {
 			struct {
 				BOOL8 tileMirrorH  : 1; /** @brief [01]*/
@@ -8134,7 +6650,6 @@ namespace h3
 			};
 			UINT8 mirror;
 		};
-		/** @brief [0D] accessibility of tiles*/
 		union {
 			struct {
 				BOOL8 cannotAccess   : 1; /** @brief [01]*/
@@ -8145,16 +6660,12 @@ namespace h3
 			};
 			UINT8 access;
 		};
-		/** @brief [E] vector of DEFs to draw on this tile*/
 		H3Vector<H3ObjectDraw> objectDrawing;
-		/** @brief [1E] object type on this tile*/
 		INT16 objectType;
 	protected:
 		h3unk16 _f_20;
 	public:
-		/** @brief [22] subtype of object on this tile*/
 		INT16 objectSubtype;
-		/** @brief [24] H3ObjectDetails index of top drawn object (-1 if nothing)*/
 		UINT16 drawnObjectIndex;
 
 		_H3API_ BOOL          CanDig() const;
@@ -8181,17 +6692,11 @@ namespace h3
 	struct H3ObjectDetails
 	{
 		_H3API_SIZE_(0xC);
-		/** @brief [0] */
 		UINT32 setup;
-		/** @brief [4] */
 		UINT8 x;
-		/** @brief [5] */
 		UINT8 y;
-		/** @brief [6] */
 		UINT8 z;
-		/** @brief [8] */
 		UINT16 num;
-		/** @brief [A] */
 		UINT8 frameRandomness;
 	};
 	_H3API_ASSERT_SIZE_(H3ObjectDetails);
@@ -8206,7 +6711,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief information about visibility and wandering monster zone control of map tiles*/
 	struct H3TileVision
 	{
 		_H3API_SIZE_(0x2);
@@ -8236,44 +6740,29 @@ namespace h3
 namespace h3
 {
 	_H3API_DECLARE_(Pathfinder);
-	/* previously called MovementMgr, however not a manager. Renamed Pathfinder */
 	typedef H3Pathfinder H3MovementMgr;
 	struct H3PathNode;
 
 #pragma pack(push, 4)
-	/**
-	 * @brief Used by AI to determine where to go on adv map and in combat
-	 * Also used to set accessible combat/map tiles for humans
-	 */
 	struct H3Pathfinder
 	{
 		_H3API_SIZE_(0x70);
 		_H3API_GET_INFO_(0x6992D4, H3Pathfinder);
 	protected:
-		/** @brief [0] */
 		h3unk8 _f_00[8];
 	public:
-		/** @brief [8] */
 		INT32 availableMovement;
-		/** @brief [C] */
 		INT32 maxLandMovement;
-		/** @brief [10] see 0x56B768*/
 		INT32 maxWaterMovement;
 		h3unk8 _f_14;
-		/** @brief [15] can hero cast Dimension Door?*/
 		BOOL8 ddAccess;
-		/** @brief [16] can hero cast fly?*/
 		BOOL8 flyAccess;
-		/** @brief [17] can cast waterwalk?*/
 		BOOL8 waterwalkAccess;
-		/** @brief [18] level of waterwalk if cast*/
 		INT32 waterwalkLevel;
-		/** @brief [1C] level of fly if cast*/
 		INT32 flyLevel;
 	protected:
 		h3unk8 _f_20[4];
 	public:
-		/** @brief [24] an array of path nodes*/
 		union
 		{
 			H3PathNode* movementInfo;
@@ -8282,25 +6771,19 @@ namespace h3
 	protected:
 		h3unk8 _f_28[8];
 	public:
-		/** @brief [30] map width*/
 		INT32 mapX;
-		/** @brief [34] map height*/
 		INT32 mapY;
 	protected:
 		H3Vector<h3unk8[30]> _f_38;
 	public:
-		/** @brief [48] H3Position of path to take*/
 		H3Vector<H3Position> arrowPath;
 	protected:
-		/** @brief [58] vector of size 4 items */
 		H3Vector<h3unk32> _f_58;
 	public:
-		/** @brief [68] */
 		struct BattleHexes
 		{
 			h3unk32 hexes[187];
 		}*battleHexes;
-		/** @brief [6C] [x][y][z] array*/
 		UINT* aiData;
 
 		_H3API_ H3PathNode*           GetMovementInfo(UINT32 mixed_position);
@@ -8328,10 +6811,8 @@ namespace h3
 	{
 		_H3API_SIZE_(0x1E);
 	protected:
-		/** @brief [00]*/
 		H3Position mixedPosition;
 	public:
-		/** @brief [04]*/
 		union
 		{
 			struct
@@ -8349,10 +6830,8 @@ namespace h3
 	protected:
 		h3unk8 _f_08[16];
 	public:
-		/** @brief [18]*/
 		UINT16 movementCost;
 	protected:
-		/** @brief [1A]*/
 		UINT16 movementCost2;
 		h3unk8 _f_1C[2];
 	public:
@@ -8379,31 +6858,19 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief Represents 1 side of AI vs AI fast battles */
 	struct H3SimulatedCombat
 	{
 		_H3API_SIZE_(0x34);
-		/** @brief [00]*/
 		H3Vector<H3SimulatedCreature> creatures;
-		/** @brief [10]*/
 		INT32 specialTerrain;
-		/** @brief [14]*/
 		INT32 spellPoints;
-		/** @brief [18]*/
 		BOOL8 canCastSpells;
-		/** @brief [1C]*/
 		INT32 armyStrength;
-		/** @brief [20]*/
 		INT8 tactics;
-		/** @brief [24]*/
 		H3Hero* hero;
-		/** @brief [28]*/
 		H3Army* army;
-		/** @brief [2C]*/
 		H3Hero* opponent;
-		/** @brief [30]*/
 		BOOL8 turrets;
-		/** @brief [32]*/
 		INT16 turretsLevel;
 
 		_H3API_ VOID DeleteCreatures();
@@ -8421,7 +6888,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief A single creature stack in fast ai-ai battles*/
 	struct H3SimulatedCreature
 	{
 		_H3API_SIZE_(0x48);
@@ -8460,20 +6926,14 @@ namespace h3
 	struct H3SimulatedHero
 	{
 		_H3API_SIZE_(0x28);
-		/** @brief [0] */
 		INT heroAttack;
-		/** @brief [4] */
 		INT heroDefence;
 	protected:
 		h3unk8 _f_08[4];
 	public:
-		/** @brief [C] */
 		INT damage[4];
-		/** @brief [1C] */
 		INT moveType;
-		/** @brief [20] */
 		INT thisSide;
-		/** @brief [24] */
 		INT enemySide;
 	};
 	_H3API_ASSERT_SIZE_(H3SimulatedHero);
@@ -8493,13 +6953,9 @@ namespace h3
 	{
 		_H3API_SIZE_(0x24);
 		_H3API_CTOR_DTOR_(0x4365D0, -1);
-		/** @brief [0] */
 		INT32 spellId;
-		/** @brief [4] associated secondary skill level to the spell*/
 		INT32 skillLevel;
-		/** @brief [8] */
 		INT32 spellPower;
-		/** @brief [C] */
 		INT32 spellDuration;
 	protected:
 		h3unk8 _f_10;
@@ -8585,14 +7041,11 @@ namespace h3
 
 #pragma pack(push, 4)
 
-    /** @brief Artifacts as stored on heroes and passed as arguments*/
     struct H3Artifact
     {
         _H3API_SIZE_(8);
 
-        /** @brief [00] 0..140 eArtifacts*/
         INT32 id;
-        /** @brief [04] spell id for spell scrolls, otherwise -1*/
         INT32 subtype;
 
         _H3API_ H3Artifact();
@@ -8624,10 +7077,6 @@ namespace h3
 
     struct H3HeldArtifact : H3Artifact
     {
-        /**
-         * @brief The artifact being held in the mouse cursor
-         * @return Reference to this artifact (write-access enabled)
-         */
         _H3API_ static H3Artifact& Get();
     };
 
@@ -8641,29 +7090,19 @@ namespace h3
 
 #pragma pack(push, 4)
 
-    /** @brief information about artifacts*/
     struct H3ArtifactSetup
     {
         _H3API_SIZE_(0x20);
         _H3API_GET_INFO_(0x660B68, H3ArtifactSetup);
 
-        /** @brief [0] */
         LPCSTR name;
-        /** @brief [4] gold cost*/
         INT32 cost;
-        /** @brief [8]*/
         eArtifactSlots position;
-        /** @brief [C]*/
         eArtifactType type;
-        /** @brief [10]*/
         LPCSTR description;
-        /** @brief [14] index of the combo 0..11*/
         eCombinationArtifacts comboID;
-        /** @brief [18] index of the artifact 0..143*/
         eArtifact  combinationArtifactId;
-        /** @brief [1C] artifact is not available*/
         BOOL8 disabled;
-        /** @brief [1D] spell added to spellbook*/
         eSpell  newSpell;
 
         _H3API_ BOOL IsPartOfCombo() const;
@@ -8717,17 +7156,9 @@ namespace h3
 	_H3API_TYPE_DECLARE_(H3Bitset<limits::TOWNS_ON_MAP>, VisitedTownsBitset);
 
 #pragma pack(push, 4)
-	/**
-	 * @brief alternative for std::bitset matching C++98 alignment
-	 * @tparam size the number of bits to be used
-	 */
 	template<UINT size>
 	struct H3Bitset
 	{
-		/**
-		 * @brief total bytes used by the bitset
-		 * @return constexpr UINT occupied memory, including alignment
-		 */
 		static constexpr UINT RawSize();
 	protected:
 		static constexpr UINT m_length = (size - 1) / 32 + 1;
@@ -8741,213 +7172,57 @@ namespace h3
 		UINT   endMask();
 
 	public:
-		/**
-		 * @brief incrementable iterator to inspect bitset's span
-		 * modeled after Bitfield::reference but with known end
-		 */
 		struct iterator
 		{
 		protected:
 			H3Bitset* m_bitset;
 			UINT      m_position;
 		public:
-			/**
-			 * @brief Construct a new iterator from start of bitset
-			 * @param bitset bitset to use for iteration
-			 */
 			iterator(H3Bitset* bitset);
-			/**
-			 * @brief Construct a new iterator from specified position
-			 * @param bitset bitset to use for iteration
-			 * @param position 0..size-1
-			 */
 			iterator(H3Bitset* bitset, UINT position);
-			/**
-			 * @brief pre-increment
-			 * @return itself
-			 */
 			iterator& operator++();
-			/**
-			 * @brief post-increment
-			 * @return copy of itself before increment
-			 */
 			iterator  operator++(int);
-			/**
-			 * @brief required for range-based loop
-			 * @return itself
-			 */
 			iterator& operator*();
-			/**
-			 * @brief Gives access to its methods
-			 * @return iterator* Pointer to itself
-			 */
 			iterator* operator->();
-			/**
-			 * @brief flips current bit
-			 * @return itself
-			 */
 			iterator& operator~();
-			/**
-			 * @brief allows if (iterator) condition
-			 * @return BOOL whether current bit is set
-			 */
 			operator BOOL();
-			/**
-			 * @brief allows if (!iterator) condition
-			 * @return BOOL whether current bit is not set
-			 */
 			BOOL operator!();
-			/**
-			 * @brief iterator equality check
-			 * @param other another iterator
-			 * @return BOOL whether both iterators point to the same bit
-			 */
 			BOOL operator==(const iterator& other);
-			/**
-			 * @brief iterator inequality check
-			 * @param other another iterator
-			 * @return BOOL whether both iterators point to a different bit
-			 */
 			BOOL operator!=(const iterator& other);
-			/**
-			 * @brief Set the state of the current bit
-			 * @param state true or false
-			 */
 			VOID operator=(BOOL state);
-			/** @brief set the current bit as ON/true */
 			VOID Set();
-			/** @brief set the current bit as OFF/false */
 			VOID Reset();
-			/** @brief change the state of the current bit to on from off and vice-versa */
 			VOID Flip();
 		};
-		/** @brief Construct with all bits as off */
 		H3Bitset();
-		/**
-		 * @brief Construct with specified first 32 bits
-		 * @param value the state of the first 32 bits
-		 */
 		H3Bitset(UINT value);
-		/**
-		 * @brief Construct with specified first 64 bits
-		 * @param value the state of the first 64 bits
-		 */
 		H3Bitset(UINT64 value);
-		/**
-		 * @brief Construct from a string
-		 * if the string contains other characters than 0 or 1, they are considered as 1 / true
-		 * @param value a string of 0 (false) and 1s (false)
-		 */
 		H3Bitset(const H3String& value);
 		H3Bitset(const H3Bitset<size>& other);
-		/**
-		 * @brief transform the current state to a readable string
-		 * @return H3String string of 0s and 1s (off / on)
-		 */
 		H3String ToString() const;
-		/**
-		 * @brief transform the current hexadecimal state to a readable string
-		 * @return H3String string of 0..9A..F as it appears in memory
-		 */
 		H3String ToHexString() const;
-		/**
-		 * @brief extract first 32 bits
-		 * @return UINT state of the first 32 bits
-		 */
 		UINT     ToUINT() const;
-		/**
-		 * @brief extract first 64 bits
-		 * @return UINT64 state of the first 64 bits
-		 */
 		UINT64   ToUINT64() const;
-		/** @brief set all bits to true */
 		VOID Set();
-		/** @brief set all bits to false */
 		VOID Reset();
-		/**
-		 * @brief checks if all bits are set
-		 * @return BOOL true if all bits are on, false otherwise
-		 */
 		BOOL All() const;
-		/**
-		 * @brief checks if at least 1 bit is set
-		 * @return BOOL true if at least one bit is on, false otherwise
-		 */
 		BOOL Any() const;
-		/**
-		 * @brief checks if there are no bits set
-		 * @return BOOL true if all bits are off, false otherwie
-		 */
 		BOOL None() const;
-		/** @brief flip all bits state */
 		VOID Flip();
-		/**
-		 * @brief counts how many bits are set
-		 * @return UINT 0..size bits that are on
-		 */
 		UINT Count() const;
-		/**
-		 * @brief inspect state of any bit
-		 * @param position 0..size-1
-		 * @return BOOL the state of specified bit
-		 */
 		BOOL Test(UINT position) const;
-		/**
-		 * @brief number of bits in the bitset
-		 * @return UINT size
-		 */
 		UINT Size() const;
-		/**
-		 * @brief number of DWORD used in memory
-		 * @return UINT raw size of the bitset divided by 4
-		 */
 		UINT Length() const;
-		/**
-		 * @brief Checks if at least 1 bit matches in between the two bitsets.
-		 * @param other The bitset to compare against.
-		 * @return Whether at least 1 bit matched.
-		 */
 		BOOL Intersects(const H3Bitset<size>& other) const;
-		/**
-		 * @brief Checks if all set bits contained in \p other also set in the current bitset
-		 * @param other The bitset to compare against.
-		 * @return Whether the current bitset contains all set bits from \p other.
-		 */
 		BOOL Contains(const H3Bitset<size>& other) const;
 		H3Bitset& operator=(const H3Bitset<size>& other);
 		BOOL operator!=(const H3Bitset<size>& other);
 		BOOL operator==(const H3Bitset<size>& other);
-		/**
-		 * @brief allows if (!bitset) condition, same as if (bitset.None())
-		 * @return BOOL whether all bits are off
-		 */
 		BOOL operator!() const;
-		/**
-		 * @brief allows if (bitset()) condition, same as if (bitset.Any())
-		 * @return BOOL whether any bool is set
-		 */
 		BOOL operator()() const;
-		/**
-		 * @brief checks state of bit at specified index
-		 * @param position 0..size-1
-		 * @return BOOL true if the bit is set, false otherwise
-		 */
 		BOOL operator()(UINT position) const;
-		/**
-		 * @brief iterator at first position of bitset
-		 * @return iterator at position 0
-		 */
 		iterator begin();
-		/**
-		 * @brief iterator beyond last position of bitset
-		 * @return iterator at position size
-		 */
 		iterator end();
-		/**
-		 * @brief access bit state at specified index through iterator
-		 * @param position 0..size-1
-		 * @return iterator for the specified position allowing additional access
-		 */
 		iterator operator[](UINT position);
 	};
 #pragma pack(pop) /* align-4 */
@@ -9347,15 +7622,12 @@ namespace h3
 
 #pragma pack(push, 4)
 
-    /** @brief combo artifacts are stored in memory using a bitset*/
     struct H3ComboArtifactSetup
     {
         _H3API_SIZE_(0x18);
         _H3API_GET_INFO_(0x4DDFF2 + 2, H3ComboArtifactSetup);
 
-        /** @brief [00] matching artifact id of this combo*/
         eArtifact index;
-        /** @brief [04] bitset of required artifacts*/
         H3ArtifactBitset artifacts;
 
         _H3API_ BOOL IsPartOfCombo(eArtifact id) const;
@@ -9392,7 +7664,6 @@ namespace h3
                 PALETTE          = 0x60,
                 PALETTE_HDMOD    = 0x61,
 
-                /* based on NWC names, duplicates removed */
 
                 DATA         = 0x01,
                 SPREADSHEET  = 0x02,
@@ -9489,7 +7760,6 @@ namespace h3
         {
             enum eCampaignType : INT32
             {
-                /* old versions : 3 or less not supported */
                 ROE = 5,
                 AB  = 5,
                 SOD = 6,
@@ -9731,10 +8001,6 @@ namespace h3
         {
             enum eBattleAction : INT32
             {
-                /**
-                 * @brief Cancel Action; the stack can do a different action now
-                 * but it may still be impossible to force it to do most actions through ERM (WOG)
-                */
                 CANCEL         = 0,
                 CAST_SPELL     = 1, // Hero casts a spell
                 WALK           = 2,
@@ -10086,7 +8352,6 @@ namespace h3
                 constexpr INT32 CAMPAIGN = 1001;
                 constexpr INT32 STANDARD = 1002;
                 constexpr INT32 RESET    = 1003;
-                /* others range from 1004 to 1025 */
             } // namespace HighScore
 
             namespace LoadGame
@@ -10484,11 +8749,9 @@ namespace h3
         {
             enum eHeroIdentity : INT32
             {
-                /* campaign */
                 MOST_POWERFUL = -3,
                 RANDOM        = -1,
 
-                /* Knight (Castle) */
                 ORRIN        = 0,
                 VALESKA      = 1,
                 EDRIC        = 2,
@@ -10498,7 +8761,6 @@ namespace h3
                 CHRISTIAN    = 6,
                 TYRIS        = 7,
 
-                /* Cleric (Castle) */
                 RION         = 8,
                 ADELA        = 9,
                 CUTHBERT     = 10,
@@ -10508,7 +8770,6 @@ namespace h3
                 LOYNIS       = 14,
                 CAITLIN      = 15,
 
-                /* Ranger (Rampart) */
                 MEPHALA      = 16,
                 UFRETIN      = 17,
                 JENOVA       = 18,
@@ -10518,7 +8779,6 @@ namespace h3
                 CLANCY       = 22,
                 KYRRE        = 23,
 
-                /* Druid (Rampart) */
                 CORONIUS     = 24,
                 ULAND        = 25,
                 ELLESHAR     = 26,
@@ -10528,7 +8788,6 @@ namespace h3
                 ALAGAR       = 30,
                 AERIS        = 31,
 
-                /* Alchemist (Tower) */
                 PIQUEDRAM    = 32,
                 THANE        = 33,
                 JOSEPHINE    = 34,
@@ -10538,7 +8797,6 @@ namespace h3
                 RISSA        = 38,
                 IONA         = 39,
 
-                /* Wizard (Tower) */
                 ASTRAL       = 40,
                 HALON        = 41,
                 SERENA       = 42,
@@ -10548,7 +8806,6 @@ namespace h3
                 CYRA         = 46,
                 AINE         = 47,
 
-                /* Demoniac (Inferno) */
                 FIONA        = 48,
                 RASHKA       = 49,
                 MARIUS       = 50,
@@ -10558,7 +8815,6 @@ namespace h3
                 PYRE         = 54,
                 NYMUS        = 55,
 
-                /* Heretic (Inferno) */
                 AYDEN        = 56,
                 XYRON        = 57,
                 AXSIS        = 58,
@@ -10568,7 +8824,6 @@ namespace h3
                 ZYDAR        = 62,
                 XARFAX       = 63,
 
-                /* Death Knight (Necropolis) */
                 STRAKER      = 64,
                 VOKIAL       = 65,
                 MOANDOR      = 66,
@@ -10578,7 +8833,6 @@ namespace h3
                 CLAVIUS      = 70,
                 GALTHRAN     = 71,
 
-                /* Necromancer (Necropolis) */
                 SEPTIENNA    = 72,
                 AISLINN      = 73,
                 SANDRO       = 74,
@@ -10588,7 +8842,6 @@ namespace h3
                 VIDOMINA     = 78,
                 NAGASH       = 79,
 
-                /* Overlord (Dungeon) */
                 LORELEI      = 80,
                 ARLACH       = 81,
                 DACE         = 82,
@@ -10598,7 +8851,6 @@ namespace h3
                 SYNCA        = 86,
                 SHAKTI       = 87,
 
-                /* Warlock (Dungeon) */
                 ALAMAR       = 88,
                 JAEGAR       = 89,
                 MALEKITH     = 90,
@@ -10608,7 +8860,6 @@ namespace h3
                 SEPHINROTH   = 94,
                 DARKSTORN    = 95,
 
-                /* Barbarian (Stronghold) */
                 YOG          = 96,
                 GURNISSON    = 97,
                 JABARKAS     = 98,
@@ -10618,7 +8869,6 @@ namespace h3
                 CRAG_HACK    = 102,
                 TYRAXOR      = 103,
 
-                /* Battle Mage (Stronghold) */
                 GIRD         = 104,
                 VEY          = 105,
                 DESSA        = 106,
@@ -10628,7 +8878,6 @@ namespace h3
                 ORIS         = 100,
                 SAURUG       = 111,
 
-                /* Beastmaster (Fortress) */
                 BRON         = 112,
                 DRAKON       = 113,
                 WYSTAN       = 114,
@@ -10638,7 +8887,6 @@ namespace h3
                 GERWULF      = 118,
                 BROGHILD     = 119,
 
-                /* Witch (Fortress) */
                 MIRLANDA     = 120,
                 ROSIC        = 121,
                 VOY          = 122,
@@ -10648,7 +8896,6 @@ namespace h3
                 ANDRA        = 126,
                 TIVA         = 127,
 
-                /* Planeswalker (Conflux) */
                 PASIS        = 128,
                 THUNAR       = 129,
                 IGNISSA      = 130,
@@ -10658,7 +8905,6 @@ namespace h3
                 FIUR         = 134,
                 KALT         = 135,
 
-                /* Elementalist (Conflux) */
                 LUNA         = 136,
                 BRISSA       = 137,
                 CIELE        = 138,
@@ -10668,7 +8914,6 @@ namespace h3
                 GELARE       = 142,
                 GRINDAN      = 143,
 
-                /* Special */
                 SIR_MULLICH  = 144,
                 ADRIENNE     = 145,
                 CATHERINE    = 146,
@@ -10682,7 +8927,6 @@ namespace h3
                 BORAGUS      = 154,
                 XERON        = 155,
 
-                /* 7 hidden campaign heroes for starting info */
                 GENERAL_KENDAL     = 156,
                 CAMPAIGN_CHRISTIAN = 157,
                 CAMPAIGN_GEM       = 158,
@@ -10726,7 +8970,6 @@ namespace h3
 {
     namespace NH3Dispositions
     {
-        /* creature likelihood of joining you */
         enum eDisposition
         {
             COMPLIANT  = 0,
@@ -10740,7 +8983,6 @@ namespace h3
 
     namespace NH3Formats
     {
-        /* h3m format for various types */
         enum eFormats
         {
             ROE = 0x0E,
@@ -10790,17 +9032,6 @@ namespace h3
 				WHEEL_BUTTON   = 0x0309,
 				MOUSE_WHEEL    = 0x020A,
 
-				/* modified WM_ style messages to h3
-					WM_KEY_DOWN       = 1,  // 0x100
-					WM_KEY_UP         = 2,  // 0x101
-					WM_MOUSE_MOVE     = 4,  // 0x200
-					WM_LBUTTON_DOWN   = 8,  // 0x201
-					WM_LBUTTON_UP     = 16, // 0x202
-					WM_LBUTTON_DBLCLK = 8,  // 0x203
-					WM_RBUTTON_DOWN   = 32, // 0x204
-					WM_RBUTTON_UP     = 64, // 0x205
-					WM_RBUTTON_DBLCLK = 32, // 0x206
-				*/
 			};
 		}
 		typedef NMessageCommand::eMessageCommand eMessageCommand;
@@ -10817,8 +9048,6 @@ namespace h3
 				MOUSE_WHEEL_BUTTON_DOWN = 0x207,
 				MOUSE_WHEEL_BUTTON_UP   = 0x208,
 
-				/* message commands sent to window controls using MessageMsgCommand::MC_ITEM_COMMAND */
-				/* payload is set in H3Msg::parameter */
 
 				REPAINT           = 0x02, /* no payload */
 				SET_TEXT          = 0x03, /* LPCSTR text */
@@ -11116,49 +9345,40 @@ namespace h3
                 DWELL6U                  = 42,
                 DWELL7U                  = 43,
 
-                /* CASTLE */
                 LIGHTHOUSE               = 17,
                 STABLES                  = 21,
                 BROTHERHOOD_OF_THE_SWORD = 22,
 
-                /* RAMPART */
                 MYSTIC_POND              = 17,
                 FOUNTAIN_OF_FORTUNE      = 21,
                 DWARVEN_TREASURY         = 22,
 
-                /* TOWER */
                 ARTIFACT_MERCHANT        = 17, // same for Dungeon and Conflux
                 LOOKOUT_TOWER            = 21,
                 LIBRARY                  = 22,
                 WALL_OF_KNOWLEDGE        = 23,
 
-                /* INFERNO */
                 BRIMSTONECLOUDS          = 21,
                 CASTLE_GATE              = 22,
                 ORDER_OF_FIRE            = 23,
 
-                /* NECROPOLIS */
                 VEIL_OF_DARKNESS         = 17,
                 NECROMANCY_AMPLIFIER     = 21,
                 SKELETON_TRANSFORMER     = 22,
 
-                /*  DUNGEON */
                 MANA_VORTEX              = 21,
                 PORTAL_OF_SUMMONING      = 22,
                 BATTLE_ACADEMY           = 23,
 
-                /* STRONGHOLD */
                 ESCAPE_TUNNEL            = 17,
                 FREELANCERS_GUILD        = 21,
                 BALLISTA_YARD            = 22,
                 HALL_OF_VALHALLA         = 23,
 
-                /* FORTRESS */
                 CAGE_OF_WARLORDS         = 17,
                 GLYPHS_OF_FEAR           = 21,
                 BLOOD_OBELISK            = 22,
 
-                /* CONFLUX */
                 MAGIC_UNIVERSITY         = 21
             };
         }
@@ -11245,7 +9465,6 @@ namespace h3
         {
             enum eSpecialBuildings
             {
-                /* Castle */
                 LIGHTHOUSE = 0,
                 GRIFFIN_HORDE,
                 ROYAL_GRIFFIN_HORDE,
@@ -11256,7 +9475,6 @@ namespace h3
                 UNUSED_CASTLE3,
                 UNUSED_CASTLE4,
 
-                /* Rampart */
                 MYSTIC_GARDEN = 0,
                 DWARF_HORDE,
                 BATTLE_DWARF_HORDE,
@@ -11267,7 +9485,6 @@ namespace h3
                 TREEFOLK_HORDE,
                 BRIAR_TREEFOLK_HORDE,
 
-                /* Tower */
                 ARTIFACT_MERCHANTS_TOWER = 0,
                 STONE_GARGOYLE_HORDE,
                 OBSIDIAN_GARGOYLE_HORDE,
@@ -11278,7 +9495,6 @@ namespace h3
                 UNUSED_TOWER2,
                 UNUSED_TOWER3,
 
-                /* Inferno */
                 UNUSED_INFERNO1 = 0,
                 IMP_HORDE,
                 FAMILIAR_HORDE,
@@ -11289,7 +9505,6 @@ namespace h3
                 HELL_HOUND_HORDE,
                 CERBERUS_HORDE,
 
-                /* Necropolis */
                 COVER_OF_DARKNESS = 0,
                 SKELETON_HORDE,
                 SKELETON_WARRIOR_HORDE,
@@ -11300,7 +9515,6 @@ namespace h3
                 UNUSED_NECROPOLIS3,
                 UNUSED_NECROPOLIS4,
 
-                /* Dungeon */
                 ARTIFACT_MERCHANTS_DUNGEON = 0,
                 TROGLODYTE_HORDE,
                 INFERNAL_TROGLODYTE_HORDE,
@@ -11311,7 +9525,6 @@ namespace h3
                 UNUSED_DUNGEON2,
                 UNUSED_DUNGEON3,
 
-                /* Stronghold */
                 ESCAPE_TUNNEL = 0,
                 GOBLIN_HORDE,
                 HOBGOBLIN_HORDE,
@@ -11322,7 +9535,6 @@ namespace h3
                 UNUSED_STRONGHOLD2,
                 UNUSED_STRONGHOLD3,
 
-                /* Fortress */
                 DEFENSE_CAGE = 0,
                 GNOLL_HORDE,
                 GNOLL_MARAUDER_HORDE,
@@ -11333,7 +9545,6 @@ namespace h3
                 UNUSED_FORTRESS3,
                 UNUSED_FORTRESS4,
 
-                /* Conflux */
                 ARTIFACT_MERCHANTS = 0,
                 PIXIE_HORDE,
                 SPRITE_HORDE,
@@ -11500,13 +9711,6 @@ namespace h3
 #endif /*_H3API_TEMPLATE_DECLARE_*/
 
 #pragma pack(push, 4)
-    /**
-     * @brief A representation of std::set as found within h3
-     * The container is not complete (and never will due to complexity)
-     * It only exists to give access and to derive required structures from
-     * @tparam T Stored elements with comparison int operator<(const&)
-     * @tparam NilNode The address of the static nil node
-     */
     template<typename T, UINT NilNode = 0>
     struct H3Set
     {
@@ -11540,9 +9744,6 @@ namespace h3
     #endif
     public:
 
-        /**
-         * @brief An iterator to go over H3Set
-         */
         struct iterator
         {
         protected:
@@ -11563,21 +9764,8 @@ namespace h3
         iterator end();
         iterator end() const;
 
-        /**
-         * @brief Obtains the static nil node from its templated address
-         * @return NodePtr nil node
-        */
         NodePtr  Nil() const;
-        /**
-         * @brief The number of nodes currently residing in the set
-         * @return 0...n nodes
-        */
         UINT Count() const;
-        /**
-         * @brief Finds matching data to the specified key within the set
-         * @param key A key to the data to find
-         * @return An iterator to the matching object if found, otherwise to end() iterator
-        */
         iterator Find(const T& key) const;
 
     };
@@ -11740,13 +9928,10 @@ namespace h3
 	struct H3RGB565;
 	_H3API_DECLARE_(HSV);
 
-	/** @brief Represents a 15bit r5g5b5 pixel*/
 	typedef UINT16 RGB555;
-	/** @brief Represents a 16bit r5g6b5 pixel*/
 	typedef UINT16 RGB565;
 
 #pragma pack(push, 1)
-	/** @brief 24bit rgb pixel stored as 3 contiguous bytes. Now only exists in H3LoadedPcx24*/
 	struct H3RGB888
 	{
 		_H3API_SIZE_(3);
@@ -11755,45 +9940,13 @@ namespace h3
 		UINT8 g;
 		UINT8 b;
 
-		/** @brief approximate darkening by 20%, but faster than hsv*/
 		_H3API_ VOID Darken20();
-		/** @brief approximate darkening by 50%, but faster than hsv*/
 		_H3API_ VOID Darken50();
-		/** @brief applies grayscale effect by narrowing the gap between the rgb components*/
 		_H3API_ VOID GrayScale();
-		/**
-		 * @brief darkens pixel's color through HSV by specified amount*
-		 * @param amount 0..255
-		 */
 		_H3API_ VOID Darken(const UINT8 amount);
-		/**
-		 * @brief lightens pixel's color through HSV by amount
-		 * @param amount 0..255
-		 */
 		_H3API_ VOID Lighten(const UINT8 amount);
-		/**
-		 * @brief applies rgb mask of specified weight, assuming source pixel has full alpha visibility
-		 * @param red 0..255
-		 * @param green 0..255
-		 * @param blue 0..255
-		 * @param alpha weight component  0..255
-		 */
 		_H3API_ VOID AlphaDraw(UINT8 red, UINT8 green, UINT8 blue, UINT8 alpha);
-		/**
-		 * @brief Get equivalent hue as normalized float
-		 * @param red 0..255
-		 * @param green 0..255
-		 * @param blue 0..255
-		 * @return FLOAT 0.0f..1.0f
-		 */
 		_H3API_ static FLOAT GetHueAsNormalizedFloat(UINT8 red, UINT8 green, UINT8 blue);
-		/**
-		 * @brief Pack rgb components into a single dword with full alpha visibility
-		 * @param red 0..255
-		 * @param green 0..255
-		 * @param blue 0..255
-		 * @return DWORD packed rgb
-		 */
 		_H3API_ static DWORD Pack(UINT8 red, UINT8 green, UINT8 blue);
 		_H3API_ H3RGB888();
 		_H3API_ H3RGB888(DWORD color);
@@ -11970,7 +10123,6 @@ namespace h3
 #pragma pack(pop) /* align-1 */
 
 #pragma pack(push, 4)
-	/** @brief 32bit argb pixel in HD mod*/
 	struct H3ARGB888
 	{
 		_H3API_SIZE_(4);
@@ -11980,36 +10132,12 @@ namespace h3
 		UINT8 r;
 		UINT8 a;
 
-		/**
-		 * @brief pack the pixel components into a single dword
-		 * @return UINT packed pixel value as dword
-		 */
 		_H3API_ UINT Value() const;
-		/**
-		 * @brief pack the pixel components into a single dword
-		 * @return UINT packed pixel value as dword
-		 */
 		_H3API_ UINT operator*() const;
-		/**
-		 * @brief automatic cast as DWORD
-		 * @return DWORD packed pixel value as dword
-		 */
 		_H3API_ operator DWORD () const;
-		/**
-		 * @brief darkens pixel's color through HSV by specified amount
-		 * note full transparency is not supported, so this only affects rgb components
-		 * @param amount 0..255
-		 */
 		_H3API_ VOID Darken(const UINT8 amount);
-		/**
-		 * @brief lightens pixel's color through HSV by specified amount
-		 * note full transparency is not supported, so this only affects rgb components
-		 * @param amount 0..255
-		 */
 		_H3API_ VOID Lighten(const UINT8 amount);
-		/** @brief applies grayscale effect by narrowing the gap between the rgb components*/
 		_H3API_ VOID GrayScale();
-		/** @brief reorders argb components based on legacy drawing, pre - HDmod 5.0RC63*/
 		_H3API_ VOID Legacy();
 		_H3API_ H3ARGB888();
 		_H3API_ H3ARGB888(DWORD col);
@@ -12017,10 +10145,6 @@ namespace h3
 		_H3API_ H3ARGB888(const H3RGB888& col);
 		_H3API_ H3ARGB888(const H3ARGB888& col);
 		_H3API_ H3ARGB888(UINT8 red, UINT8 blue, UINT8 green);
-		/**
-		 * @brief pack the pixel components into a single dword
-		 * @return DWORD packed pixel value as dword
-		 */
 		_H3API_ DWORD GetColor() const;
 		_H3API_ VOID operator=(const H3RGB565& col);
 		_H3API_ VOID operator=(const H3RGB888& col);
@@ -12028,14 +10152,8 @@ namespace h3
 		_H3API_ VOID operator=(UINT16 col);
 		_H3API_ VOID operator=(UINT32 col);
 		_H3API_ BOOL operator==(const H3ARGB888& col);
-		/** @brief approximate lightening by 25% following game logic*/
 		_H3API_ VOID LightShadow();
-		/** @brief approximate darkening by 50% following game logic*/
 		_H3API_ VOID DarkShadow();
-		/**
-		 * @brief blend or superpose a specific mask over the current pixel*
-		 * @param col mask to apply
-		 */
 		_H3API_ VOID Blend(const H3ARGB888& col);
 	#pragma region NamedColors
 		_H3API_ static H3ARGB888 Regular();
@@ -12202,11 +10320,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3ARGB888);
 
-	/**
-	 * @brief 15bits rgb packed in 2 bytes; apparently unused by h3 but the mechanics exist
-	 * This is the predominant type used in the mapeditor.
-	 * https://docs.microsoft.com/en-us/windows/desktop/DirectShow/working-with-16-bit-rgb
-	 */
 	struct H3RGB555
 	{
 		_H3API_SIZE_(2);
@@ -12224,10 +10337,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3RGB555);
 
-	/**
-	 * @brief 16bits rgb packed in 2 bytes; most common type used without 32bit mode
-	 * https://docs.microsoft.com/en-us/windows/desktop/DirectShow/working-with-16-bit-rgb
-	 */
 	struct H3RGB565
 	{
 		_H3API_SIZE_(2);
@@ -12237,45 +10346,13 @@ namespace h3
 protected:
 		RGB565 bits;
 public:
-		/**
-		 * @brief retrieve the packed red component
-		 * @return UINT8 0..31
-		 */
 		_H3API_ UINT8 GetRed() const;
-		/**
-		 * @brief retrieve the red component in 8bit format
-		 * @return UINT8 0..255
-		 */
 		_H3API_ UINT8 GetRed8() const;
-		/**
-		 * @brief retrieve the packed green component
-		 * @return UINT8 0..63
-		 */
 		_H3API_ UINT8 GetGreen() const;
-		/**
-		 * @brief retrieve the green component in 8bit format
-		 * @return UINT8 0..255
-		 */
 		_H3API_ UINT8 GetGreen8() const;
-		/**
-		 * @brief retrieve the packed blue component
-		 * @return UINT8 0..31
-		 */
 		_H3API_ UINT8 GetBlue() const;
-		/**
-		 * @brief retrieve the blue component in 8bit format
-		 * @return UINT8 0..255
-		 */
 		_H3API_ UINT8 GetBlue8() const;
-		/**
-		 * @brief retrieves the rgb components in 24bit format
-		 * @return DWORD 0x000000..0xFFFFFF
-		 */
 		_H3API_ DWORD GetRGB888() const;
-		/**
-		 * @brief Get a copy of the packed rgb components
-		 * @return RGB565 color packed in 2 bytes
-		 */
 		_H3API_ RGB565 GetBits() const;
 		_H3API_ H3RGB565();
 		_H3API_ H3RGB565(RGB565 rgb);
@@ -12289,92 +10366,21 @@ public:
 		_H3API_ VOID operator=(const UINT16 col);
 		_H3API_ VOID operator=(const UINT32 col);
 		_H3API_ BOOL operator==(const H3RGB565& col);
-		/**
-		 * @brief automatic cast as 2 bytes WORD
-		 * @return WORD color packed in 2 bytes
-		 */
 		_H3API_ operator WORD () const;
-		/**
-		 * @brief Get a copy of the packed rgb components
-		 * @return WORD color packed in 2 bytes
-		 */
 		_H3API_ WORD Value() const;
-		/**
-		 * @brief Set the packed color to the specified value
-		 * @param color packed 16bit rgb
-		 */
 		_H3API_ VOID SetBits(WORD color);
-		/**
-		 * @brief Set the pixel's components
-		 * @param r red component 0..255
-		 * @param g green component 0..255
-		 * @param b blue component 0..255
-		 */
 		_H3API_ VOID PackRGB565(UINT8 r, UINT8 g, UINT8 b);
-		/**
-		 * @brief Set the pixel's components
-		 * @param rgb color to use
-		 */
 		_H3API_ VOID Pack(H3RGB888& rgb);
-		/**
-		 * @brief transform any rgb components into a packed 16bit pixel
-		 * @param r red component 0..255
-		 * @param g green component 0..255
-		 * @param b blue component 0..255
-		 * @return WORD packed 16bit color
-		 */
 		_H3API_ static WORD  Pack(UINT8 r, UINT8 g, UINT8 b);
-		/**
-		 * @brief transform a packed 16bit color into a 24bit pixel
-		 * @param rgb 16bit color to unpack
-		 * @return DWORD color without alpha component 0x000000..0xFFFFFF
-		 */
 		_H3API_ static DWORD Unpack(RGB565 rgb);
-		/**
-		 * @brief darkens pixel's color by specified amount
-		 * @param amount 0..255
-		 */
 		_H3API_ VOID Darken(UINT8 amount);
-		/**
-		 * @brief lightens pixel's color by specified amount
-		 * @param amount 0..255
-		 */
 		_H3API_ VOID Lighten(UINT8 amount);
-		/** @brief applies grayscale effect by narrowing the gap between the rgb components*/
 		_H3API_ VOID GrayScale();
-		/**
-		 * @brief darkens by 25% as performed by h3, using default masks
-		 * i.e. rgb components are reduced to 75% of their current value
-		 */
 		_H3API_ VOID LightShadow();
-		/**
-		 * @brief darkens by 25% as performed by h3, using specified masks
-		 * i.e. rgb components are reduced to 75% of their current value
-		 * @param mask50 a mask representing 50% rgb components
-		 * @param mask25 a mask representing 25% rgb components
-		 */
 		_H3API_ VOID LightShadow(RGB565 mask50, RGB565 mask25);
-		/**
-		 * @brief darkens by 50% as performed by h3, using default mask
-		 * i.e. rgb components are reduced to 50% of their current value
-		 */
 		_H3API_ VOID DarkShadow();
-		/**
-		 * @brief darkens by 50% as performed by h3, using specified mask
-		 * i.e. rgb components are reduced to 50% of their current value
-		 * @param mask a mask representing 50% rgb components
-		 */
 		_H3API_ VOID DarkShadow(RGB565 mask);
-		/**
-		 * @brief Blend 2 colors together to obtain a new one
-		 * @param col the color to mix
-		 */
 		_H3API_ VOID Blend(const H3RGB565& col);
-		/**
-		 * @brief Blend 2 colors together to obtain a new one, with an upper cap specified by a mask
-		 * @param col the color to mix
-		 * @param mask upper limit for blending of source and \p col
-		 */
 		_H3API_ VOID Blend(const H3RGB565& col, RGB565 mask);
 #pragma region NamedColors
 		_H3API_ static RGB565 Regular();
@@ -12538,7 +10544,6 @@ public:
 	};
 	_H3API_ASSERT_SIZE_(H3RGB565);
 
-	/** @brief approximate HSV pixel without floats for smarter color manipulation*/
 	struct H3HSV
 	{
 	protected:
@@ -12596,7 +10601,6 @@ namespace h3
 	_H3API_TYPE_DECLARE_(H3BinaryLoader<H3WavFile>,     WavLoader);
 
 #pragma pack(push, 4)
-	/** @brief Base class for inheritance of assets. original name: 'type_resource'*/
 	struct H3ResourceItem : H3Allocator
 	{
 		_H3API_SIZE_(0x1C);
@@ -12629,10 +10633,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3ResourceItem);
 
-	/**
-	 * @brief same functionality as H3Palette565 except it does not derive from H3ResourceItem
-	 * Hence it skips constructor/destructor. Used by H3LoadedPcx.
-	 */
 	struct H3BasePalette565
 	{
 		_H3API_SIZE_(0x21C);
@@ -12678,10 +10678,6 @@ namespace h3
 #endif
 	};
 	_H3API_ASSERT_SIZE_(H3BasePalette565);
-	/**
-	 * @brief same functionality as H3Palette888 except it does not derive from H3ResourceItem
-	 * Hence it skips constructor/destructor. Used by H3LoadedPcx and H3Font.
-	 */
 	struct H3BasePalette888
 	{
 		_H3API_SIZE_(0x31C);
@@ -12705,11 +10701,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3BasePalette888);
 
-	/**
-	 * @brief raii loader for h3 assets
-	 * It is suggested to use the common type definitions
-	 * @tparam T One of the data types that exist in ResourceManager
-	 */
 	template <typename T>
 	class H3BinaryLoader
 	{
@@ -12805,32 +10796,20 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief original name: CSpriteFrame*/
 	struct H3DefFrame : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x48);
 
-		/** @brief [1C] all row offsets and actual pixel data*/
 		INT32 rawDataSize;
-		/** @brief [20] frame width * frame height*/
 		INT32 dataSize;
-		/** @brief [24] 0..3*/
 		INT32 compressionType;
-		/** @brief [28]*/
 		INT32 width;
-		/** @brief [2C]*/
 		INT32 height;
-		/** @brief [30]*/
 		INT32 frameWidth;
-		/** @brief [34]*/
 		INT32 frameHeight;
-		/** @brief [38] marginLeft + frameWidth = width*/
 		INT32 marginLeft;
-		/** @brief [3C]*/
 		INT32 marginTop;
-		/** @brief [40]*/
 		INT32 width2;
-		/** @brief [44] rle pixels or index*/
 		PUINT8 rawData;
 
 		_H3API_ VOID DrawToPcx16(INT src_x, INT src_y, INT src_width, INT src_height,
@@ -12850,32 +10829,25 @@ namespace h3
 	struct H3String;
 
 #pragma pack(push, 4)
-	/** @brief original name may be 'font', unknown */
 	struct H3Font : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x1260);
 	protected:
 		h3unk _f_1C[5];
 	public:
-		/** @brief [21]*/
 		INT8 height;
 	protected:
 		h3unk _f_22[26];
 	public:
-		/** @brief [3C] used to calculate line width*/
 		struct FontSpacing
 		{
 			INT32 leftMargin;
 			INT32 span;
 			INT32 rightMargin;
 		}width[256];
-		/** @brief [C3C] referenced at 0x4B4F1C*/
 		UINT32 bufferOffsets[256];
-		/** @brief [103C]*/
 		H3BasePalette565 palette;
-		/** @brief [1258] how the characters look*/
 		PUINT8 bitmapBuffer;
-		/** @brief [125C]*/
 		INT32 bufferSize;
 
 		_H3API_ INT32 GetLinesCountInText(LPCSTR str, INT32 width);
@@ -12889,11 +10861,6 @@ namespace h3
 
 		_H3API_ static H3Font* Load(LPCSTR name);
 
-		/**
-		 * @brief Access font buffer at starting position of specified character
-		 * @param character_id Index of the ascii character 0..255
-		 * @return Buffer to specified location
-		 */
 		_H3API_ PUINT8 GetChar(UINT32 character_id);
 	};
 	_H3API_ASSERT_SIZE_(H3Font);
@@ -12929,7 +10896,6 @@ namespace h3
 	_H3API_TYPE_DECLARE_(H3LoadedDef, Sprite);
 
 #pragma pack(push, 4)
-	/** @brief original name: CSprite*/
 	struct H3LoadedDef : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x38);
@@ -12937,29 +10903,19 @@ namespace h3
 		struct DefGroup
 		{
 			_H3API_SIZE_(0x0C);
-			/** @brief [00]*/
 			INT32 count;
-			/** @brief [04]*/
 			UINT32 spritesSize;
-			/** @brief [08]*/
 			H3DefFrame** frames;
 
 			_H3API_ H3DefFrame& operator[](UINT index);
 		};
 
-		/** @brief [1C]*/
 		DefGroup**    groups;
-		/** @brief [20]*/
 		H3Palette565* palette565;
-		/** @brief [24]*/
 		H3Palette888* palette888;
-		/** @brief [28]*/
 		INT32 groupsCount;
-		/** @brief [2C]*/
 		INT32* activeGroups;
-		/** @brief [30]*/
 		INT32 widthDEF;
-		/** @brief [34]*/
 		INT32 heightDEF;
 
 		_H3API_ VOID AddFrameFromDef(LPCSTR source, INT32 index);
@@ -12993,27 +10949,18 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief original name Bitmap8*/
 	struct H3LoadedPcx : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x56C);
 		_H3API_VTABLE_(0x63BA14);
 
-		/** @brief [1C]*/
 		INT32 bufSize;
-		/** @brief [20]*/
 		INT32 bufSizeUnk;
-		/** @brief [24]*/
 		INT32 width;
-		/** @brief [28]*/
 		INT32 height;
-		/** @brief [2C]*/
 		INT32 scanlineSize;
-		/** @brief [30] 256-color indexed buffer*/
 		PUINT8 buffer;
-		/** @brief [34]*/
 		H3BasePalette565 palette565;
-		/** @brief [250]*/
 		H3BasePalette888 palette888;
 
 		_H3API_ VOID DrawToPcx16(int srcX, int srcY, int dx, int dy, H3LoadedPcx16* dest, int destX, int destY, BOOL skip_transparent_colors);
@@ -13046,27 +10993,19 @@ namespace h3
 	_H3API_TYPE_DECLARE_(H3LoadedPcx16, Bitmap16);
 
 #pragma pack(push, 4)
-	/** @brief original name Bitmap16*/
 	struct H3LoadedPcx16 : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x38);
 		_H3API_VTABLE_(0x63B9C8);
 
-		/** @brief [1C]*/
 		INT32 buffSize;
 	protected:
-		/** @brief [20]*/
 		INT32 buffSizeUnk;
 	public:
-		/** @brief [24]*/
 		INT32 width;
-		/** @brief [28]*/
 		INT32 height;
-		/** @brief [2C]*/
 		INT32 scanlineSize;
-		/** @brief [30] H3RGB565 buffer unless bitmode == 4 in which case this is a H3ARGB888 buffer*/
 		PUINT8 buffer;
-		/** @brief [34]*/
 		BOOL8 keepBuffer; // see 0x44DDE0
 
 		_H3API_ VOID CopyRegion(H3LoadedPcx16* source, INT x, INT y);
@@ -13095,7 +11034,6 @@ namespace h3
 
 		_H3API_ static H3LoadedPcx16* Load(LPCSTR name);
 		_H3API_ static H3LoadedPcx16* Create(LPCSTR name, INT width, INT height);
-		/** @brief creates an unnamed pcx16 drawing canvas*/
 		_H3API_ static H3LoadedPcx16* Create(INT width, INT height);
 		_H3API_ PUINT8 GetRow(int row);
 		_H3API_ H3RGB565* GetPixel565(int x, int y);
@@ -13120,17 +11058,12 @@ namespace h3
 		_H3API_SIZE_(0x30);
 		_H3API_VTABLE_(0x63B9F4);
 
-		/** @brief [1C]*/
 		INT32 buffSize;
 	protected:
-		/** @brief [20]*/
 		INT32 buffSizeUnk;
 	public:
-		/** @brief [24]*/
 		INT32 width;
-		/** @brief [28]*/
 		INT32 height;
-		/** @brief [2C] RGB888 buffer*/
 		PUINT8 buffer;
 
 		_H3API_ H3LoadedPcx24* Construct(LPCSTR name, INT width, INT height, PUINT8 data, UINT32 dataSize);
@@ -13156,75 +11089,49 @@ namespace h3
 
 #pragma pack(push, 1)
 
-	/** @brief Adventure map masks information in lod archives*/
 	struct H3Msk
 	{
 		_H3API_SIZE_(0x0E);
 		struct Msk
 		{
-			/** @brief [00]*/
 			DWORD dbits;
-			/** @brief [04]*/
 			WORD  wbits;
 
 			_H3API_ void operator>>(H3ObjectMask& mask) const;
 		};
-		/** @brief [00] number or cells occupied horizontally*/
 		UINT8 width;
-		/** @brief [01] number or cells occupied vertically*/
 		UINT8 height;
-		/** @brief [02] which cells have a display colour*/
 		Msk   colorMask;
-		/** @brief [08] which cells have a shadow colour*/
 		Msk   shadowMask;
 	};
 	_H3API_ASSERT_SIZE_(H3Msk);
 
-	/** @brief Font information in lod archives*/
 	struct H3Fnt
 	{
-		/** @brief [00]*/
 		UINT8  magic[5];
-		/** @brief [05]*/
 		UINT8  height;
-		/** @brief [06]*/
 		h3unk8 header[26];
-		/** @brief [20]*/
 		struct FntCharacter
 		{
 			INT32 leftMargin;
 			INT32 width;
 			INT32 rightMargin;
 		}characters[256];
-		/** @brief [C20]*/
 		UINT32 bufferOffsets[256];
-		/**
-		 * @brief [1020] total size is sum of all character widths * height
-		 * 00 - nothing
-		 * 01 - shadow
-		 * FF - color
-		 */
 		UINT8 buffer[4]; // size unset
 	};
 #pragma pack(pop) /* align-1 */
 
 #pragma pack(push, 4)
 
-	/** @brief header for assets that exist within lod archive*/
 	struct H3LodItem
 	{
 		_H3API_SIZE_(0x20);
-		/** @brief [00]*/
 		CHAR    name[12];
-		/** @brief [0C] always 0, indicates end of name*/
 		h3unk32 nameEnd;
-		/** @brief [10]*/
 		PUINT8  buffer;
-		/** @brief [14]*/
 		UINT32  size;
-		/** @brief [18]*/
 		INT32   type;
-		/** @brief [1C]*/
 		UINT32  sizeCompressed;
 	};
 	_H3API_ASSERT_SIZE_(H3LodItem);
@@ -13233,13 +11140,9 @@ namespace h3
 	{
 		_H3API_SIZE_(0x18);
 
-		/** @brief [00]*/
 		UINT width;
-		/** @brief [04]*/
 		UINT height;
-		/** @brief [08]*/
 		H3ObjectMask colors;
-		/** @brief [10]*/
 		H3ObjectMask shadow;
 
 		_H3API_ VOID operator=(const H3Msk& msk);
@@ -13250,21 +11153,13 @@ namespace h3
 	{
 		_H3API_SIZE_(0x190);
 
-		/** @brief [00] lod's name*/
 		LPCSTR name;
-		/** @brief [04]*/
 		FILE* filePosition;
-		/** @brief [08] possibly fewer chars, not important*/
 		CHAR   path[256];
-		/** @brief [108]*/
 		h3unk  _f_108[112];
-		/** @brief [178]*/
 		INT32  filesCount;
-		/** @brief [17C]*/
 		h3unk  _f_17C[4];
-		/** @brief [180] buffer to lod item headers*/
 		PUINT8 fileHeaders;
-		/** @brief [184]*/
 		h3unk  _f_184[12];
 
 		_H3API_ H3Lod*     Create(LPCSTR fileName);
@@ -13285,7 +11180,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief a 256 argb palette of colors for indexed images, introduced by HDmod*/
 	struct H3Palette32
 	{
 		H3ARGB888 colors[256];
@@ -13304,11 +11198,9 @@ namespace h3
 	_H3API_TYPE_DECLARE_(H3Palette565, Palette16);
 
 #pragma pack(push, 4)
-	/** @brief 16-bits palette. Original name TPalette16*/
 	struct H3Palette565 : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x21C);
-		/** @brief [1C]*/
 		union {
 			struct {
 				H3RGB565 color[256];
@@ -13350,11 +11242,9 @@ namespace h3
 	_H3API_TYPE_DECLARE_(H3Palette888, Palette24);
 
 #pragma pack(push, 4)
-	/** @brief original name: TPalette24*/
 	struct H3Palette888 : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x31C);
-		/** @brief [1C] */
 		H3RGB888 color[256];
 
 		_H3API_ VOID ColorToPlayer(INT id);
@@ -13491,21 +11381,13 @@ namespace h3
 	_H3API_TYPE_DECLARE_(H3TextFile, TextResource);
 
 #pragma pack(push, 4)
-	/** @brief text file with a single column of text. Original name TTextResource*/
 	struct H3TextFile : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x30);
 	protected:
-		/** @brief [1C] list of rows holding text, single column*/
 		H3Vector<LPCSTR> text;
-		/** @brief [2C] text read from file*/
 		LPCSTR buffer;
 	public:
-		/**
-		 * @brief Get the text from specified row
-		 * @param row Using the index from TxtEdit
-		 * @return text at specified row
-		 */
 		_H3API_ LPCSTR  GetText(UINT32 row) const;
 		_H3API_ LPCSTR  GetText(UINT32 row);
 		_H3API_ VOID    UnLoad();
@@ -13531,7 +11413,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief text file with several columns of text. Original name TSpreadSheetResource*/
 	struct H3TextTable : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x34);
@@ -13551,11 +11432,8 @@ namespace h3
 		};
 
 	protected:
-		/** @brief [1C] list of rows holding lists of column text*/
 		H3Vector<H3Vector<LPCSTR>*> text;
-		/** @brief [2C] read from lod*/
 		LPCSTR buffer;
-		/** @brief [30]*/
 		UINT bufferSize;
 	public:
 		_H3API_ H3Vector<H3Vector<LPCSTR>*>& GetText();
@@ -13577,23 +11455,16 @@ namespace h3
 	_H3API_DECLARE_(WavFile);
 
 #pragma pack(push, 4)
-	/** @brief original name unknown, only references are 'midi' and 'sfx'*/
 	struct H3WavFile : public H3ResourceItem
 	{
 		_H3API_SIZE_(0x34);
 		_H3API_VTABLE_(0x6416E0);
 
-		/** @brief [1C]*/
 		HANDLE hSample;
-		/** @brief [20] from SoundMgr*/
 		PUINT8 buffer;
-		/** @brief [24]*/
 		DWORD bufferSize;
-		/** @brief [28] fields of _RTL_CRITICAL_SECTION*/
 		HANDLE lockSemaphore;
-		/** @brief [2C]*/
 		ULONG_PTR spinCount;
-		/** @brief [30]*/
 		PRTL_CRITICAL_SECTION_DEBUG debugInfo;
 
 		_H3API_ static H3WavFile* Load(LPCSTR name);
@@ -13620,25 +11491,15 @@ namespace h3
 	struct H3CmpHeader
 	{
 		h3unk32                        _f_0; // set as 2 for old campaign versions
-		/** @brief [04] .h3c campaign name*/
 		H3String                       filename;
-		/** @brief [14] */
 		eCampaignType                  type;
-		/** @brief [18] */
 		INT32                          mapCount;
-		/** @brief [1C] */
 		H3String                       name;
-		/** @brief [2C] */
 		H3String                       description;
-		/** @brief [3C] */
 		H3Vector<H3CmpScenarioHeader*> scenarios;
-		/** @brief [4C] raw deflated h3c buffer*/
 		PBYTE                          rawBuffer;
-		/** @brief [50] used to parse rawBuffer */
 		H3GzInflateBuf*                gzBuf;
-		/** @brief [54] */
 		BOOL8                          canChooseDifficulty;
-		/** @brief [58] */
 		eCampaignMusic                 music;
 	};
 
@@ -13657,26 +11518,19 @@ namespace h3
 	struct H3CmpInfo
 	{
 		_H3API_SIZE_(0x7C);
-		/** @brief [00]*/
 		BOOL8 cheater;
-		/** @brief [01]*/
 		BOOL8 avgMapScoreAbove350;
-		/** @brief [02]*/
 		INT8  campaignMapIndex;
 	protected:
 		h3unk8 _f_3;
 	public:
-		/** @brief [04]*/
 		INT32 bigCampaignIndex;
 	protected:
-		/** @brief [08]*/
 		h3unk8 _f_8[4];
 	public:
-		/** @brief [0C]*/
 		INT8 crossoverArrayIndex;
 	protected:
 		h3unk8 _f_D[3];
-		/** @brief [10]*/
 		h3unk8 _f_10[4];
 		h3unk8 _f_14;
 		h3unk8 _f_15[3];
@@ -13685,17 +11539,12 @@ namespace h3
 		h3unk8 _f_1D[3];
 		h3unk8 _f_20[4];
 	public:
-		/** @brief [24]*/
 		h3unk8 BigCampaignStarted[21];
 	protected:
 		h3unk8 _f_39[3];
-		/** @brief [3C]*/
 		H3Vector<H3Vector<H3Hero>> crossoverHeroes;
-		/** @brief [4C]*/
 		H3Vector<h3unk> someCrossoverArraysRef;
-		/** @brief [5C]*/
 		H3Vector<H3CmpScenarioInfo> campaignMapInfo;
-		/** @brief [6C]*/
 		H3Vector<h3unk> someCrossoverInfoStructs;
 	};
 	_H3API_ASSERT_SIZE_(H3CmpInfo);
@@ -13714,11 +11563,8 @@ namespace h3
 	{
 		_H3API_SIZE_(0x18);
 
-		/** @brief [00]*/
 		eCampaignMovie movie;
-		/** @brief [04]*/
 		eCampaignMusic music;
-		/** @brief [08]*/
 		H3String       text;
 	};
 	_H3API_ASSERT_SIZE_(H3CmpPrologue);
@@ -13738,43 +11584,24 @@ namespace h3
 	struct H3CmpScenarioHeader
 	{
 		_H3API_SIZE_(0xA8);
-		/** @brief [00] *.h3m */
 		H3String          mapName;
-		/** @brief [10] used by Streambuf::seekoff*/
 		h3unk32           offset;
-		/** @brief [14] packed size of map*/
 		INT32             deflatedDataSize;
-		/** @brief [18] scenarios that have to be completed first*/
 		H3Vector<BOOL8>   requirements;
-		/** @brief [28]*/
 		H3String          description;
-		/** @brief [38]*/
 		INT8              color;
-		/** @brief [39]*/
 		INT8              difficulty;
-		/** @brief [3C]*/
 		H3CmpPrologue*    prologue;
-		/** @brief [40]*/
 		H3CmpPrologue*    epilogue;
-		/** @brief [44]*/
 		BOOL8             keepExperience;
-		/** @brief [45]*/
 		BOOL8             keepPrimarySkills;
-		/** @brief [46]*/
 		BOOL8             keepSecondarySkills;
-		/** @brief [47]*/
 		BOOL8             keepSpells;
-		/** @brief [48]*/
 		BOOL8             keepArtifacts;
-		/** @brief [4C] H3PlayerAttributes::powerPlaceholder*/
 		h3unk32           powerPlaceholder[8];
-		/** @brief [6C] from H3MapInfo::_f_20 mb crossover hero ids*/
 		H3Vector<INT32>   heroIds;
-		/** @brief [7C] crossover creatures*/
 		H3CreaturesBitset creatures;
-		/** @brief [90] crossover artifacts*/
 		H3ArtifactBitset  artifacts;
-		/** @brief [A4]*/
 		H3CmpStartBoni*   startingOptions;
 	};
 	_H3API_ASSERT_SIZE_(H3CmpScenarioHeader);
@@ -13792,15 +11619,10 @@ namespace h3
 	struct H3CmpScenarioInfo
 	{
 		_H3API_SIZE_(0x14);
-		/** @brief [00]*/
 		BOOL8 completed;
-		/** @brief [04] total time required*/
 		INT32 days;
-		/** @brief [08]*/
 		INT32 score;
-		/** @brief [0C]*/
 		INT32 corroverArrayIndex;
-		/** @brief [10]*/
 		INT32 completionOrder;
 	};
 	_H3API_ASSERT_SIZE_(H3CmpScenarioInfo);
@@ -13818,9 +11640,7 @@ namespace h3
 	struct H3SecondarySkill
 	{
 
-		/** @brief [00] 0..27 eSecSkills*/
 		eSecondary     type;
-		/** @brief [04] 0..3 eSecSkillLevel*/
 		eSecSkillLevel level;
 	};
 
@@ -13833,7 +11653,6 @@ namespace h3
 	_H3API_DECLARE_(CmpStartingBonusDetails);
 
 #pragma pack(push, 4)
-	/** @brief abstract base class */
 	struct H3CmpStartingBonusDetails
 	{
 		struct VTable
@@ -13854,9 +11673,7 @@ namespace h3
 		_H3API_SIZE_(0x0C);
 		_H3API_VTABLE_(0x63DAA0);
 
-		/** @brief [04] hero id*/
 		eHero  hero;
-		/** @brief [08]*/
 		eSpell spell;
 	};
 	_H3API_ASSERT_SIZE_(H3CmpBonusSpell);
@@ -13866,7 +11683,6 @@ namespace h3
 		_H3API_SIZE_(0x10);
 		_H3API_VTABLE_(0x63DA80);
 
-		/** [04] @brief hero id, -3 for most powerful hero*/
 		eHero     hero;
 		eCreature type;
 		INT32     count;
@@ -13880,9 +11696,7 @@ namespace h3
 
 		eTown town;
 		union{
-			/** @brief [08] value read from h3m */
 			eBuildings building;
-			/** @brief [08] value set using TownBuildings_688910[town][building] */
 			INT32      index;
 		};
 	};
@@ -13903,7 +11717,6 @@ namespace h3
 		_H3API_SIZE_(0x0C);
 		_H3API_VTABLE_(0x63DA20);
 
-		/** @brief [04] hero id, or -3 for most powerful hero*/
 		eHero hero;
 		INT32 spell;
 	};
@@ -13934,7 +11747,6 @@ namespace h3
 		_H3API_SIZE_(0x0C);
 		_H3API_VTABLE_(0x63D9C0);
 
-		/** @brief single resource or if <0 multiples (see enum for details) */
 		eResource type;
 		INT32     count;
 	};
@@ -13960,7 +11772,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief abstract class from which other starting options inherit*/
 	struct H3CmpStartingOptionsBase
 	{
 		struct VTable
@@ -14068,7 +11879,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief index of adjacent squares, -1 if outside battlefield boundaries*/
 	struct H3AdjacentSquares
 	{
 		_H3API_SIZE_(0xC);
@@ -14093,7 +11903,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data read from cranim.txt*/
 	struct H3CreatureAnimation
 	{
 		_H3API_SIZE_(0x54);
@@ -14129,15 +11938,10 @@ namespace h3
 		_H3API_SIZE_(0x74);
 		_H3API_GET_INFO_(0x6747B0, H3CreatureInformation);
 
-		/** @brief [0] */
 		INT32 town;
-		/** @brief [4] */
 		INT32 level;
-		/** @brief [8] */
 		LPCSTR soundName;
-		/** @brief [C] */
 		LPCSTR defName;
-		/** @brief [10] */
 		union
 		{
 			struct
@@ -14177,41 +11981,23 @@ namespace h3
 			};
 			UINT32 flags;
 		};
-		/** @brief [14] */
 		LPCSTR nameSingular;
-		/** @brief [18] */
 		LPCSTR namePlural;
-		/** @brief [1C] */
 		LPCSTR description;
-		/** @brief [20] */
 		H3Resources cost;
-		/** @brief [3C] */
 		INT32  fightValue;
-		/** @brief [40] */
 		INT32  aiValue;
-		/** @brief [44] */
 		INT32  grow;
-		/** @brief [48] */
 		INT32  hGrow;
-		/** @brief [4C] */
 		INT32  hitPoints;
-		/** @brief [50] */
 		INT32  speed;
-		/** @brief [54] */
 		INT32  attack;
-		/** @brief [58] */
 		INT32  defence;
-		/** @brief [5C] */
 		INT32  damageLow;
-		/** @brief [60] */
 		INT32  damageHigh;
-		/** @brief [64] */
 		INT32  numberShots;
-		/** @brief [68] */
 		INT32  spellCharges;
-		/** @brief [6C] */
 		INT32  advMapLow;
-		/** @brief [70] */
 		INT32  advMapHigh;
 
 		_H3API_ LPCSTR      GetCreatureName(INT32 count) const;
@@ -14237,237 +12023,139 @@ namespace h3
 	{
 		_H3API_SIZE_(0x548);
 
-		/** @brief [00]*/
 		BOOL8   attackedAlready;
-		/** @brief [04] ??*/
 		INT32   totalPlayerStacks;
-		/** @brief [08] 4-visible, 8-not visible*/
 		UINT32  visibility;
 		h3unk32 _f_0C;
 		h3unk32 _f_10;
 		h3unk32 _f_14;
 		h3unk32 _f_18;
-		/** @brief [1C] where to shoot/move to*/
 		INT32   battlefieldDestination;
-		/** @brief [20] fire shield animation is being shown*/
 		BOOL8   fireShieldAnimation;
-		/** @brief [21] fire shield animation is being shown*/
 		BOOL8   movementRelated;
 		h3unk32 _f_24;
-		/** @brief [28] the index of the cloned creature*/
 		INT32   cloneId;
-		/** @brief [2C] number of turns left for cloned creature*/
 		INT32   cloneDuration;
-		/** @brief [30] when true, the rectangular pcx with stack count is not drawn*/
 		BOOL8   skipCountDraw;
 	public:
-		/** @brief [34] eCreatureType */
 		INT32 type;
-		/** @brief [38] position on battlefield 0..186 */
 		INT32 position;
-		/** @brief [3C]*/
 		INT32 animation;
-		/** @brief [40]*/
 		INT32 animationFrame;
-		/** @brief [44] 0 left, 1 right, -1 not applicable*/
 		INT32 secondHexOrientation;
 	protected:
 		h3unk32 _f_048;
 	public:
-		/** @brief [4C] number of creatures that are currently alive*/
 		INT32 numberAlive;
-		/** @brief [50]*/
 		INT32 previousNumber;
-		/** @brief [54] number of creatures that can never be recovered (e.g. basic Resurrection) */
 		INT32 numberForeverDead;
-		/** @brief [50] number of lost hit points of top creature in stack*/
 		INT32 healthLost;
-		/** @brief [5C] 0..6, -1 is removed after battle */
 		INT32 slotIndex;
-		/** @brief [60] number of creatures in this stack to compare against resurrection*/
 		INT32 numberAtStart;
 	protected:
 		h3unk32 _f_064[2]; // maybe align?
 	public:
-		/** @brief [6C] maximum hit points*/
 		INT32 baseHP;
-		/** @brief [70]*/
 		INT32 isLucky;
-		/** @brief [74] copy of H3CreatureInformation using combat values in some places*/
 		H3CreatureInformation info;
 	protected: // these need confirmations
-		/** @brief [E8] stack needs to be hit by fire shield*/
 		BOOL8 applyFireShield;
-		/** @brief [E9] ?at least one creature has died?*/
 		BOOL8 hasLosses;
-		/** @brief [EA] ?at least one creature has died?*/
 		BOOL8 hasLosses2;
-		/** @brief [EB] all creatures have died*/
 		BOOL8 isDead;
 	public:
-		/** @brief [EC] set in After-Hit spell subroutine 0x440220*/
 		INT32 spellToApply;
 	protected:
-	/** @brief [F0] ?before getting attacked? */
 		h3unk8 _f_0F0[4];
 	public:
-		/** @brief [F4] the real owner of the creature, 0.attacker 1.defender */
 		INT32 side;
-		/** @brief [F8] reference to position on side*/
 		INT32 sideIndex;
 	protected:
-	/** @brief [FC]*/
 		UINT32 lastAnimationTime;
-		/** @brief [100]*/
 		INT32 yOffset;
-		/** @brief [104]*/
 		INT32 xOffset;
-		/** @brief [108]*/
 		h3unk8 _f_108[8];
-		/** @brief [110]*/
 		H3MonsterAnimation cranim;
 	public:
-		/** @brief [164]*/
 		H3LoadedDef* def;
 	protected:
-		/** @brief [168]*/
 		H3LoadedDef* shootingDef;
 		h3unk8 _f_16C[4];
-		/** @brief [170]*/
 		H3WavFile* moveSound;
-		/** @brief [174]*/
 		H3WavFile* attackSound;
-		/** @brief [178]*/
 		H3WavFile* getHitSound;
-		/** @brief [17C]*/
 		H3WavFile* shotSound;
-		/** @brief [180]*/
 		H3WavFile* deathSound;
-		/** @brief [184]*/
 		H3WavFile* defendSound;
-		/** @brief [188]*/
 		H3WavFile* extraSound1;
-		/** @brief [18C]*/
 		H3WavFile* extraSound2;
 		h3unk8 _f_190[4];
 	public:
-		/** @brief [194] number of spells currently active*/
 		INT32 activeSpellNumber;
-		/** @brief [198] remaining number of turns of any spells*/
 		INT32 activeSpellDuration[81];
-		/** @brief [2DC] secondary skill level of applied spells*/
 		INT32 activeSpellLevel[81];
 	protected:
 		H3Vector<h3unk> _f_420; // size 0x400, spell related... may not be vector
 		h3unk8 _f_430[36];
 	public:
-		/** @brief [454] number of retaliations left*/
 		INT32 retaliations;
-		/** @brief [458]*/
 		INT32 blessDamage;
-		/** @brief [0x45C]*/
 		INT32 curseDamage;
-		/** @brief [0x460]*/
 		INT32 antiMagic;
-		/** @brief [0x464]*/
 		INT32 bloodlustEffect;
-		/** @brief [0x468]*/
 		INT32 precisionEffect;
-		/** @brief [0x46C]*/
 		INT32 weaknessEffect;
-		/** @brief [0x470]*/
 		INT32 stoneSkinEffect;
 	protected:
 		INT32 _f_474;
 	public:
-		/** @brief [0x478]*/
 		INT32 prayerEffect;
-		/** @brief [0x47C]*/
 		INT32 mirthEffect;
-		/** @brief [0x480]*/
 		INT32 sorrowEffect;
-		/** @brief [0x484]*/
 		INT32 fortuneEffect;
-		/** @brief [0x488]*/
 		INT32 misfortuneEffect;
-		/** @brief [0x48C] called KING_1/2/3*/
 		INT32 slayerType;
-		/** @brief [490] for jousting bonus*/
 		INT32 hexesTraveled;
-		/** @brief [0x494] number of strikes added through spell*/
 		INT32 counterstrikeEffect;
-		/** @brief [0x498]*/
 		FLOAT frenzyMultiplier;
-		/** @brief [0x49C] for calculating damage retaliation damage*/
 		FLOAT blindEffect;
-		/** @brief [0x4A0]*/
 		FLOAT fireShieldEffect;
 	protected:
 		h3unk32 _f_4A4;
 	public:
-		/** @brief [0x4A8] in %*/
 		FLOAT protectionAirEffect;
-		/** @brief [0x4AC] in %*/
 		FLOAT protectionFireEffect;
-		/** @brief [0x4B0] in %*/
 		FLOAT protectionWaterEffect;
-		/** @brief [0x4B4] in %*/
 		FLOAT protectionEarthEffect;
-		/** @brief [0x4B8] in %*/
 		FLOAT shieldEffect;
-		/** @brief [0x4BC] in %*/
 		FLOAT airShieldEffect;
-		/** @brief [0x4C0]*/
 		BOOL8 blinded;
-		/** @brief [0x4C1]*/
 		BOOL8 paralyzed;
-		/** @brief [0x4C4]*/
 		INT32 forgetfulnessLevel;
-		/** @brief [0x4C8]*/
 		FLOAT slowEffect;
-		/** @brief [0x4C4] value added/removed*/
 		INT32 hasteEffect;
-		/** @brief [0x4D0]*/
 		INT32 diseaseAttackEffect;
-		/** @brief [0x4D4]*/
 		INT32 diseaseDefenseEffect;
 	protected:
 		h3unk32 _f_4D8[2];
 	public:
-		/** @brief [0x4E0]*/
 		INT32 faerieDragonSpell;
-		/** @brief [0x4E4] not a float!*/
 		INT32 magicMirrorEffect;
-		/** @brief [0x4E8]*/
 		INT32 morale;
-		/** @brief [0x4EC]*/
 		INT32 luck;
-		/** @brief [0x4F0]*/
 		BOOL8 isDone;
-		/** @brief [0x4F1]*/
 		BOOL8 highlightContour;
-		/** @brief [0x4F4] which dendroids have binded the current target (used for animation requirement)*/
 		H3Vector<H3CombatCreature*> dendroidBinder;
-		/** @brief [0x504] list of H3CombatCreature binded by this dendroid*/
 		H3Vector<H3CombatCreature*> dendroidBinds;
 	protected:
-		/** @brief [0x514] possibly tied to hypnotize as well?*/
 		H3Vector<H3CombatCreature*> _f_514;
-		/** @brief [0x524]*/
 		H3Vector<H3CombatCreature*> hypnotized;
 		h3unk8 _f_534[20];
 	public:
 		_H3API_ LPCSTR GetCreatureName() const;
 		_H3API_ INT32 GetSecondSquare() const;
 		_H3API_ INT32 GetStackSpeed() const;
-		/**
-		 * @brief Seeks hex id location considering relative orientation for a given position. Battle side is taken into consideration.
-		 * @param considered_hex hex location to inspect
-		 * @param relative_orientation The neighbor hex orientation, 0~7 see H3AdjacentSquares::eRelativeOrientation
-		 * @return hex at relative position, -1 if invalid
-		 */
 		_H3API_ INT32 HexRelativePosition(INT32 considered_hex, INT32 relative_orientation) const;
-		/** @brief Checks if any of the non-fatal conditions disabling a creature's turn are active*/
 		_H3API_ BOOL IsIncapacitated() const;
 		_H3API_ BOOL IsDefending() const;
 		_H3API_ BOOL IsDone() const;
@@ -14483,32 +12171,9 @@ namespace h3
 		_H3API_ H3Hero* GetOwner() const;
 		_H3API_ INT32 GetProtectiveSpellEffect(INT32 damage, INT32 spellID) const;
 		_H3API_ INT32 MagicMirrorEffect() const;
-        /**
-         * @brief Apply physical damage to target, this damage would not be reduce by creature basic stats.
-		 *
-         * @param amount of damage
-         * @return how many creatures killed by this damage.
-         */
 		_H3API_ INT32 ApplyPhysicalDamage(INT32 amount);
 		_H3API_ VOID  ApplySpell(INT32 spellId, INT32 spellPower, INT32 schoolLevel, H3Hero* hero);
-        /**
-         * @brief For those creature who cast spell after hit, this function only set h3::H3CombatCreature->spellToApply
-		          so spell will be executed later not right now
-		 *
-         * @param defender target army
-         * @return if true, it will suspend target army action after success cast.
-        */
         _H3API_ BOOL8 ApplyAfterHitSpell(H3CombatCreature* defender);
-        /**
-         * @brief For those creature: VAMPIRE_LORD, THUNDERBIRD, MIGHTY_GORGON, SERPENT_FLY, DRAGON_FLY and RUST_DRAGON, after hit target
-		 *        effect will be executed right now.
-		 *
-         * @param defender target army
-         * @param damage physical damage done
-         * @param killed how many creature killed by physical damage
-         * @param totalDefenderLifeRemain defender army total hp
-         * @return
-        */
         _H3API_ VOID  ApplyAfterHitAbility(H3CombatCreature* defender, INT32 damage, INT32 killed, INT32 totalDefenderHp);
 		_H3API_ BOOL8 CanReceiveSpell(INT32 spellId) const;
 		_H3API_ BOOL  CanCastSpellAtEmptyHex(INT32 hexId) const;
@@ -14532,24 +12197,16 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data for a single battlefield cell */
 	struct H3CombatSquare
 	{
 		_H3API_SIZE_(0x70);
-		/** @brief [0] */
 		INT16 x;
-		/** @brief [2] */
 		INT16 y;
-		/** @brief [4] */
 		INT16 left;
-		/** @brief [6] */
 		INT16 top;
-		/** @brief [8] */
 		INT16 right;
-		/** @brief [A] */
 		INT16 bottom;
 	protected: h3unk8 _f_0C[4]; public:
-		/** @brief [10] */
 		union
 		{
 			UINT8 obstacleBits;
@@ -14564,29 +12221,15 @@ namespace h3
 				BOOL8 unused        : 2; // 40-80
 			};
 		};
-		/** @brief [14] */
 		INT32 obstacleIndex;
-		/** @brief [18] */
 		INT8 stackSide;
-		/** @brief [19] */
 		INT8 stackIndex;
-		/** @brief [1A] */
 		BOOL8 twoHexMonsterSquare;
-		/** @brief [1C] */
 		INT32 deadStacksNumber;
-		/** @brief [20] */
 		INT8 deadStackSide[14];
-		/** @brief [2E] */
 		INT8 deadStackIndex[14];
-		/**
-		 * @brief [3C]
-		 * used to check the second square in the direction faced by the creature
-		 * 0..defender is owner, 1..attacker is owner
-		 */
 		BOOL8 belongsToAttacker[14];
-		/** @brief [4A] */
 		BOOL8 availableForLeftSquare;
-		/** @brief [4B] */
 		BOOL8 availableForRightSquare;
 	protected:
 		h3unk8 _f_4C[32];
@@ -14617,11 +12260,6 @@ namespace h3
 		LPCSTR name;
 		INT32 type;
 
-		/**
-		 * @brief Get spell effect animation info by spell id.
-		 * @param spellId which spell
-		 * @return if anim does not exist return nullptr
-		 */
 		_H3API_ static H3MagicAnimation* GetAnim(INT32 spellId);
 	};
 	_H3API_ASSERT_SIZE_(H3MagicAnimation);
@@ -14642,21 +12280,13 @@ namespace h3
 	{
 		_H3API_SIZE_(0x18);
 
-		/** @brief [00] */
 		H3LoadedDef* def;
-		/** @brief [04] */
 		H3ObstacleInfo* info;
-		/** @brief [08] */
 		UINT8 anchorHex;
-		/** @brief [09] if anyone owns this, otherwise -1 */
 		INT8 ownerSide;
-		/** @brief [0A] uncertain but set when features are triggered , default 1*/
 		h3unk8 featureTriggered;
-		/** @brief [0C] damage of existing feature (e.g. firewall), -1 if not set */
 		UINT32 featureDamage;
-		/** @brief [10] defaults to 0 */
 		UINT32 featureDuration;
-		/** @brief [14] combat animation index, if not set -1 */
 		UINT32 animationIndex;
 	};
 	_H3API_ASSERT_SIZE_(H3Obstacle);
@@ -14676,21 +12306,13 @@ namespace h3
 		_H3API_SIZE_(0x14);
 		_H3API_GET_INFO_(0x465C1E + 3, H3ObstacleInfo);
 
-		/** @brief [00] (bitfield)*/
 		UINT16 landTypes;
-		/** @brief [02] (bitfield)*/
 		UINT16 specialGroundTypes;
-		/** @brief [04] */
 		INT8 heightInCells;
-		/** @brief [05] */
 		INT8 widthInCells;
-		/** @brief [06] */
 		INT8 blockedCount;
-		/** @brief [07] */
 		h3unk8 _f_7;
-		/** @brief [08] */
 		INT8 relativeCells[8];
-		/** @brief [10] */
 		LPCSTR defName;
 	};
 	_H3API_ASSERT_SIZE_(H3ObstacleInfo);
@@ -14733,22 +12355,15 @@ namespace h3
 	{
 		_H3API_SIZE_(0x24);
 
-		/** @brief [0]*/
 		INT16 x;
-		/** @brief [2]*/
 		INT16 y;
-		/** @brief [4] -1 if not set*/
 		INT16 hex_id;
-		/** @brief [8]*/
 		LPCSTR names[5];
-		/** @brief [1C] from walls.txt*/
 		INT32 name;
-		/** @brief [20] from walls.txt*/
 		INT16 hp;
 	};
 	_H3API_ASSERT_SIZE_(H3WallSection);
 
-	/** @brief Information for each piece of town structure in combat screen, 1 per town*/
 	struct H3TownFortifications
 	{
 		_H3API_SIZE_(0x288);
@@ -14770,24 +12385,8 @@ namespace h3
 
 	struct H3Creature
 	{
-		/**
-		 * @brief returns a creature's upgraded version
-		 * @param id Index of the creature
-		 * @return -1 if no upgrade exist
-		 */
 		_H3API_ static INT32 GetUpgrade(INT32 id);
-		/**
-		 * @brief Checks if a creature has an upgraded version
-		 * @param id Index of the creature
-		 * @return Whether an upgrade exists
-		 */
 		_H3API_ static BOOL8 HasUpgrade(INT32 id);
-		/**
-		 * @brief Get a description of a creature group's size based on how many there are
-		 * @param amount How many creatures are present
-		 * @param text_variant 0..2 | 0=> X-Y | 1=> A XYZ of | 2=> a XYZ of (same as 1 but lower-case)
-		 * @return Description of group's size based on text files
-		*/
 		_H3API_ static LPCSTR GroupName(INT32 amount, INT32 text_variant);
 	};
 
@@ -14795,7 +12394,6 @@ namespace h3
 
 #pragma pack(push, 1)
 
-	/** @brief Creature slots are sometimes represented with only a 16bit signed amount*/
 	struct H3CreatureSlot16
 	{
 		_H3API_SIZE_(0x6);
@@ -14817,7 +12415,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief Used both in town and in adv map garrisons*/
 	struct H3GarrisonInterface
 	{
 		_H3API_SIZE_(0x78);
@@ -14826,36 +12423,21 @@ namespace h3
 	protected:
 		h3unk8 _f_00[28]; // unused afaict
 	public:
-		/** @brief [1C]*/
 		INT32 x;
-		/** @brief [20]*/
 		INT32 y;
-		/** @brief [24]*/
 		BOOL32 isBottom;
-		/** @brief [28] player color*/
 		INT32 ownerId;
-		/** @brief [2C] 0..6, -2 if none*/
 		INT32 selectedSlotIndex;
 	protected:
 		h3unk8 _f_30[52];
 	public:
-		/** @brief [64]*/
 		INT32 id;
-		/** @brief [68] parent dialog*/
 		H3BaseDlg* dlg;
-		/** @brief [6C]*/
 		H3Army* army;
-		/** @brief [70]*/
 		INT32 heroPictureIndex;
-		/** @brief [74]*/
 		H3Hero* hero;
 
 		_H3API_ VOID DrawHero(INT32 hero_picture);
-		/**
-		 * @brief Draw a creature portrait to the specified slot
-		 * @param index 0..6 which creature slot to draw to
-		 * @param creature_portrait_index The index of TwCrPort.def, which is creature id + 2
-		 */
 		_H3API_ VOID DrawCreature(INT32 index, INT32 creature_portrait_index);
 		_H3API_ VOID Redraw(INT32 selected_slot = -1);
 	};
@@ -14871,23 +12453,15 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief global events set to occur on a date*/
 	struct H3GlobalEvent
 	{
 		_H3API_SIZE_(0x34);
-		/** @brief [0] */
 		H3String message;
-		/** @brief [10] */
 		H3Resources resources;
-		/** @brief [2C] */
 		UINT8 players;
-		/** @brief [2D] */
 		BOOL8 humanEnabled;
-		/** @brief [2E] */
 		BOOL8 computerEnabled;
-		/** @brief [30] */
 		UINT16 firstDay;
-		/** @brief [32] */
 		UINT16 repeatEveryXDays;
 	};
 	_H3API_ASSERT_SIZE_(H3GlobalEvent);
@@ -14906,27 +12480,16 @@ namespace h3
 	{
 		_H3API_SIZE_(0x24);
 
-		/** @brief [00]*/
 		eLoss  type;
-		/** @brief [04]*/
 		INT32  loseTownX;
-		/** @brief [08]*/
 		INT32  loseTownY;
-		/** @brief [0C]*/
 		INT32  loseTownZ;
-		/** @brief [10]*/
 		INT32  loseHeroX;
-		/** @brief [14]*/
 		INT32  loseHeroY;
-		/** @brief [18]*/
 		INT32  loseHeroZ;
-		/** @brief [1C]*/
 		INT32  loseHeroId;
-		/** @brief [20]*/
 		UINT16 timeExpires;
-		/** @brief [22]*/
 		BOOL8  lossConditionReached;
-		/** @brief [23]*/
 		INT8   losingPlayerId;
 	};
 	_H3API_ASSERT_SIZE_(H3LossCondition);
@@ -15001,35 +12564,20 @@ namespace h3
 	struct H3PlayerAttributes
 	{
 		_H3API_SIZE_(0x44);
-		/** @brief [00]*/
 		BOOL8 humanPlayable;
-		/** @brief [01]*/
 		BOOL8 computerPlayable;
-		/** @brief [04]*/
 		INT32 aiBehaviour;
-		/** @brief [08]*/
 		UINT16 availableFactionsBitset;
-		/** @brief [0A]*/
 		BOOL8 ownsRandomTown;
-		/** @brief [0B]*/
 		BOOL8 generateHeroAtMainTown;
-		/** @brief [0C]*/
 		BOOL8 hasMainTown;
-		/** @brief [10]*/
 		BOOL32 generateHero;
-		/** @brief [14]*/
 		H3Position mainTownPosition;
-		/** @brief [18]*/
 		BOOL8 hasRandomHero;
-		/** @brief [1C]*/
 		INT32 mainHeroId;
-		/** @brief [20]*/
 		INT32 mainHeroCustomPicture;
-		/** @brief [24]*/
 		CHAR customName[12];
-		/** @brief [30]*/
 		h3unk32 powerPlaceholder;
-		/** @brief [34]*/
 		H3Vector<H3CustomHeroData> heroesData;
 	};
 	_H3API_ASSERT_SIZE_(H3PlayerAttributes);
@@ -15048,51 +12596,28 @@ namespace h3
 	{
 		_H3API_SIZE_(0x4C);
 
-		/** @brief [00]*/
 		eVictory type;
-		/** @brief [01]*/
 		BOOL8 allowDefeatAll;
-		/** @brief [02]*/
 		BOOL8 appliesToComputer;
-		/** @brief [04]*/
 		INT32 artifactId;
-		/** @brief [08]*/
 		INT32 accumulateCreaturesType;
-		/** @brief [0C]*/
 		INT32 accumulateCreaturesAmount;
-		/** @brief [010]*/
 		INT32 accumulateResource;
-		/** @brief [014]*/
 		INT32 accumulateResourceAmount;
-		/** @brief [018]*/
 		INT32 townX;
-		/** @brief [01C]*/
 		INT32 townY;
-		/** @brief [020]*/
 		INT32 townZ;
-		/** @brief [024]*/
 		INT8  villageHallLevel;
-		/** @brief [025]*/
 		INT8  buildFortLevel;
-		/** @brief [028]*/
 		INT32 defeatHeroX;
-		/** @brief [02C]*/
 		INT32 defeatHeroY;
-		/** @brief [030]*/
 		INT32 defeatHeroZ;
-		/** @brief [034]*/
 		INT32 defeatHeroId;
-		/** @brief [038]*/
 		INT32 defeatMonsterX;
-		/** @brief [03C]*/
 		INT32 defeatMonsterY;
-		/** @brief [040]*/
 		INT32 defeatMonsterZ;
-		/** @brief [044] harcoded for Foolhardy Waywardness*/
 		INT32 daysToSurvive;
-		/** @brief [048]*/
 		BOOL8 winConditionReached;
-		/** @brief [049]*/
 		INT8  winningPlayerId;
 	};
 	_H3API_ASSERT_SIZE_(H3VictoryCondition);
@@ -15148,7 +12673,6 @@ namespace h3
 	_H3API_DECLARE_(SetupHero);
 
 #pragma pack(push, 1)
-	/** @brief Intermediary between h3m/save format and H3Hero*/
 	struct H3SetupHero
 	{
 		_H3API_SIZE_(0x334);
@@ -15224,237 +12748,134 @@ namespace h3
 	{
 		_H3API_SIZE_(0x492);
 
-		/** @brief [0] */
 		INT16   x;
-		/** @brief [2] */
 		INT16   y;
-		/** @brief [4] */
 		INT16   z;
-		/** @brief [6] used when the current hero is active and appears on H3MapItem*/
 		BOOL8	isVisible;
-		/** @brief [7] used to show / hide active hero*/
 		H3Position  mixedPosition;
-		/** @brief [B] true if there is an object below the hero*/
 		BOOL8	objectBelow;
-		/** @brief [C] type of H3MapItem under hero*/
 		INT32   objectTypeUnder;
 	protected:
-		/** @brief [10] ??? related to H3MapItem under hero*/
 		UINT32  _flag;
 	public:
-		/** @brief [14] setup of H3MapItem under the hero*/
 		UINT32  objectBelowSetup;
-		/** @brief [18] number of spell points*/
 		INT16   spellPoints;
 	public:
-		/** @brief [1A] 0..156, has to match class, cannot be used to change specialty*/
 		INT32	id;
 	protected:
-		/** @brief [1E] set at 4D8DB1, unknown*/
 		UINT	number;
 	public:
-		/** @brief [22] 0..7 Red ~ Pink*/
 		INT8	owner;
-		/** @brief [23] hero's name, null-terminated*/
 		CHAR	name[12+1];
-		/**
-		 * @brief [30] index of the hero sprite to use 0..17 Knight ~ Elementalist
-		 * 0x12 boat sprite no class - can't navigate water (more sprites after but can crash)
-		 */
 		INT32   hero_class;
-		/** @brief [34] id of the hero's portrait, 0 ~ 156*/
 		UINT8   picture;
-		/** @brief [35] planned x destination*/
 		INT32	dest_x;
-		/** @brief [39] planned y destination*/
 		INT32	dest_y;
-		/** @brief [3D] planned z destination*/
 		INT32	dest_z;
 	protected:
 		h3unk8	_f_41[3];
 	public:
-		/** @brief [44] starting x position*/
 		UINT8   patrol_x;
-		/** @brief [45] starting y position*/
 		UINT8   patrol_y;
-		/** @brief [46] radius for patrolling, -1 means no range limit*/
 		INT8   patrolRadius;
 	protected:
 		h3unk8	_f_47;
 		h3unk8  _f_48;
 	public:
-		/** @brief [49] maximum movement points of the hero on a given turn*/
 		INT32   maxMovement;
-		/** @brief [4D] remaining movement points of the hero on a given turn*/
 		INT32   movement;
-		/** @brief [51] current experience of the hero*/
 		INT32	experience;
-		/** @brief [55] current level of the hero*/
 		INT16   level;
 	protected:
-		/** @brief [57] 32 visited object types per hero*/
 		H3Bitfield  learningStones;
-		/** @brief [5B] 32 visited object types per hero*/
 		H3Bitfield  marlettoTower;
-		/** @brief [5F] 32 visited object types per hero*/
 		H3Bitfield  gardenRevelation;
-		/** @brief [63] 32 visited object types per hero*/
 		H3Bitfield  mercenaryCamp;
-		/** @brief [67] 32 visited object types per hero*/
 		H3Bitfield  starAxis;
-		/** @brief [6B] 32 visited object types per hero*/
 		H3Bitfield  treeKnowldge;
-		/** @brief [6F] 32 visited object types per hero*/
 		H3Bitfield  libraryEnlightenment;
-		/** @brief [73] 32 visited object types per hero*/
 		H3Bitfield  arena;
-		/** @brief [77] 32 visited object types per hero*/
 		H3Bitfield  schoolMagic;
-		/** @brief [7B] 32 visited object types per hero*/
 		H3Bitfield  schoolWar;
 		UINT8	_f_7F[16];
 	public:
-		/** @brief [8F] seed for skill tree, 1..255*/
 		UINT8	levelSeed;
 	protected:
 		UINT8	_f_90;
 	public:
-		/** @brief [91] creatures of the hero*/
 		H3Army army;
-		/** @brief [C9] level of each secondary skill*/
 		INT8   secSkill[28];
-		/** @brief [E5] order in which to display SSkills (1,2,3,...)*/
 		INT8   secSkillPosition[28];
-		/** @brief [101] number of secondary skills the hero has*/
 		INT32  secSkillCount;
-		/** @brief [105] temporary hero flags*/
 		union
 		{
 			struct
 			{
-				/** @brief [0x00000001] Visited Well*/
 				unsigned well              : 1;
-				/** @brief [0x00000002] Visited Stables*/
 				unsigned stables           : 1;
-				/** @brief [0x00000004] Visited Buoy*/
 				unsigned buoy              : 1;
-				/** @brief [0x00000008] Visited Swan Pond*/
 				unsigned swanPond          : 1;
-				/** @brief [0x00000010] Visited idol of fortune on days 1~6, morale bonys*/
 				unsigned idolFortuneMorale : 1;
-				/** @brief [0x00000020] -1 luck from fountain of fortune*/
 				unsigned fountainFortune1  : 1;
-				/** @brief [0x00000040] visited watering hole*/
 				unsigned wateringHole      : 1;
-				/** @brief [0x00000080] visited oasis*/
 				unsigned oasis             : 1;
-				/** @brief [0x00000100] visited temple on days 1~6*/
 				unsigned temple            : 1;
-				/** @brief [0x00000200] shipwreck morale penalty*/
 				unsigned shipwreck         : 1;
-				/** @brief [0x00000400] crypt morale penalty*/
 				unsigned crypt             : 1;
-				/** @brief [0x00000800] derelict ship morale penalty*/
 				unsigned derelectShip      : 1;
-				/** @brief [0x00001000] pyramid morale penalty*/
 				unsigned pyramid           : 1;
-				/** @brief [0x00002000] visited faerie ring*/
 				unsigned faerieRing        : 1;
-				/** @brief [0x00004000] visited fountain of youth*/
 				unsigned fountainOfYouth   : 1;
-				/** @brief [0x00008000] visited mermaids*/
 				unsigned mermaids          : 1;
-				/** @brief [0x00010000] visited rally flag*/
 				unsigned rallyFlag         : 1;
-				/** @brief [0x00020000] hero is in tavern, see 0x4DA4D1*/
 				unsigned inTavern          : 1;
-				/** @brief [0x00040000] hero is in a boat*/
 				unsigned inBoat            : 1;
-				/** @brief [0x00080000] */
 				unsigned unk80000          : 1;
-				/** @brief [0x00100000] visited sirens*/
 				unsigned sirens            : 1;
-				/** @brief [0x00200000] warrior's tomb morale penalty*/
 				unsigned warriorTomb       : 1;
-				/** @brief [0x00400000] typed luck cheat*/
 				unsigned luckCheat         : 1;
-				/** @brief [0x00800000] typed morale cheat*/
 				unsigned moraleCheat       : 1;
-				/** @brief [0x01000000] typed speed cheat*/
 				unsigned speedCheat        : 1;
-				/** @brief [0x02000000] luck bonus from idol of fortune*/
 				unsigned idolFortuneLuck   : 1;
-				/** @brief [0x04000000] visited temple on day 7, +2 morale*/
 				unsigned temple2           : 1;
-				/** @brief [0x08000000] +1 luck from fountain of fortune*/
 				unsigned fountainFortune2  : 1;
-				/** @brief [0x10000000] +2 luck from fountain of fortune*/
 				unsigned fountainFortune3  : 1;
-				/** @brief [0x20000000] +3 luck from fountain of fortune*/
 				unsigned fountainFortune4  : 1;
-				/** @brief [0x40000000-0x80000000] */
 				unsigned unk40000000       : 2;
 			};
 			UINT32 flags;
 		};
-		/** @brief [109] */
 		FLOAT  AI_experienceEffectiveness;
-		/** @brief [10D] number of times dimension door was cast this day*/
 		INT8	dimDoorCastCount; // +10D
-		/** @brief [10E] spell expertise of disguise that was cast*/
 		INT32   disguisePower;  // +10E
-		/** @brief [112] spell expertise of fly that was cast*/
 		INT32	flyPower;
-		/** @brief [116] spell expertise of waterwalk that was cast*/
 		INT32	waterwalkPower; // +116
-		/** @brief [11A] */
 		INT8	moraleBonus;
-		/** @brief [11B] */
 		INT8	luckBonus;
-		/** @brief [11C] */
 		BOOL8	isSleeping;
 	protected:
 		h3unk8  _f_11D[4];
 	public:
-		/** @brief [121] (48 towns, room for 64)*/
 		H3VisitedTownsBitset visitedTowns;
-		/** @brief [129] spell expertise of Visions spell*/
 		INT32	visionPower; // +129
-		/** @brief [12D] 19 artifacts on a hero*/
 		H3Artifact bodyArtifacts[19];
 	protected:
-		/** @brief [1C5] ?*/
 		UINT8	freeAddSlots;
 	public:
-		/** @brief [1C6] whether an artifact slot is blocked or not*/
 		UINT8	blockedArtifacts[14];
-		/** @brief [1D4] 64 artifacts in the backpack*/
 		H3Artifact backpackArtifacts[64];
-		/** @brief [3D1] number of artifacts in the backpack*/
 		INT8	backpackCount;
-		/** @brief [3D5] male or female*/
 		BOOL    isFemale;
-		/** @brief [3D9] has custom biography?*/
 		BOOL8	customBio;
-		/** @brief [3DA] custom biography*/
 		H3String biography;
-		/** @brief [3EA] Spells the hero has learned*/
 		BOOL8   learnedSpells[70];
-		/** @brief [430] Spells the hero has access to through artifacts*/
 		BOOL8   availableSpell[70];
-		/** @brief [476] four primary skills, attack, defense, spell power, knowledge*/
 		INT8   primarySkill[4];
-		/** @brief [47A] */
 		UINT   aiAggressiveness;
-		/** @brief [47E] */
 		UINT   aiSpellPowerEffectiveness;
-		/** @brief [482] */
 		UINT   aiSpellLengthEffectiveness;
-		/** @brief [486] */
 		UINT   aiKnowledgeEffectiveness;
-		/** @brief [48A] */
 		UINT   aiDoubleSpellPointsEffectiveness;
-		/** @brief [48E] */
 		UINT   aiExtraSpellPointsEffectiveness;
 
 	public:
@@ -15484,12 +12905,6 @@ namespace h3
 		_H3API_ INT32 HasSimilarCreature(INT id);
 		_H3API_ LPCSTR GetHeroClassName();
 		_H3API_ VOID ShowDialog() const;
-		/**
-		 * @brief Shows the hero information dialog
-		 * @param dismissable Whether to enable to Dismiss button
-		 * @param not_in_town Whether the dialog is called from town; used to refresh adventure map when dismissing hero
-		 * @param right_click Show with right-click or keep open
-		 */
 		_H3API_ VOID ShowDialog(BOOL32 dismissable, BOOL32 not_in_town, BOOL8 right_click);
 		_H3API_ INT GetPower() const;
 		_H3API_ BOOL8 CanReplaceArtifact(INT32 id, INT32 slot) const;
@@ -15505,122 +12920,25 @@ namespace h3
 		_H3API_ INT32 CalculateSpellCost(INT spell, H3Army* opponentArmy, INT specialTerrain);
 		_H3API_ INT32 CalculateAdventureMapSpellCost(INT spell);
 		_H3API_ VOID RemoveSpellPointsAndRefresh(UINT16 spellPoints);
-		/**
-		 * @brief Updates all temporary spells granted by artifacts or learned
-		 */
 		_H3API_ VOID UpdateAvailableSpell();
 		_H3API_ VOID Hide();
 		_H3API_ VOID Show();
 
-		/**
-		 * @brief Get what creature type would be raised after combat
-		 *
-		 * @return eCretures to raise
-		 */
 		_H3API_ eCreature GetNecromancyCreatureId() const;
-		/**
-		 * @brief Calculates the hero's necromancy power
-		 *
-		 * @param clamp_value Whether to cap the value at 1.0f
-		 * @return Percentage of creatures to raise
-		 */
 		_H3API_ FLOAT GetNecromancyPower(BOOL8 clamp_value) const;
-		/**
-		 * @brief Calculates how many mana points to restore daily
-		 * Considers mysticism and artifacts worn
-		 *
-		 * @return The amount of spell points that will be restored
-		 */
 		_H3API_ INT32 GetSpellPointsRestored() const;
-		/**
-		 * @brief Calculate the hero's total luck
-		 *
-		 * @param enemy_hero Can be nullptr if no enemy
-		 * @param is_cursed_ground Whether the hero is on cursed ground
-		 * @param clamp_value Whether to clamp the value between -3..+3
-		 * @return Total luck under specified conditions
-		 */
 		_H3API_ INT32 GetLuckBonus(H3Hero* enemy_hero, BOOL8 is_cursed_ground, BOOL8 clamp_value) const;
-		/**
-		 * @brief Calculate the hero's total morale
-		 *
-		 * @param enemy_hero *UNUSED* Can be nullptr if no enemy
-		 * @param is_cursed_ground Whether the hero is on cursed ground
-		 * @param clamp_value Whether to clamp the value between -3..+3
-		 * @return Total morale under specified conditions
-		 */
 		_H3API_ INT32 GetMoraleBonus(H3Hero* enemy_hero, BOOL8 is_cursed_ground, BOOL8 clamp_value) const;
-		/**
-		 * @brief Calculates how many cells should be revealed
-		 * Considers Scouting and artifacts
-		 *
-		 * @return Radius of cells to reveal
-		 */
 		_H3API_ INT32 GetScoutingRadius() const;
-		/**
-		 * @brief Get Archery power %
-		 * Considers artifacts
-		 *
-		 * @return 0.0 if no skill
-		*/
 		_H3API_ FLOAT GetArcheryPower() const;
-		/**
-		 * @brief Get Offense power %
-		 *
-		 * @return 0.0 if no skill
-		 */
 		_H3API_ FLOAT GetOffensePower() const;
-		/**
-		 * @brief Get percentage of physical damage after Armorer reduction
-		 *
-		 * @return 1.0 if no skill, 0.0 at minimum
-		 */
 		_H3API_ FLOAT GetArmorerPower() const;
-		/**
-		 * @brief How many gold is generated by hero
-		 * Considers both estates and gold specialty
-		 *
-		 * @return The amount of gold to generate
-		 */
 		_H3API_ INT32 GetGeneratedGold() const;
-		/**
-		 * @brief The effect of the hero's Eagle Eye Skill
-		 * Takes into consideration artifacts
-		 *
-		 * @return 0.0 if no skill .. 1.0
-		 */
 		_H3API_ FLOAT GetEagleEyePower() const;
-		/**
-		 * @brief The fraction of gold you need to pay
-		 * Takes into consideration artifacts
-		 *
-		 * @return 1.0 if no skill .. 0.1
-		 */
 		_H3API_ FLOAT GetDiplomacyPower() const;
-		/**
-		 * @brief The chance of a spell to NOT be resisted
-		 * Takes into consideration artifacts even without having the skill.
-		 *
-		 * @return 1.0 if no skill .. 0.0
-		 */
 		_H3API_ FLOAT GetResistancePower() const;
-		/**
-		 * @brief The effect of the hero's Learning Skill
-		 *
-		 * @return 1.0 if no skill, plus whatever bonuses
-		 */
 		_H3API_ FLOAT GetLearningPower() const;
-		/**
-		 * @brief The effect of the hero's Intelligence Skill
-		 *
-		 * @return 1.0 if no skill, plus whatever bonuses
-		 */
 		_H3API_ FLOAT GetIntelligencePower() const;
-		/**
-		 * @brief The effect of the hero's First Aid Skill
-		 *
-		 * @return 1.0 if no skill, plus whatever bonuses
-		 */
 		_H3API_ FLOAT GetFirstAidPower() const;
 
 	};
@@ -15642,80 +12960,54 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief data about each of the 8 players on the map*/
 	struct H3Player
 	{
 		_H3API_SIZE_(0x168);
 
-		/** @brief [0] */
 		INT8 ownerID;
-		/** @brief [1] */
 		INT8 numberHeroes;
-		/** @brief [4] */
 		INT32  currentHero;
-		/** @brief [8] */
 		INT32  heroIDs[8];
-		/** @brief [28] */
 		INT32  tavernHeroL;
-		/** @brief [2C] */
 		INT32  tavernHeroR;
 	protected:
 		h3unk8 _f_30[4];
 	public:
-		/** @brief [34] */
 		INT32 AI_type;
-		/** @brief [38] */
 		INT8 visitedObelisks;
 	protected:
 		h3unk8 _f_39[4];
 	public:
-		/** @brief [3D] */
 		INT8  daysLeft;
-		/** @brief [3E] */
 		INT8  townsCount;
-		/** @brief [3F] */
 		INT8  currentTown;
-		/** @brief [40] */
 		INT8  towns[48];
 	protected:
 		h3unk8 _f_70[4];
-		/** @brief [74] */
 		INT32 topHeroIndex;
 		h3unk8 _f_78[36];
 	public:
-		/** @brief [9C] */
 		H3Resources playerResources;
-		/** @brief [B8] */
 		H3Bitfield magicalGardens;
-		/** @brief [BC] */
 		H3Bitfield magicSpring;
-		/** @brief [C0] */
 		H3Bitfield visitedCorpses;
-		/** @brief [C4] */
 		H3Bitfield visitedLeanTos;
 	protected:
 		h3unk8 _f_C8[4];
-		/** @brief [CC] name of player, uncertain length*/
 		CHAR player_name[21];
 	public:
-		/** @brief [E1] */
 		BOOL8 is_human;
-		/** @brief [E2] */
 		BOOL8 is_human2;
 	protected:
 		h3unk8 _f_E3[3];
-		/** @brief [E6] */
 		BOOL8 human;
 		h3unk8 _f_E7;
-		/** @brief [E8] */
 		BOOL hasComboArtifacts;
 		h3unk8 _f_EC[28];
 	public:
-		/** @brief [108] */
 		H3Resources income;
 	protected:
 		h3unk8 _f_124[4];
-		/** @brief [128] */
 		DOUBLE resourceImportance[7];
 		h3unk8 _f_160[8];
 	public:
@@ -15741,26 +13033,17 @@ namespace h3
 	protected:
 		h3unk8 _f_000[8];
 	public:
-		/** @brief [008]*/
 		INT8  handicap[8];
-		/** @brief [010]*/
 		INT32 townType[8];
-		/** @brief [030] 0 human, 10 computer, -1 not set*/
 		INT8  playerType[8];
-		/** @brief [038]*/
 		INT8  difficulty;
-		/** @brief [039]*/
 		CHAR  filename[251];
-		/** @brief [134]*/
 		CHAR  saveDirectory[100];
-		/** @brief [198]*/
 		BOOL8 isPlayable[8];
 	protected:
 		h3unk8 _f_1A0[3];
 	public:
-		/** @brief [1A3]*/
 		INT8 turnDuration;
-		/** @brief [1A4]*/
 		INT32 heroMaybe[8];
 	protected:
 		h3unk8 _f_1C4[8];
@@ -15785,15 +13068,10 @@ namespace h3
 	struct H3University;
 	struct H3CreatureBank;
 
-	/* alternate names! */
 	_H3API_TYPE_DECLARE_(H3Main, Game);
 	_H3API_TYPE_DECLARE_(H3Main, Base);
 
 #pragma pack(push, 4)
-	/**
-	 * @brief Holds most data relevant to play a map/game
-	 * not a manager!
-	 */
 	struct H3Main
 	{
 		_H3API_SIZE_(0x4E7D0);
@@ -15802,42 +13080,30 @@ namespace h3
 	protected:
 		h3unk8 _f_0000[4];
 	public:
-		/** @brief [04] */
 		INT8 disabledShrines[70];
-		/** @brief [4A] */
 		INT8 disabledSpells[70];
-		/** @brief [90] message to show Grail is not enabled in a town, reset every day*/
 		BOOL8 grailDisabledMessage;
-		/** @brief [94] to read data from h3m file*/
 		H3Vector<H3SetupTown> townSetups;
-		/** @brief [A4] to read data from h3m file*/
 		H3SetupHero heroSetup[156];
 	protected:
 		h3unk8 _f_1F454[4];
-		/** @brief [1F458]*/
 		H3CmpInfo campaignInfo;
 		h3unk8 _f_1F4D4[354];
 	public:
-		/** @brief [1F636]*/
 		BOOL8 isDead[8];
-		/** @brief [1F63E]*/
 		struct Date
 		{
 			_H3API_SIZE_(6);
 			UINT16 day;
 			UINT16 week;
 			UINT16 month;
-			/** @brief converts day, week, month into days from start, first day being 1*/
 			_H3API_ UINT32 CurrentDay() const;
 		}date;
 	protected:
 		h3unk8 _f_1F644[32];
 	public:
-		/** @brief [1F664] */
 		H3ArtifactMerchant artifactMerchant;
-		/** @brief [1F680] */
 		H3Vector<H3BlackMarket> blackMarkets;
-		/** @brief [1F690] */
 		struct Grail
 		{
 			_H3API_SIZE_(0x8);
@@ -15849,44 +13115,26 @@ namespace h3
 		public:
 			INT8 isPresent;	// +6
 		}grail;
-		/** @brief [1F698] 0 - RoE, 1 - AB, 2 - SoD*/
 		INT32 mapKind;
-		/** @brief [1F69C] */
 		BOOL8 isCheater;
-		/** @brief [1F69D] Griffin dwelling doesn't require Blacksmith in this mode*/
 		BOOL8 inTutorial;
 	protected:
 		h3unk8 _f_1F69E[2];
 	public:
-		/** @brief [1F6A0] */
 		H3PlayersInfo playersInfo;
-		/** @brief [1F86C] */
 		H3MapInfo mapInfo;
-		/** @brief [1FB70] */
 		H3MainSetup mainSetup;
 	protected:
 		h3unk8 _f_20ACC[4];
 	public:
-		/** @brief [20AD0] */
 		H3Player players[8];
-		/** @brief [21610] */
 		H3Vector<H3Town> towns;
-		/** @brief [21620] */
 		H3Hero heroes[156];
-		/** @brief [4DF18] */
 		INT8 heroOwner[156];
-		/** @brief [4DFB4] */
 		H3Bitfield heroMayBeHiredBy[156];
-		/** @brief [4E224] */
 		INT8 randomArtifacts[144];
-		/** @brief [4E2B4] */
 		INT8 artifactsAllowed[144];
 	protected:
-		/**
-		 * When visiting one of these objects, whole team gets set as visited
-		 * Exists as an array[32] (Shrines are referred as index 19,20,21 ca. 4A9BAF, and save/read uses 32 bytes)
-		 */
-		/** @brief [4E344] */
 		H3PlayersBitfield visitedBuoy;
 		H3PlayersBitfield visitedSwanPond;
 		H3PlayersBitfield visitedFaerieRing;
@@ -15903,7 +13151,6 @@ namespace h3
 		H3PlayersBitfield visitedFountainYouth;
 		H3PlayersBitfield visitedHillFort;
 		H3PlayersBitfield visitedMagicSprings;
-		/** @brief [4E354] */
 		H3PlayersBitfield visitedMermaid;
 		H3PlayersBitfield visitedRallyFlag;
 		H3PlayersBitfield visitedTreeKnowledge;
@@ -15917,57 +13164,35 @@ namespace h3
 		H3PlayersBitfield visitedAltarSacrifice;
 		h3unk8 field_4E361[3]; // unused
 	public:
-		/** @brief [4E364] bitfield for players*/
 		H3PlayersBitfield keymasterVisited[8];
 	protected:
-		/**
-		 * @brief [4E36C] terrain reveal bitfield for cartographers
-		 * 0 .. water cartographer (0x100)
-		 * 1 .. land cartographer  (0xBF)
-		 * 2 .. subterranean cartographer (0x40)
-		 */
 		UINT16 cartographersLandReveal[3];
 		H3PlayersBitfield visitedCartographers[3];
 		h3unk8 _f_4E375[3]; // unused
 	public:
-		/** @brief [4E378] */
 		H3Vector<H3Signpost> signpostsBottles;
-		/** @brief [4E388] */
 		H3Vector<H3Mine> minesLighthouses;
-		/** @brief [0x4E398] */
 		H3Vector<H3Generator> dwellings;
-		/** @brief [0x4E3A8] */
 		H3Vector<H3Garrison> garrisons;
-		/** @brief [0x4E3B8] */
 		H3Vector<H3Boat> boats;
-		/** @brief [0x4E3C8] */
 		H3Vector<H3University> universities;
-		/** @brief [0x4E3D8] */
 		H3Vector<H3CreatureBank> creatureBanks;
-		/** @brief [4E3E8] */
 		INT8 obeliskCount;
-		/** @brief [4E3E9] */
 		UINT8 obeliskVisited[48];
 	protected:
 		h3unk8 _f_4E419[575];
 	public:
-		/** @brief [4E658] */
 		INT8 bannedSkills[28];
 	protected:
 		h3unk8 _f_4E674[4];
 	public:
-		/** @brief [4E678] H3Position*/
 		H3Vector<UINT32> monolithTwoWay[8];
-		/** @brief [4E6F8] H3Position*/
 		H3Vector<UINT32> monolithOneWay[8];
 	protected:
 		h3unk8 _f_4E778[4];
 	public:
-		/** @brief [4E77C] H3Position*/
 		H3Vector<UINT32> whirlPools;
-		/** @brief [4E78C] H3Position*/
 		H3Vector<UINT32> subterraneanGatesDestination;
-		/** @brief [4E79C] H3Position*/
 		H3Vector<UINT32> subterraneanGatesID;
 	protected:
 		H3Vector<h3unk8*> replayActions;
@@ -15979,11 +13204,6 @@ namespace h3
 		_H3API_ BOOL HasUnderground() const;
 
 		_H3API_ H3Point GetCoordinates(H3MapItem* item);
-		/**
-		 * @brief Get H3Hero structure safely.
-		 * @param id Identifier for the hero to get.
-		 * @return H3Hero* for specified id, nullptr if invalid.
-		*/
 		_H3API_ H3Hero*    GetHero(INT32 id);
 		_H3API_ H3MapItem* GetMapItem(UINT32 mixedPosition);
 		_H3API_ H3Player*  GetPlayer();
@@ -15994,11 +13214,6 @@ namespace h3
 		_H3API_ VOID       RefreshMapItemAppearrance(H3MapItem* mi);
 		_H3API_ VOID       ResetRandomArtifacts();
 		_H3API_ VOID       SaveGame(LPCSTR save_name);
-		/**
-		 * @brief Used to update the H3LoadedDef on the adventure map.
-		 * For example, to modify town's appearance after building Fort.
-		 * @param item Position on the map that should be updated.
-		*/
 		_H3API_ VOID UpdateMapItemAppearance(H3MapItem* item);
 
 		_H3API_ H3Map<H3MapItem>     GetMap();
@@ -16025,55 +13240,24 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief Houses functionality related to multipleplay*/
 	struct H3Network
 	{
-		/** @brief Checks if the current game features more than 1 human*/
 		_H3API_ static BOOL8 Multiplayer();
-		/**
-		 * @brief Send up to 127 characters of text
-		 * @param text Message to be sent
-		 * @param player_id Destination player
-		 */
 		_H3API_ static VOID SendMessageToPlayer(LPCSTR text, INT32 player_id);
-		/**
-		 * @brief Send up to 127 characters of text
-		 * @param text Message to be sent
-		 * @param player_id Destination player
-		 */
 		_H3API_ static VOID SendMessageToPlayer(const H3String& text, INT32 player_id);
 	};
 
-	/** @brief Send data in between players*/
 	template<typename T>
 	struct H3NetworkData
 	{
-		/** @brief [00] -1 means everyone*/
 		INT32   recipientId;
 		h3unk32 _f_04;
-		/** @brief [08] identifier for receiver to know how to handle data*/
 		INT     msgId;
-		/** @brief [0C] sizeof(*this) + extra size of H3NetworkData*/
 		INT     bufferSize;
 		INT     _f_10;
-		/**
-		 * @brief [14] All network messages are typenamed
-		 */
 		T data;
-		/**
-		 * @brief
-		 * @tparam T
-		 * @param recipient_id
-		 * @param msg_id
-		 * @param data
-		 */
 		_H3API_ H3NetworkData(INT32 recipient_id, INT32 msg_id, const T& data);
 
-		/**
-		 * @brief Send general data to another player
-		 * @param compress_data Whether the data should be compressed before sending it over
-		 * @param size You can specify whether you want to send fewer bytes than the full size, -1 sends full size
-		 */
 		_H3API_ VOID SendData(BOOL compress_data, INT32 size = -1);
 	};
 
@@ -16102,22 +13286,15 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief random dwellings as they are read from h3m*/
 	struct H3RandomDwelling
 	{
 		_H3API_SIZE_(0x10);
 
-		/** @brief [00] non-zero if set to match a maped town identifier from H3Main::townSetups */
 		UINT32           associatedTown;
-		/** @brief [04] bitset of available towns*/
 		UINT16           availableTowns;
-		/** @brief [06] FF..07 */
 		INT8             owner;
-		/** @brief [07] 0..7*/
 		UINT8            minLevel;
-		/** @brief [08] 0..7*/
 		UINT8            maxLevel;
-		/** @brief [0C]*/
 		H3ObjectDetails* objectDetails;
 	};
 	_H3API_ASSERT_SIZE_(H3RandomDwelling);
@@ -16133,53 +13310,30 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief Used when loading preliminary data from map files*/
 	struct H3ScenarioMapInformation : H3MapInfo
 	{
 		_H3API_SIZE_(0xCA4);
-		/** @brief [304]*/
 		H3PlayersInfo              playersInfo;
-		/** @brief [4D0]*/
 		h3unk16                    _f_4D0;
-		/** @brief [4D2]*/
 		h3unk8                     _f_4D2[30];
-		/** @brief [4F0]*/
 		INT8                       heroOwner[156];
-		/** @brief [58C]*/
 		CHAR                       mapNameArray[61];
-		/** @brief [5C9]*/
 		CHAR                       mapDescriptionArray[300];
-		/** @brief [6F8]*/
 		FILETIME                   fileTime;
-		/** @brief [700]*/
 		h3unk8                     gap700[8];
-		/** @brief [708]*/
 		h3unk32                    _f_708;
-		/** @brief [70C]*/
 		h3unk8                     _f_70C[4];
-		/** @brief [710]*/
 		H3MapInfo                  mapinfo;
-		/** @brief [A14]*/
 		H3PlayersInfo              playersinfo;
-		/** @brief [BE0]*/
 		h3unk8                     _f_BE0[64];
-		/** @brief [C20]*/
 		H3Vector<H3Vector<H3Hero>> heroes;
-		/** @brief [C30]*/
 		h3unk8                     _f_C30[16];
-		/** @brief [C40]*/
 		H3Vector<h3unk8>            _f_C40;
-		/** @brief [C50]*/
 		H3Vector<h3unk8>            _f_C50;
-		/** @brief [C60]*/
 		H3String                   _f_C60;
-		/** @brief [C70]*/
 		h3unk8                     _f_C70[8];
-		/** @brief [C78]*/
 		BOOL8                      isPlayerAbsent[8];
-		/** @brief [C80]*/
 		h3unk32                    _f_C80[8];
-		/** @brief [CA0]*/
 		h3unk32                    _f_CA0;
 	};
 	_H3API_ASSERT_SIZE_(H3ScenarioMapInformation);
@@ -16194,20 +13348,15 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief information about all spells (including creature spell-abilities)*/
 	struct H3Spell
 	{
 		_H3API_SIZE_(0x88);
 		_H3API_GET_INFO_(0x687FA8, H3Spell);
 
-		/** @brief [0]*/
 		eSpellTarget type;
-		/** @brief [4] name of the sound to use*/
 		LPCSTR soundName;
-		/** @brief [8]*/
 		UINT32 animationIndex;
 	public:
-		/** @brief [C] bitfield of spell data*/
 		union
 		{
 			struct
@@ -16221,52 +13370,31 @@ namespace h3
 				BOOL8 expertMassVersion   : 1; // [40]
 				BOOL8 targetAnywhere      : 1; // [80]
 				BOOL8 removeObstacle      : 1; // [100]
-				/** @brief All damage spells*/
 				BOOL8 damageSpell         : 1; // [200]
 				BOOL8 mindSpell           : 1; // [400]
 				BOOL8 friendlyMass        : 1; // [800]
 				BOOL8 cannotTargetSiege   : 1; // [1000]
 				BOOL8 spellFromArtifact   : 1; // [2000]
-				/** @brief Air/Fire Shield, Protections From, Anti-Magic, Magic Mirror, Stone Skin, Counterstrike*/
 				BOOL8 defensive           : 1; // [4000]
-				/** @brief All damage spells except INFERNO and CHAING LIGHTNING*/
 				BOOL8 aiDamageSpell      : 1; // [8000]
-				/** @brief Inferno and Chaing Lightning*/
 				BOOL8 aiAreaEffect        : 1; // [10000]
-				/** @brief Death Ripple, Destroy Undead and Armageddon*/
 				BOOL8 aiMassDamageSpell  : 1; // [20000]
-				/** @brief Shield, Air Shield, ... Berserk, Teleport, Clone, NO SUMMON SPELLS*/
 				BOOL8 aiNonDamageSpell   : 1; // [40000]
-				/** @brief Resurrection, Animate Dead, Hypnotize, all summon spells*/
 				BOOL8 aiCreatures         : 1; // [80000]
-				/**
-				 * @brief Summon Boat, Fly, WW, DD, TP
-				 * Earthquake, Titan's Lightning Bolt (not sure why these are here???)
-				 */
 				BOOL8 aiAdventureMap      : 1; // [100000]
 			};
 			UINT32 flags;
 		};
 
-		/** @brief [10] full name*/
 		LPCSTR name;
-		/** @brief [14] abbreviated name*/
 		LPCSTR shortName;
-		/** @brief [18] 0..5*/
 		INT32 level;
-		/** @brief [1C] */
 		eSpellchool school;
-		/** @brief [20] mana cost at each spell expertise*/
 		INT32 manaCost[4];
-		/** @brief [30] value multiplied by spell power*/
 		INT32 spEffect;
-		/** @brief [34] base value of spell for calculations*/
 		INT32 baseValue[4];
-		/** @brief [44] change for each class?*/
 		INT32 chanceToGet[9];
-		/** @brief [68] */
 		UINT32 aiValue[4];
-		/** @brief [78] description of spell based on secondary skill level*/
 		LPCSTR description[4];
 
 		_H3API_ INT32 GetBaseEffect(INT32 level, INT32 spellPower);
@@ -16284,21 +13412,15 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief according to WoG*/
 	struct H3TurnTimer
 	{
 		_H3API_SIZE_(0x14);
 		_H3API_GET_INFO_(0x4AD194 + 1, H3TurnTimer);
 
-		/** @brief [00]*/
 		UINT lastShownTime;
-		/** @brief [04]*/
 		UINT startTimeMain;
-		/** @brief [08]*/
 		UINT turnLimit;
-		/** @brief [0C]*/
 		UINT showNextPeriod;
-		/** @brief [10]*/
 		UINT battleStartTime;
 	};
 	_H3API_ASSERT_SIZE_(H3TurnTimer);
@@ -16331,42 +13453,27 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief Starting Hero default data*/
 	struct H3HeroInfo
 	{
 		_H3API_SIZE_(0x5C);
 		_H3API_GET_INFO_(0x67DCE8, H3HeroInfo);
 
-		/** @brief [00]*/
 		BOOL32           isFemale;
-		/** @brief [04] 0..13 never used*/
 		eHeroRace        race;
-		/** @brief [08] 0..17 eHeroClass*/
 		INT32            heroClass;
-		/** @brief [0C] starting secondary skills*/
 		H3SecondarySkill sskills[2];
-		/** @brief [1C]*/
 		BOOL8            hasSpellbook;
-		/** @brief [20] -1 if no spell*/
 		INT32            startingSpell;
-		/** @brief [24] NH3Creatures::eCreatures*/
 		INT32            armyType[3];
-		/** @brief [30] 48x36 small portrait name*/
 		LPCSTR           smallPortrait;
-		/** @brief [34] 58x64 large portrait name*/
 		LPCSTR           largePortrait;
-		/** @brief [38] hero is available in RoE*/
 		BOOL8            roeHero;
-		/** @brief [39] hero is available in AB and SoD*/
 		BOOL8            expansionHero;
-		/** @brief [3A] hero is available in specific campaigns, not in regular maps*/
 		BOOL8            campaignHero;
 	protected:
 		UINT             _f_3C; // always 0
 	public:
-		/** @brief [40] default name of the hero*/
 		LPCSTR           name;
-		/** @brief [44] up to 3 starting stacks, type is determined by .armyType*/
 		struct StartingCreatures
 		{
 			INT32 lowAmount;
@@ -16386,17 +13493,12 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief hero placeholders as they are read from h3m*/
 	struct H3HeroPlaceholder
 	{
 		_H3API_SIZE_(0x10);
-		/** @brief [00]*/
 		H3ObjectDetails* objectDetails;
-		/** @brief [04] FF..07 */
 		INT8             owner;
-		/** @brief [08]*/
 		INT32            type;
-		/** @brief [0C]*/
 		UINT8            powerRating;
 	};
 	_H3API_ASSERT_SIZE_(H3HeroPlaceholder);
@@ -16411,31 +13513,20 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief specialty structure of heroes*/
 	struct H3HeroSpecialty
 	{
 		_H3API_SIZE_(0x28);
 		_H3API_GET_INFO_(0x679C80, H3HeroSpecialty);
 
-		/** @brief [0]*/
 		eHeroSpecialty type;
-		/** @brief [4] the ID of skill, creature, resource, spell, creature to upgrade (Dracon/Gelu)*/
 		UINT32 bonusId;
-		/** @brief [8] to be used with creature bonus*/
 		UINT32 attackBonus;
-		/** @brief [C] to be used with creature bonus */
 		UINT32 defenseBonus;
-		/** @brief [10] to be used with creature bonus */
 		UINT32 damageBonus;
-		/** @brief [14] the ID of the second creature that can be upgraded */
 		UINT32 upgrade2;
-		/** @brief [18] the ID of the upgraded creature (Enchanters/Sharpshooters) */
 		UINT32 upgradeTo;
-		/** @brief [1C] short specialty name*/
 		LPCSTR spShort;
-		/** @brief [20] full specialty name*/
 		LPCSTR spFull;
-		/** @brief [24] specialty description*/
 		LPCSTR spDescr;
 
 		_H3API_ BOOL   HasSpellSpec() const;
@@ -16455,13 +13546,9 @@ namespace h3
 	struct H3ScenarioHeroInfo
 	{
 		_H3API_SIZE_(0x1C);
-		/** @brief [00]*/
 		INT32    heroId;
-		/** @brief [04]*/
 		INT32    portraitId;
-		/** @brief [08]*/
 		H3String name;
-		/** @brief [18]*/
 		H3PlayersBitfield32 availableToPlayers;
 	};
 	_H3API_ASSERT_SIZE_(H3ScenarioHeroInfo);
@@ -16508,15 +13595,11 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief format of events in towns*/
 	struct H3CastleEvent : public H3GlobalEvent
 	{
 		_H3API_SIZE_(0x50);
-		/** @brief [34] */
 		INT32 castleNumber;
-		/** @brief [38] */
 		H3BuildingsBitfield buildings;
-		/** @brief [40] */
 		INT16 creatures[7];
 	};
 	_H3API_ASSERT_SIZE_(H3CastleEvent);
@@ -16556,34 +13639,20 @@ namespace h3
 	struct H3SetupTown
 	{
 		_H3API_SIZE_(0x88);
-		/** @brief [00] a unique value created in mapeditor*/
 		UINT32     id;
-		 /** @brief [04] */
 		INT8       owner;
-		/** @brief [05] */
 		BOOL8      hasCustomBuildings;
-		/** @brief [08] */
 		H3Bitfield builtBuildings[2];
-		/** @brief [10] */
 		H3Bitfield disabledBuildings[2];
 
-		/** @brief [18] */
 		BOOL8      hasFort;
-		/** @brief [19] */
 		BOOL8      hasCustomGarrison;
-		/** @brief [1C] */
 		H3Army     garrison;
-		/** @brief [54] */
 		BOOL8      hasCustomName;
-		/** @brief [58] */
 		H3String   name;
-		/** @brief [68] */
 		INT32      type;
-		/** @brief [6C] */
 		INT8       creatureFormation;
-		/** @brief [70] */
 		H3Bitfield possibleSpell[3];
-		/** @brief [7C] */
 		H3Bitfield forcedSpells[3];
 	};
 	_H3API_ASSERT_SIZE_(H3SetupTown);
@@ -16604,70 +13673,44 @@ namespace h3
 	{
 		_H3API_SIZE_(0x168);
 
-		/** @brief [0] 0..48*/
 		UINT8	number;
-		/** @brief [1] -1..7 who owns this town*/
 		INT8	owner;
-		/** @brief [2] structure built here this turn*/
 		BOOL8	builtThisTurn; // +2
 	protected:
 		h3unk8	_f_03;
 	public:
-		/** @brief [4] eTown 0..8*/
 		UINT8	type;
-		/** @brief [5] */
 		UINT8	x;
-		/** @brief [6] */
 		UINT8	y;
-		/** @brief [7] */
 		UINT8	z;
-		/** @brief [8] X destination of shipyard boat (+/- 2)*/
 		UINT8	pos2PlaceBoatX;
-		/** @brief [9] Y destination of shipyard boat*/
 		UINT8	pos2PlaceBoatY;
-		/** @brief [0C] ID of the hero inside the city's garrison*/
 		INT32	garrisonHero;
-		/** @brief [10] ID of the visiting hero in the bottom bar*/
 		INT32	visitingHero;
-		/** @brief [14] */
 		INT8	mageLevel;
 	protected:
 		h3unk8	_f_15;
 	public:
-		/** @brief [16] number of recruitable non-upgraded then upgraded creatures*/
 		INT16	recruits[2][7];
 	protected:
 		h3unk8	_f_32;
 	public:
-		/** @brief [33] if mana vortex was not used this week*/
 		BOOL8	manaVortexAvailable;
-		/** @brief [34] */
 		INT8	mysticPondResourceCount;
-		/** @brief [38] */
 		INT32	mysticPondResourceType;
-		/** @brief [3C] */
 		H3CreatureSlot16 summoningPortalCreature;
-		/** @brief [44] which spells are available in mage guild*/
 		INT32	spells[5][6];
-		/** @brief [BC] is it built?*/
 		BOOL8	magicGuild[5];
-		/** @brief [C4] the town's name, can be lengthened*/
 		H3String name;
 	protected:
-		/** @brief [D4] available/banned spells or something of this nature*/
 		H3SpellsBitset spellsRelated;
 	public:
-		/** @brief [E0] the creatures in the town's garrison not belonging to a hero*/
 		H3Army guards;
 	protected:
-		/** @brief [118] ?for unused combat creatures?*/
 		H3Army guards0;
 	public:
-		/** @brief [150] for the first 32 buildings*/
 		H3BuildingsBitfield built;
-		/** @brief [158] for the remaining buildings*/
 		H3BuildingsBitfield built2;
-		/** @brief [160] will this structure be buildable in this town?*/
 		H3BuildingsBitfield buildableMask;
 
 		_H3API_ BOOL                 CanBeBuilt(eBuildings id) const;
@@ -16879,7 +13922,6 @@ namespace h3
 		h3func closeDlg;
 	};
 
-	/** @brief A minimal dialog class without proc. Likely originally named TWindow or a variant */
 	struct _H3API_NOVTABLE_ H3BaseDlg : H3Allocator
 	{
 		_H3API_SIZE_(0x4C);
@@ -16887,54 +13929,30 @@ namespace h3
 		_H3API_CTOR_DTOR_(0x5FEFB0, 0x5FF040);
 
 	protected:
-		/** @ brief [v00]*/
 		_H3API_ virtual H3BaseDlg* vDestroy() = 0;
-		/** @ brief [v04]*/
 		_H3API_ virtual INT        vShow(INT zorder, BOOL8 draw) = 0;
-		/** @ brief [v08]*/
 		_H3API_ virtual INT        vHide(BOOL8 redrawScreen) = 0;
-		/** @ brief [v0C]*/
 		_H3API_ virtual INT        vPreProcess(H3Msg& msg) = 0;
-		/** @ brief [v10] always seems to be nullsub*/
 		_H3API_ virtual VOID       vParentActivate_10(H3DlgItem* unknown) = 0;
-		/** @ brief [v14]*/
 		_H3API_ virtual BOOL8      vRedraw(BOOL8 redrawScreen, INT32 minItemId, INT32 maxItemId) = 0;
-		/** @ brief [v18]*/
 		_H3API_ virtual INT        vShowAndRun(BOOL8 fadeIn) = 0;
-		/** @ brief [v1C]*/
 		_H3API_ virtual INT        vInitiateItems() = 0;
-		/** @ brief [v20]*/
 		_H3API_ virtual INT        vActivateItems(BOOL8 increase) = 0;
 
-		/** @ brief [04]*/
 		INT32                zOrder;
-		/** @ brief [08]*/
 		H3BaseDlg*           nextDialog;
-		/** @ brief [0C]*/
 		H3BaseDlg*           lastDialog;
-		/** @ brief [10]*/
 		INT32                flags;
-		/** @ brief [14]*/
 		INT32                state;
-		/** @ brief [18]*/
 		INT32                xDlg;
-		/** @ brief [1C]*/
 		INT32                yDlg;
-		/** @ brief [20]*/
 		INT32                widthDlg;
-		/** @ brief [24]*/
 		INT32                heightDlg;
-		/** @ brief [28]*/
 		H3DlgItem*           lastItem;
-		/** @ brief [2C]*/
 		H3DlgItem*           firstItem;
-		/** @ brief [30]*/
 		H3Vector<H3DlgItem*> dlgItems;
-		/** @ brief [40]*/
 		INT32                focusedItemId;
-		/** @ brief [44]*/
 		H3LoadedPcx16*       pcx16;
-		/** @ brief [48]*/
 		INT32                deactivatesCount;
 
 		_H3API_ H3DlgItem* getDlgItem(UINT16 id, h3func vtable) const;
@@ -16948,25 +13966,9 @@ namespace h3
 		_H3API_ INT32 GetX() const;
 		_H3API_ INT32 GetY() const;
 		_H3API_ BOOL  IsTopDialog() const;
-		/**
-		 * @brief Adds the specified state to control id
-		 * @param id Control identifier
-		 * @param state Value to be added
-		 */
 		_H3API_ VOID AddControlState(INT32 id, eControlState state);
-		/**
-		 * @brief Removes the specified state to control id
-		 * @param id Control identifier
-		 * @param state Value to be removed
-		 */
 		_H3API_ VOID RemoveControlState(INT32 id, eControlState state);
 
-		/**
-		 * @brief Adds an item to the dialog
-		 * @param item Any of H3DlgItem children
-		 * @param initiate Whether to pre-initiate the item. Set to false if the dialog handles that itself.
-		 * @return The added item
-		*/
 		_H3API_ H3DlgItem* AddItem(H3DlgItem* item, BOOL initiate = TRUE);
 		_H3API_ VOID       Redraw(INT32 x, INT32 y, INT32 dx, INT32 dy); // redraw part of dialog
 		_H3API_ VOID       Redraw(); // redraw whole dialog
@@ -17064,25 +14066,16 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3BaseDlg);
 
-	/**
-	 * @brief ExtendedDlg doesn't properly inherit from H3BasicDlg per se (constructor-wise)
-	 * but they have the exact same base and virtual methods. For simplicity they are set as related.
-	 */
 	struct _H3API_NOVTABLE_ H3ExtendedDlg : H3BaseDlg
 	{
 		_H3API_SIZE_(0x4C); // same as H3BasicDlg
 		_H3API_VTABLE_(0x643CF8);
 		_H3API_CTOR_DTOR_(0x5FFC00, 0x5FF040); // dtor jump from virtual table, shared with H3BasicDlg
 	protected:
-		/** @ brief [v24]*/
 		_H3API_ virtual INT   vDialogProc(H3Msg& msg) = 0;
-		/** @ brief [v28]*/
 		_H3API_ virtual BOOL8 vOnMouseMove(INT32 x, INT32 y) = 0;
-		/** @ brief [v2C]*/
 		_H3API_ virtual BOOL8 vOnRightClick(INT32 id) = 0;
-		/** @brief [v30] if a status bar is provided, short tip text for H3DlgItem under cursor will be shown*/
 		_H3API_ virtual BOOL8 vOnLeftClick(INT32 id, BOOL8& closeDialog) = 0;
-		/** @ brief [v34]*/
 		_H3API_ virtual H3DlgTextPcx* vGetStatusBar() = 0;
 	public:
 		_H3API_ H3ExtendedDlg(INT x, INT y, INT w, INT h);
@@ -17117,31 +14110,18 @@ namespace h3
 		_H3API_SIZE_(0xA0);
 		_H3API_VTABLE_(0x63A5E4);
 
-		/** @brief [4C]*/
 		H3DlgTransparentItem* minimapTransparentOverlay;
-		/** @brief [50]*/
 		H3DlgTransparentItem* mapTransparentOverlay;
-		/** @brief [54]*/
 		H3DlgText*            text;
-		/** @brief [58]*/
 		H3ScreenlogEdit*      screenlogEdit;
-		/** @brief [5C]*/
 		H3ResourceBarPanel*   resourceBar;
-		/** @brief [60] also the location for the edit control*/
 		H3DlgTextPcx*         hintbar;
-		/** @brief [64]*/
 		INT32                 topHeroSlotIndex;
-		/** @brief [68]*/
 		h3unk32               _f_68;
-		/** @brief [6C]*/
 		h3unk8                _f_6C;
-		/** @brief [70]*/
 		H3DlgPcx*             heroPcx[5];
-		/** @brief [84] maybe towns?*/
 		H3DlgPcx*             heroPcx2[5];
-		/** @brief [98] hero or town panel in bottom right*/
 		H3DlgBasePanel*       panel;
-		/** @brief [9C]*/
 		h3unk32               _f_9C;
 	};
 	_H3API_ASSERT_SIZE_(H3AdventureMgrDlg);
@@ -17165,32 +14145,19 @@ namespace h3
 		_H3API_SIZE_(0x34);
 		_H3API_VTABLE_(0x64235C);
 	protected:
-		/** @brief [v00]*/
 		_H3API_ virtual H3DlgBasePanel* vDestroy(BOOL8 deallocate) = 0;
-		/** @brief [v04]*/
 		_H3API_ virtual VOID            vFunc04(INT unknown) = 0;
-		/** @brief [v08]*/
 		_H3API_ virtual VOID            vFunc08(INT unknown1, INT unknown2) = 0;
-		/** @brief [v0C]*/
 		_H3API_ virtual VOID            vDrawToWindow() = 0;
 
-		/** @brief [04]*/
 		INT32                x;
-		/** @brief [08]*/
 		INT32                y;
-		/** @brief [0C]*/
 		INT32                width;
-		/** @brief [10]*/
 		INT32                height;
-		/** @brief [14]*/
 		H3Vector<H3DlgItem*> items;
-		/** @brief [24]*/
 		H3BaseDlg*           parent;
-		/** @brief [28]*/
 		INT32                largestId;
-		/** @brief [2C]*/
 		INT32                smallestId;
-		/** @brief [30]*/
 		H3LoadedPcx16*       backupPcx;
 
 		_H3API_ VOID backupScreen();
@@ -17230,29 +14197,18 @@ namespace h3
 		_H3API_SIZE_(0x8C);
 	protected:
 		h3unk32               _f_4C;
-		/** @brief [50]*/
 		H3DlgEdit*            editText;
-		/** @brief [54]*/
 		H3Vector<H3String*>   combatText;
-		/** @brief [64]*/
 		UINT                  lastTimeStamp;
 		h3unk32               _f_68;
-		/** @brief [6C]*/
 		UINT                  timeHint;
 	public:
-		/** @brief [70]*/
 		H3CombatBottomPanel*  bottomPanel;
-		/** @brief [74]*/
 		H3CombatHeroPanel*    leftHeroPopup;
-		/** @brief [78]*/
 		H3CombatHeroPanel*    rightHeroPopup;
-		/** @brief [7C]*/
 		H3CombatMonsterPanel* leftMonsterPopup;
-		/** @brief [80]*/
 		H3CombatMonsterPanel* rightMonsterPopup;
-		/** @brief [84]*/
 		H3CombatMonsterPanel* bottomleftMonsterPopup;
-		/** @brief [88]*/
 		H3CombatMonsterPanel* bottomRightMonsterPopup;
 
 		_H3API_ VOID ShowHint(LPCSTR hint, BOOL8 add_to_log = FALSE);
@@ -17330,25 +14286,18 @@ namespace h3
 {
 
 #pragma pack(push, 4)
-	/** @brief cannot be used except as a pointer or reference*/
 	struct _H3API_NOVTABLE_ H3NetworkDlg : H3ExtendedDlg
 	{
 		_H3API_SIZE_(0x60); // was 0x68 with 8 unknown bytes, seem only relevant to specialized dialogs
 		_H3API_VTABLE_(0x63A6A8);
 		_H3API_CTOR_DTOR_(0x41AFA0, 0x41B080);
 	protected:
-		/** @ brief [v38]*/
 		_H3API_ virtual INT vEndDialogOnTimeExpired(H3Msg& msg) = 0;
 
-		/** @ brief [4C]*/
 		INT32 lastHintShowed;
-		/** @ brief [50]*/
 		INT32 exitCommand;
-		/** @ brief [54]*/
 		INT32 exitSubtype;
-		/** @ brief [58]*/
 		INT32 resultItemId;
-		/** @ brief [5C]*/
 		BOOL8 networkGame;
 	public:
 		_H3API_ H3NetworkDlg(INT x, INT y, INT w, INT h);
@@ -17368,23 +14317,14 @@ namespace h3
 	{
 		_H3API_SIZE_(0xB8);
 
-		/** @brief [60]*/
 		INT32         creatureId;
-		/** @brief [64]*/
 		INT32         numberCreatures;
-		/** @brief [68]*/
 		INT32         morale;
-		/** @brief [6C]*/
 		H3String      moraleModifiers;
-		/** @brief [7C]*/
 		INT32         luck;
-		/** @brief [80]*/
 		H3String      luckModifiers;
-		/** @brief [90]*/
 		h3unk8        _f_90[32];
-		/** @brief [B0]*/
 		H3DlgTextPcx* varBackPcx;
-		/** @brief [B4]*/
 		H3DlgDef*     animation;
 	};
 	_H3API_ASSERT_SIZE_(H3CreatureInfoDlg);
@@ -17408,40 +14348,24 @@ namespace h3
 #pragma warning(disable : 4482)
 	struct H3Dlg : H3NetworkDlg
 	{
-		/** @brief Amount of time allowed between two consecutive clicks to determine whether it's double-click*/
 		static constexpr DWORD DOUBLE_CLICK_SPEED = 400;
 
 	protected:
 
-		/** @ brief [v00]*/
 		_H3API_ virtual H3Dlg* vDestroy() override;
-		/** @ brief [v04]*/
 		_H3API_ virtual INT vShow(INT zorder, BOOL8 draw) override;
-		/** @ brief [v08]*/
 		_H3API_ virtual INT vHide(BOOL8 redrawScreen) override;
-		/** @ brief [v0C]*/
 		_H3API_ virtual INT vPreProcess(H3Msg& msg) override;
-		/** @ brief [v10] always seems to be nullsub*/
 		_H3API_ virtual VOID vParentActivate_10(H3DlgItem* unknown) override;
-		/** @ brief [v14]*/
 		_H3API_ virtual BOOL8 vRedraw(BOOL8 redrawScreen, INT32 minItemId, INT32 maxItemId) override;
-		/** @ brief [v18]*/
 		_H3API_ virtual INT vShowAndRun(BOOL8 fadeIn) override;
-		/** @ brief [v1C]*/
 		_H3API_ virtual INT vInitiateItems() override;
-		/** @ brief [v20]*/
 		_H3API_ virtual INT vActivateItems(BOOL8 increase) override;
-		/** @ brief [v24]*/
 		_H3API_ virtual INT vDialogProc(H3Msg& msg) override;
-		/** @ brief [v28]*/
 		_H3API_ virtual BOOL8 vOnMouseMove(INT32 x, INT32 y) override;
-		/** @ brief [v2C]*/
 		_H3API_ virtual BOOL8 vOnRightClick(INT32 id) override;
-		/** @ brief [v30]*/
 		_H3API_ virtual BOOL8 vOnLeftClick(INT32 id, BOOL8& closeDialog) override;
-		/** @ brief [v34]*/
 		_H3API_ virtual H3DlgTextPcx* vGetStatusBar() override;
-		/** @ brief [v38]*/
 		_H3API_ virtual INT vEndDialogOnTimeExpired(H3Msg& msg) override;
 
 	public:
@@ -17519,7 +14443,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/* Dialog used to show high scores. Callback 0x4EA2B0 */
 	struct H3HiScoreDlg : H3BaseDlg
 	{
 		_H3API_SIZE_(0x110);
@@ -17527,21 +14450,13 @@ namespace h3
 		_H3API_VTABLE_(0x63EB98);
 		_H3API_CTOR_DTOR_(0x4E9960, -1);
 
-		/** @brief [4C]*/
 		H3DlgDef* campaignCreatureDefs[11];
-		/** @brief [78]*/
 		H3DlgDef* scenarioCreatureDefs[11];
-		/** @brief [A4]*/
 		h3unk8 _f_A4[88];
-		/** @brief [FC]*/
 		BOOL8 showingSingleScenarios;
-		/** @brief [100]*/
 		h3unk32 f100;
-		/** @brief [104]*/
 		UINT32 time;
-		/** @brief [108] */
 		H3LoadedPcx* campaignPcx;
-		/** @brief [10C]*/
 		H3LoadedPcx* scenarioPcx;
 
 		_H3API_ static VOID Show();
@@ -17565,19 +14480,12 @@ namespace h3
 	{
 		_H3API_SIZE_(0x20);
 
-		/** @brief [00] eCommand*/
 		eMsgCommand command;
-		/** @brief [04] eMsgSubtype*/
 		eMsgSubtype subtype;
-		/** @brief [08]*/
 		INT32 itemId;
-		/** @brief [0C] eMsgFlag*/
 		eMsgFlag    flags;
-		/** @brief [10] cursor position*/
 		H3POINT     position;
-		/** @brief [18] data to be sent to a window control*/
 		VOID*       parameter;
-		/** @brief [1C] can be multiple things but mostly observed parent dialog*/
 		PVOID       parentDlg;
 
 		_H3API_ VOID       SetCommand(eMsgCommand command, eMsgSubtype subtype, INT32 item_id, eMsgFlag flags,
@@ -17608,10 +14516,6 @@ namespace h3
 		_H3API_ INT        GetX()      const;
 		_H3API_ INT        GetY()      const;
 		_H3API_ H3POINT    GetCoords() const;
-		/**
-		 * @brief Get the parent dialog for some custom items when calling their custom proc.
-		 * @return owning dialog of the current item
-		 */
 		_H3API_ H3BaseDlg* GetDlg() const;
 
 		_H3API_ INT StopProcessing();
@@ -17624,17 +14528,14 @@ namespace h3
 namespace h3
 {
 	_H3API_DECLARE_(PictureCategories);
-	/* MessageBox is a common define, not going to fight it */
 	_H3API_DECLARE_(Messagebox);
 	struct H3String;
 	template<typename _Elem> struct H3Vector;
 
-	/** @brief Vector to show multiple images in a dialog message*/
 	typedef H3Vector<H3PictureCategories> H3PictureVector;
 
 #pragma pack(push, 4)
 
-	/** @brief Information about pre-built image types*/
 	struct H3PictureCategories
 	{
 		_H3API_SIZE_(8);
@@ -17663,199 +14564,62 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3PictureCategories);
 
-	/** @brief All pre-built in-game messages are controlled by this static struct*/
 	struct H3Messagebox
 	{
-		/** @brief Show a messagebox using h3_Textbuffer as message*/
 		_H3API_ H3Messagebox();
-		/**
-		 * @brief Show a messagebox with text
-		 * @param message Text to be displayed
-		 */
 		_H3API_ H3Messagebox(LPCSTR message);
-		/**
-		 * @brief Show a messagebox with text
-		 * @param message Text to be displayed
-		 */
 		_H3API_ H3Messagebox(const H3String& message);
 
-		/** @brief Which image the user selected*/
 		enum ePick
 		{
 			LEFT  = -1,
 			NONE  = 0,
 			RIGHT = 1,
 		};
-		/**
-		 * @brief Creates dialog to display variable images;
-		 * h3_TextBuffer is used as the message to be shown
-		 * @param images Vector of images to show
-		 * @param timeout milliseconds before closing the dialog, 0 for no timeout
-		 */
 		_H3API_ static VOID  Display(const H3PictureVector& images, INT32 timeout = 0);
-		/**
-		 * @brief Creates dialog to display variable images
-		 * @param text Message to be shown
-		 * @param images Vector of images to show
-		 * @param timeout milliseconds before closing the dialog, 0 for no timeout
-		 */
 		_H3API_ static VOID  Display(LPCSTR text, const H3PictureVector& images, INT32 timeout = 0);
-		/**
-		 * @brief Creates dialog to display variable images
-		 * @param text Message to be shown
-		 * @param images Vector of images to show
-		 * @param timeout milliseconds before closing the dialog, 0 for no timeout
-		 */
 		_H3API_ static VOID  Display(const H3String& text, const H3PictureVector& images, INT32 timeout = 0);
-		/**
-		 * @brief Display a simple dialog box with up to 3 images and "OK" button;
-		 * h3_TextBuffer is used as the message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @param pic3 Third image data
-		 */
 		_H3API_ static VOID  Show(  const H3PictureCategories& pic1 = H3PictureCategories(),
 								    const H3PictureCategories& pic2 = H3PictureCategories(),
 								    const H3PictureCategories& pic3 = H3PictureCategories());
-		/**
-		 * @brief Display a simple dialog box with up to 3 images and "OK" button
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @param pic3 Third image data
-		 */
 		_H3API_ static VOID  Show(  LPCSTR text,
 								    const H3PictureCategories& pic1 = H3PictureCategories(),
 								    const H3PictureCategories& pic2 = H3PictureCategories(),
 								    const H3PictureCategories& pic3 = H3PictureCategories());
-		/**
-		 * @brief Display a simple dialog box with up to 3 images and "OK" button
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @param pic3 Third image data
-		 */
 		_H3API_ static VOID  Show(  const H3String& text,
 								    const H3PictureCategories& pic1 = H3PictureCategories(),
 								    const H3PictureCategories& pic2 = H3PictureCategories(),
 								    const H3PictureCategories& pic3 = H3PictureCategories());
-		/**
-		 * @brief Display a simple dialog box with up to 3 images, "OK" and "Cancel" buttons;
-		 * h3_TextBuffer is used as the message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @param pic3 Third image data
-		 * @return BOOL Whether user clicked on "OK"
-		 */
 		_H3API_ static BOOL  Choice(const H3PictureCategories& pic1 = H3PictureCategories(),
 									const H3PictureCategories& pic2 = H3PictureCategories(),
 									const H3PictureCategories& pic3 = H3PictureCategories());
-		/**
-		 * @brief Display a simple dialog box with up to 3 images, "OK" and "Cancel" buttons
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @param pic3 Third image data
-		 * @return BOOL Whether user clicked on "OK"
-		 */
 		_H3API_ static BOOL  Choice(LPCSTR text,
 									const H3PictureCategories& pic1 = H3PictureCategories(),
 									const H3PictureCategories& pic2 = H3PictureCategories(),
 									const H3PictureCategories& pic3 = H3PictureCategories());
-		/**
-		 * @brief Display a simple dialog box with up to 3 images, "OK" and "Cancel" buttons
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @param pic3 Third image data
-		 * @return BOOL Whether user clicked on "OK"
-		 */
 		_H3API_ static BOOL  Choice(const H3String& text,
 									const H3PictureCategories& pic1 = H3PictureCategories(),
 									const H3PictureCategories& pic2 = H3PictureCategories(),
 									const H3PictureCategories& pic3 = H3PictureCategories());
-		/**
-		 * @brief Display a simple dialog box with up to 3 images, shown on Right-Mouse Button click;
-		 * h3_TextBuffer is used as the message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @param pic3 Third image data
-		 */
 		_H3API_ static VOID  RMB(	const H3PictureCategories& pic1 = H3PictureCategories(),
 									const H3PictureCategories& pic2 = H3PictureCategories(),
 									const H3PictureCategories& pic3 = H3PictureCategories());
-		/**
-		 * @brief Display a simple dialog box with up to 3 images, shown on Right-Mouse Button click
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @param pic3 Third image data
-		 */
 		_H3API_ static VOID  RMB(	LPCSTR text,
 									const H3PictureCategories& pic1 = H3PictureCategories(),
 									const H3PictureCategories& pic2 = H3PictureCategories(),
 									const H3PictureCategories& pic3 = H3PictureCategories());
-		/**
-		 * @brief Display a simple dialog box with up to 3 images, shown on Right-Mouse Button click
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @param pic3 Third image data
-		 */
 		_H3API_ static VOID  RMB(	const H3String& text,
 									const H3PictureCategories& pic1 = H3PictureCategories(),
 									const H3PictureCategories& pic2 = H3PictureCategories(),
 									const H3PictureCategories& pic3 = H3PictureCategories());
-		/**
-		 * @brief Forces user to select between two images using "OK" button;
-		 * h3_TextBuffer is used as the message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @return ePick Which item the user selected (left vs right)
-		 */
 		_H3API_ static ePick Take(  const H3PictureCategories& pic1, const H3PictureCategories& pic2);
-		/**
-		 * @brief Forces user to select between two images using "OK" button
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @return ePick Which item the user selected (left vs right)
-		 */
 		_H3API_ static ePick Take(  LPCSTR text,
 									const H3PictureCategories& pic1, const H3PictureCategories& pic2);
-		/**
-		 * @brief Forces user to select between two images using "OK" button
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @return ePick Which item the user selected (left vs right)
-		 */
 		_H3API_ static ePick Take(  const H3String& text,
 									const H3PictureCategories& pic1, const H3PictureCategories& pic2);
-		/**
-		 * @brief Offers the choice between two images but also lets user refuse with "Cancel";
-		 * h3_TextBuffer is used as the message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @return ePick Which item the user selected (left vs right or none)
-		 */
 		_H3API_ static ePick Choose(const H3PictureCategories& pic1, const H3PictureCategories& pic2);
-		/**
-		 * @brief Offers the choice between two images but also lets user refuse with "Cancel"
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @return ePick Which item the user selected (left vs right or none)
-		 */
 		_H3API_ static ePick Choose(LPCSTR text,
 									const H3PictureCategories& pic1, const H3PictureCategories& pic2);
-		/**
-		 * @brief Offers the choice between two images but also lets user refuse with "Cancel"
-		 * @param text Message to be shown
-		 * @param pic1 First image data
-		 * @param pic2 Second image data
-		 * @return ePick Which item the user selected (left vs right or none)
-		 */
 		_H3API_ static ePick Choose(const H3String& text,
 									const H3PictureCategories& pic1, const H3PictureCategories& pic2);
 
@@ -17900,11 +14664,8 @@ namespace h3
 		_H3API_CTOR_DTOR_(0x52C6C0, 0x52CA80);
 
 		h3unk32 _f_60;
-		/** @brief [64]*/
 		H3ResourceBarPanel* resourcesBar;
-		/** @brief [68]*/
 		H3LoadedPcx* puzzlePieces[48];
-		/** @brief [128]*/
 		INT32 townType;
 	};
 	_H3API_ASSERT_SIZE_(H3OracleDlg);
@@ -17921,21 +14682,15 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief Used to show player's resources at bottom of screen in various dialogs*/
 	struct H3ResourceBarPanel : H3DlgBasePanel
 	{
 		_H3API_SIZE_(0x78);
 		_H3API_VTABLE_(0x641034);
 		_H3API_CTOR_DTOR_(0x558DF0, -1);
-		/** @brief [34]*/
 		BOOL8      useKRESBAR;
-		/** @brief [38]*/
 		H3DlgText* resourceText[7];
-		/** @brief [54]*/
 		H3DlgItem* resourceOverlay[7];
-		/** @brief [70]*/
 		H3DlgPcx*  resbarPCX;
-		/** @brief [74]*/
 		H3DlgText* currentDayText;
 	};
 	_H3API_ASSERT_SIZE_(H3ResourceBarPanel);
@@ -17953,10 +14708,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/**
-	 * @brief Handles printing of player text on the screen.
-	 * Not a dialog per se but has similar behaviour.
-	 */
 	struct H3ScreenChat
 	{
 		_H3API_SIZE_(0x44);
@@ -17976,45 +14727,24 @@ namespace h3
 			h3unk8 unk[0x7F];
 		};
 
-		/** @brief [00]*/
 		ChatEntry* entries;
-		/** @brief [04]*/
 		INT32      firstItemShift;
-		/** @brief [08]*/
 		INT32      currentlyShown;
-		/** @brief [0C]*/
 		UnkEntry*  items;
-		/** @brief [10]*/
 		UINT32     time;
-		/** @brief [14]*/
 		BOOL8      redraw;
-		/** @brief [18]*/
 		H3ScreenchatEdit* dlgEdit;
-		/** @brief [1C]*/
 		INT32      maxItemNum;
-		/** @brief [20]*/
 		INT32      lastDrawn;
-		/** @brief [24]*/
 		h3unk8     field_24;
-		/** @brief [28]*/
 		h3unk32    sound_f_28;
-		/** @brief [2C]*/
 		BOOL8      flag;
-		/** @brief [30]*/
 		H3WavFile* chatWav;
-		/** @brief [34]*/
 		H3WavFile* playexitWav;
-		/** @brief [38]*/
 		H3WavFile* sysmsgWav;
-		/** @brief [3C]*/
 		H3WavFile* timeoverWav;
-		/** @brief [40]*/
 		H3WavFile* playcomeWav;
 
-		/**
-		 * @brief Checks the oldest message for removal
-		 * @return Whether 20,000ms have elapsed
-		 */
 		_H3API_ BOOL8 CheckExpiry();
 		_H3API_ VOID  Clear();
 		_H3API_ VOID  ShowVA(LPCSTR format, ...);
@@ -18036,32 +14766,20 @@ namespace h3
 	_H3API_DECLARE_(ScenarioPlayer);
 
 #pragma pack(push, 4)
-	/** @brief player information in the select scenario dialog*/
 	struct H3ScenarioPlayer
 	{
 		_H3API_SIZE_(0x7C);
 		_H3API_CTOR_DTOR_(0x57CB10, -1);
-		/** @brief [00]*/
 		INT32   player;
-		/** @brief [04]*/
 		CHAR    name[24];
-		/** @brief [1C]*/
 		INT32*  gameVersionPtr;
-		/** @brief [20]*/
 		INT32   gameVersion;
-		/** @brief [24]*/
 		INT32   town;
-		/** @brief [28]*/
 		INT32   heroesCount;
-		/** @brief [2C]*/
 		INT32   heroes[16];
-		/** @brief [6C] 0..3 art, gold, resource, random*/
 		INT32   bonusType;
-		/** @brief [70] {-1}*/
 		h3unk32 player2;
-		/** @brief [74] {-1}*/
 		h3unk32 _f_74;
-		/** @brief [78] {0}*/
 		h3unk8  _f_78;
 	};
 	_H3API_ASSERT_SIZE_(H3ScenarioPlayer);
@@ -18077,173 +14795,91 @@ namespace h3
 	struct H3LoadedPcx;
 
 #pragma pack(push, 4)
-	/* original name : TSingleSelectionWindow, see 0x57A04A */
 	struct H3SelectScenarioDialog : H3NetworkDlg
 	{
 		_H3API_SIZE_(0x1970);
 		_H3API_VTABLE_(0x641CBC);
 		_H3API_GET_INFO_(0x69FC44, H3SelectScenarioDialog);
-		/** @brief [0060]*/
 		UINT32                     lastLeftClickTime;
-		/** @brief [0064]*/
 		h3unk8                     isCampaignMaybe;
-		/** @brief [0065]*/
 		h3unk8                     isLoadingMaybe;
-		/** @brief [0066]*/
 		h3unk8                     _f_66;
-		/** @brief [0068]*/
 		h3unk32                    _f_68;
-		/** @brief [006C]*/
 		H3LoadedDef*               scselcDef;
-		/** @brief [0070]*/
 		H3LoadedDef*               scnrvictDef;
-		/** @brief [0074]*/
 		H3LoadedDef*               scnrlossDef;
-		/** @brief [0078]*/
 		H3LoadedDef*               itpaDef;
-		/** @brief [007C]*/
 		H3LoadedDef*               scnrstarDef;
-		/** @brief [0080]*/
 		H3LoadedDef*               un44Def;
-		/** @brief [0084]*/
 		h3unk32                    _f_84;
-		/** @brief [0088]*/
 		H3LoadedPcx*               playerFlagsPcx[8];
-		/** @brief [00A8]*/
 		H3LoadedPcx*               playerInfoBarPcx[8];
-		/** @brief [00C8]*/
 		H3LoadedPcx*               heroSmallPortraitsPcx[limits::TOTAL_HEROES];
-		/** @brief [0354]*/
 		H3LoadedPcx*               hpsrandPcx;
-		/** @brief [0358]*/
 		h3unk8                     _f_358[4];
-		/** @brief [035C]*/
 		H3LoadedPcx*               hpsrand0Pcx;
-		/** @brief [0360]*/
 		H3LoadedPcx*               hpsrand1Pcx;
-		/** @brief [0364]*/
 		h3unk32                    _f_364;
-		/** @brief [0368]*/
 		H3LoadedPcx*               hpsrand6Pcx;
-		/** @brief [036C]*/
 		h3unk8                     _f_36C;
-		/** @brief [0370]*/
 		UINT32                     mapListNumberTop;
-		/** @brief [0374]*/
 		UINT32                     selectedMapIndex;
-		/** @brief [0378]*/
 		UINT32                     turnDuration;
-		/** @brief [037C]*/
 		BOOL8                      mapSelectShown;
-		/** @brief [037D]*/
 		BOOL8                      mapListShown;
-		/** @brief [037E]*/
 		BOOL8                      rmgSettingsShown;
-		/** @brief [037F]*/
 		h3unk8                     _f_37F;
-		/** @brief [0380]*/
 		H3DlgEdit*                 edit380;
-		/** @brief [0384]*/
 		h3unk32                    _f_384;
-		/** @brief [0388]*/
 		h3unk32                    _f_388;
-		/** @brief [038C]*/
 		H3ScenarioMapInformation   mapInfo;
-		/** @brief [1030]*/
 		H3Vector<H3ScenarioMapInformation> vector1030;
-		/** @brief [1040]*/
 		H3Vector<H3ScenarioMapInformation> vector1040;
-		/** @brief [1050]*/
 		H3Vector<H3ScenarioMapInformation> mapsInformation;
-		/** @brief [1060]*/
 		H3ScenarioMapInformation*  mapsInfoPtr;
-		/** @brief [1064]*/
 		H3ScenarioPlayer           mapPlayersHuman[8];
-		/** @brief [1444]*/
 		H3ScenarioPlayer           mapPlayersComputer[8];
-		/** @brief [1824]*/
 		h3unk32                    _f_1824;
-		/** @brief [1828]*/
 		h3unk32                    _f_1828;
-		/** @brief [182C]*/
 		h3unk32                    _f_182C;
-		/** @brief [1830]*/
 		h3unk32                    _f_1830;
-		/** @brief [1834]*/
 		h3unk8                     _f_1834;
-		/** @brief [1838]*/
 		H3DlgScrollbar*            scrollBar1838;
-		/** @brief [183C]*/
 		H3DlgScrollbar*            scrollBar183C;
-		/** @brief [1840]*/
 		H3DlgScrollbar*            turnDurationScroll;
-		/** @brief [1844]*/
 		h3unk32                    _f_1844;
-		/** @brief [1848]*/
 		H3DlgText*                 text1848;
-		/** @brief [184C]*/
 		H3DlgText*                 text184C;
-		/** @brief [1850]*/
 		H3DlgText*                 text1850;
-		/** @brief [1854]*/
 		BOOL8                      newMapSelected;
-		/** @brief [1858]*/
 		H3DlgEdit*                 edit1858;
-		/** @brief [185C]*/
 		h3unk32                    _f_185C;
-		/** @brief [1860]*/
 		h3unk32                    _f_1860;
-		/** @brief [1864]*/
 		h3unk8                     _f_1864;
-		/** @brief [1865]*/
 		h3unk8                     _f_1865;
-		/** @brief [1868]*/
 		H3DlgDefButton*            button1868;
-		/** @brief [186C]*/
 		h3unk8                     _f_186C;
-		/** @brief [1870] derived with an extra byte + 2 ints*/
 		H3LoadedPcx16*             extendedPcx;
-		/** @brief [1874] read from VersionInfo*/
 		CHAR                       gameVersionName[20];
-		/** @brief [1888] start or another class*/
 		h3func*                    newGameCampaignVtable;
-		/** @brief [188C]*/
 		h3unk8                     _f_188C[8];
-		/** @brief [1894]*/
 		h3unk8                     _f_1894;
-		/** @brief [1898]*/
 		INT32                      gameVersion;
-		/** @brief [189C]*/
 		h3unk32                    _f_189C;
-		/** @brief [18A0]*/
 		UINT32                     mapDimension;
-		/** @brief [18A4]*/
 		INT32                      numberLevels;
-		/** @brief [18A8]*/
 		INT32                      numberPlayersSelected;
-		/** @brief [18AC]*/
 		h3unk32                    _f_18AC;
-		/** @brief [18B0]*/
 		INT32                      computerPlayersOnlySelected;
-		/** @brief [18B4]*/
 		h3unk32                    _f_18B4;
-		/** @brief [18B8]*/
 		INT32                      waterContentSelected;
-		/** @brief [18BC]*/
 		INT32                      monsterStrengthSelected;
-		/** @brief [18C0]*/
 		H3DlgDefButton*            humanComputerButtons[9];
-		/** @brief [18E4]*/
 		H3DlgDefButton*            humanComputerTeamsButtons[9];
-		/** @brief [1908]*/
 		H3DlgDefButton*            computerOnlyButtons[9];
-		/** @brief [192C]*/
 		H3DlgDefButton*            computerOnlyTeams[8];
-		/** @brief [194C]*/
 		H3DlgDefButton*            waterContentButtons[4];
-		/** @brief [195C]*/
 		H3DlgDefButton*            monsterStrengthButtons[4];
-		/** @brief [196C]*/
 		H3DlgScrollableText*       textScroll;
 
 		_H3API_ H3ScenarioMapInformation& CurrentMap();
@@ -18262,20 +14898,12 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/**
-	 * @brief Shows creatures associated to current town
-	 *
-	 */
 	struct H3TownAlignmentDlg : H3Allocator
 	{
 		_H3API_SIZE_(0x58);
 		_H3API_VTABLE_(0x641AA0);
 		_H3API_CTOR_DTOR_(0x5761A0, 0x48FA10);
 	private:
-		/**
-		 * @brief same as H3BaseDlg but functionality not needed,
-		 * just makes the dialog allowed to be built on stack without custom vtable
-		*/
 		H3DlgVTable* vtable;
 		h3align      data[H3BaseDlg::SIZE - 4]; // -4 for vtable
 		h3unk32      _f_4C;
@@ -18300,15 +14928,10 @@ namespace h3
 	struct H3TownDialog : H3BaseDlg
 	{
 		_H3API_SIZE_(0xB4);
-		/** @brief [4C]*/
 		INT32      townIndex;
-		/** @brief [50]*/
 		RGB565*    drawBuffer;
-		/** @brief [54] 8th slot for summoning portal creatures*/
 		H3DlgDef*  creaturePortraits[8];
-		/** @brief [74] 8th slot for summoning portal creatures*/
 		H3DlgText* creaturesText[8];
-		/** @brief [94] 8th slot for summoning portal creatures*/
 		INT32      creatureTypes[8];
 	};
 	_H3API_ASSERT_SIZE_(H3TownDialog);
@@ -18322,10 +14945,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/**
-	 * @brief follows HDmod's dlg format
-	 * WARNING! this structure should only be used to hook existing dialogs
-	 */
 	struct HDDlg : H3NetworkDlg
 	{
 		_H3API_SIZE_(0x74);
@@ -18333,7 +14952,6 @@ namespace h3
 		typedef INT32(__stdcall* HDDlg_proc)(HDDlg*, const H3Msg&);
 	protected:
 		h3unk _f_60[0x10];
-		/** @brief [70]*/
 		HDDlg_proc hdProc;
 	public:
 		_H3API_ INT CallHDProc(const H3Msg& msg);
@@ -18351,7 +14969,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/* likely known as BASEMANAGER in source */
 	struct H3Manager : public H3Uncopyable
 	{
 		_H3API_SIZE_(0x38);
@@ -18383,40 +15000,20 @@ namespace h3
 			h3func start;
 			h3func stop;
 			h3func processMessage;
-			/* extra method for MouseMgr (virtual dtor) */
 		};
 	protected:
-		/** @brief [00] virtual table. Use Start(), Stop() or ProcessMessage() to access it*/
 		ManagerVTable *vtable;
 	public:
-		/**
-		 * @brief [v00] constructs associated dialog and loads manager-specifics
-		 * @param z_order where to insert dialog
-		 * @return status? SwapMgr -> 0
-		*/
 		_H3API_ INT32 Start(INT32 z_order);
-		/** @brief [v04] Destructor for associated dialog and unloads manager-specifics*/
 		_H3API_ VOID  Stop();
-		/**
-		 * @brief [v08] Process the current message and pass it along to other managers as required
-		 * @param msg Current thread message
-		 * @return 0..2 => 0 (continue?) 1 (done?) 2 (close, with mgr-specific messages)
-		*/
 		_H3API_ INT32 ProcessMessage(H3Msg& msg);
 
-		/** @brief [04] previous manager*/
 		H3Manager* parent;
-		/** @brief [08] next manager*/
 		H3Manager* child;
-		/** @brief [0C]*/
 		eType      type;
-		/** @brief [10]*/
 		INT32      zOrder;
-		/** @brief [14]*/
 		CHAR       name[28];
-		/** @brief [30]*/
 		INT32      nameEnd;
-		/** @brief [34]*/
 		eStatus    status;
 
 		_H3API_ VOID SetPreviousManager(H3Manager* prev);
@@ -18453,108 +15050,70 @@ namespace h3
 	protected:
 		h3unk32 _f_038; // mplay object
 	public:
-		/** @brief [3C] */
 		BOOL8 showFPS;
 	protected:
 		h3unk32 _f_040;
 	public:
-		/** @brief [44] */
 		struct H3Dlg* dlg;
-		/** @brief [48] [x][y][z] array storing id of frame to be drawn*/
 		UINT16* arrowPathFrames;
 	protected:
 		h3unk8 _f_04C[4];
 	public:
-		/** @brief [50] for complete calculation of tile movements*/
 		BOOL movementCalculated;
-		/** @brief [54] for partial calculation of tile movements*/
 		BOOL movementCalculated1;
 	protected:
 		h3unk8 _f_058[4];
 	public:
-		/** @brief [5C] pointer to H3Main's mainSetup*/
 		H3MainSetup* map;
-		/** @brief [60] */
 		H3LoadedDef* terrainDef[10];
 	protected:
 		h3unk8 _f_088[4];
 	public:
-		/** @brief [8C] */
 		H3LoadedDef* riverDef[4];
 	protected:
 		h3unk8 _f_09C[4];
 	public:
-		/** @brief [A0] */
 		H3LoadedDef* roadDef[3];
-		/** @brief [AC] */
 		H3LoadedDef* edgDef;
-		/** @brief [B0] */
 		H3LoadedDef* adagDef;
-		/** @brief [B4] */
 		H3LoadedDef* agemulDef;
-		/** @brief [B8] */
 		H3LoadedDef* agemurDef;
-		/** @brief [BC] */
 		H3LoadedDef* agemllDef;
-		/** @brief [C0] */
 		H3LoadedDef* agemlrDef;
-		/** @brief [C4] */
 		H3LoadedDef* tshrcDef;
-		/** @brief [C8] */
 		H3LoadedDef* radarDef;
-		/** @brief [CC] */
 		H3LoadedDef* tshreDef;
-		/** @brief [D0] */
 		H3Vector<H3LoadedDef*> defs;
-		/** @brief [E0] */
 		H3LoadedDef* attackDEF;
-		/** @brief [E4] the position of top left of the screen*/
 		H3Position screenPosition;
-		/** @brief [E8] the position of the mouse cursor in (x,y,z)*/
 		H3Position mousePosition;
-		/** @brief [EC] the previous map adventure coordinates of the mouse*/
 		POINT previousMousePosition;
 	protected:
 		h3unk8 _f_0F4[24];
 	public:
-		/** @brief [10C] */
 		H3LoadedDef* heroDef[18];
-		/** @brief [154] */
 		H3LoadedDef* boatDef[3];
-		/** @brief [160] */
 		H3LoadedDef* boatMovementDef[3];
-		/** @brief [16C] */
 		H3LoadedDef* heroFlags00[8];
-		/** @brief [18C] */
 		H3LoadedDef* heroFlags01[8];
-		/** @brief [1AC] */
 		H3LoadedDef* heroFlags02[8];
-		/** @brief [1CC] */
 		H3LoadedDef* heroFlags03[8];
-		/** @brief [1EC] see 40F65F*/
 		BOOL8 drawTransparentHero;
-		/** @brief [1F0] */
 		INT32 terrain;
-		/** @brief [1F4] direction the hero is facing*/
 		INT32 heroDirection;
 	protected:
 		h3unk8 _f_1F8[4];
 	public:
-		/** @brief [1FC] which group from AHXX.def to draw from*/
 		INT32 heroDefGroup;
 	protected:
 		h3unk8 _f_200[12];
 	public:
-		/** @brief [20C] */
 		BOOL8 centeredHero;
 	protected:
 		h3unk8 _f_20D[11];
 	public:
-		/** @brief [218] */
 		INT32 monsterTypeBattle;
-		/** @brief [21C] */
 		INT32 monsterCountBattle;
-		/** @brief [220] */
 		INT32 monsterSideBattle;
 	protected:
 		h3unk8 _f_224[4];
@@ -18563,14 +15122,11 @@ namespace h3
 			INT32 loopSound; // index of looped sound
 			INT32 volume;
 		} currentSounds[4];
-		/** @brief [248] */
 		H3WavFile* loopSounds[70];
-		/** @brief [360] */
 		H3WavFile* horseXYSounds[11];
 	protected:
 		h3unk8 _f_38C[8];
 	public:
-		/** @brief [394] see ePanel*/
 		INT32 currentInfoPanel;
 	protected:
 		h3unk8 _f_398[32];
@@ -18601,11 +15157,6 @@ namespace h3
 		_H3API_ H3FastMap<H3MapItem> GetFastMap();
 		_H3API_ H3Map<UINT16>        GetPathMap();
 		_H3API_ H3FastMap<UINT16>    GetPathFastMap();
-		/**
-		 * @brief Orders the manager to close
-		 * @param msg The current thread message
-		 * @return Value 2 to indicate end of loop
-		 */
 		_H3API_ INT32 Close(H3Msg& msg);
 	};
 	_H3API_ASSERT_SIZE_(H3AdventureManager);
@@ -18641,181 +15192,109 @@ namespace h3
 	protected:
 		h3unk8 _f_0038[4];
 	public:
-		/** @brief [3C] */
 		eCombatAction action;
-		/** @brief [40] */
 		INT32 actionParameter;
-		/** @brief [44] */
 		INT32 actionTarget;
-		/** @brief [48] */
 		INT32 actionParameter2;
-		/** @brief [4C] */
 		INT8 accessibleSquares[187];
-		/** @brief [107] */
 		eCombatSquareAccess accessibleSquares2[187];
-		/** @brief [1C4] */
 		H3CombatSquare squares[187];
-		/** @brief [5394] */
 		INT32 landType;
 	protected:
 		h3unk8 _f_5398[8];
 	public:
-		/** @brief [53A0] */
 		INT32 absoluteObstacleId;
-		/** @brief [53A4] */
 		INT32 siegeKind;
-		/** @brief [53A8] */
 		INT32 hasMoat;
 	protected:
 		h3unk8 _f_53AC[4];
 	public:
-		/** @brief [53B0] */
 		H3LoadedPcx16* drawBuffer;
 	protected:
 		h3unk8 _f_53B4[4];
 	public:
-		/** @brief [53B8] */
 		BOOL doNotDrawShade;
-		/** @brief [53BC] H3MapItem where combat is taking place*/
 		H3MapItem* mapitem;
-		/** @brief [53C0] special terrain type used*/
 		INT32 specialTerrain;
-		/** @brief [53C4] */
 		BOOL8 antiMagicGarrison;
-		/** @brief [53C5] */
 		BOOL8 creatureBank;
-		/** @brief [53C6] */
 		BOOL8 boatCombat;
-		/** @brief [53C8] town structure where combat is taking place*/
 		H3Town* town;
-		/** @brief [53CC] hero structures from each side*/
 		H3Hero* hero[2];
-		/** @brief [53D4] spell power from each side*/
 		INT32 heroSpellPower[2];
 	protected:
 		h3unk8 _f_53DC[8];
-		/** @brief [53E4] */
 		UINT32 HeroAnimation[2];
-		/** @brief [53EC] */
 		UINT32 HeroAnimationFrame[2];
 		h3unk8 _f_53F4[16];
-		/** @brief [5404] */
 		H3LoadedDef* heroDefLoaded[2];
-		/** @brief [540C] */
 		H3LoadedDef* heroFlagLoaded[2];
-		/** @brief [5414] */
 		INT32 heroFlagFrame[2];
-		/** @brief [541C] */
 		RECT heroUpdateRect[2];
-		/** @brief [543C] */
 		RECT heroFlagUpdateRect[2];
-		/** @brief [545C] eagle eye 2x vector*/
 		H3Vector<INT32> eagleEyeSpell[2];
 	public:
-		/** @brief [547C] which stacks are to be affected by a mass spell animation*/
 		BOOL8 massSpellTarget[2][20];
-		/** @brief [54A4] */
 		UINT8 isNotAI[2];
-		/** @brief [54A6] */
 		BOOL8 isHuman[2];
-		/** @brief [54A8] */
 		INT32 heroOwner[2];
-		/** @brief [54B0] */
 		BOOL8 artifactAutoCast[2];
-		/** @brief [54B4] */
 		BOOL heroCasted[2];
-		/** @brief [54BC] */
 		INT32 heroMonCount[2];
-		/** @brief [54C4] */
 		H3Army* army[2];
-		/**
-		 * @brief [54CC] called "Troop stack" in manual.
-		 * a two-sided array of 21 stacks for each side of combat
-		 * Note only 20 creatures are typically used, the 21st slot
-		 * seems reserved for the presence of the arrow tower when needed
-		 */
 		H3CombatCreature stacks[2][21];
 	protected:
 		h3unk8 _f_1329C[4];
 	public:
-		/** @brief [132A0] */
 		INT32 turnsSinceLastEnchanterCast[2];
-		/** @brief [132A8] unique monster type to summon with magic for current combat */
 		eCreature summonedMonster[2];
 	protected:
 		h3unk8 _f_132A8[8];
 	public:
-		/** @brief [132B8] */
 		INT32 currentMonSide;
-		/** @brief [132BC] */
 		INT32 currentMonIndex;
-		/** @brief [132C0] */
 		INT32 currentActiveSide;
-		/** @brief [132C4] */
 		INT32 autoCombat;
-		/** @brief [132C8] */
 		H3CombatCreature* activeStack;
-		/** @brief [132CC] */
 		INT8 blueHighlight;
-		/** @brief [132D0] */
 		INT32 creatureAtMousePos;
-		/** @brief [132D4] */
 		INT32 mouseCoord;
-		/** @brief [132D8] */
 		INT32 attackerCoord;
-		/** @brief [132DC] icons of CRCOMBAT.def, see H3MouseManager::eBattleFieldCursorType*/
 		INT32 moveType;
 	protected:
 		h3unk8 _f_132E0[8];
 	public:
-		/** @brief [132E8] */
 		H3LoadedDef* currentMagicAnim;
-		/** @brief [132EC] */
 		INT32 currentMagicAnimId;
 	protected:
 		h3unk8 _f_132F0[4];
 	public:
-		/** @brief [132F4] */
 		INT32 siegeKind2;
-		/** @brief [132F8] */
 		BOOL finished;
-		/** @brief [132FC] */
 		struct H3CombatDlg* dlg;
 	protected:
 		h3unk8 _f_13300[352];
-		/** @brief [13460] */
 		BOOL8 removeDeadCreatures;
-		/** @brief [13464] */
 		LPCSTR backgroundPcxName;
 	public:
-		/** @brief [13468] */
 		H3AdjacentSquares adjacentSquares[187];
 	protected:
 		h3unk8 _f_13D2C[12];
-		/** @brief [132E8] */
 		RECT updateRect;
 		h3unk8 _f_13D48[4];
 	public:
-		/** @brief [13D4C] */
 		INT32 necromancyRaisedAmount;
-		/** @brief [13D50] eCreatures */
 		eCreature necromancyRaisedMonsters;
 	protected:
-		/** @brief [13D54] */
 		INT cmNumWinPcxLoaded;
 	public:
-		/** @brief [13D58] information about obstacles on battlefield*/
 		H3Vector<H3Obstacle> obstacleInfo;
-		/** @brief [13D68] */
 		BOOL8 tacticsPhase;
-		/** @brief [13D6C] the current turn 0+ */
 		INT32 turn;
-		/** @brief [13D70] */
 		INT32 tacticsDifference;
 	protected:
 		h3unk8 _f_13D74[4]; // spell related?
 	public:
-		/** @brief [13D78] */
 		struct TownTowerLoaded
 		{
 			_H3API_SIZE_(0x24);
@@ -18829,46 +15308,29 @@ namespace h3
 			H3DefFrame*  frame;
 			INT32        stackNumber;
 		}towers[3];
-		/** @brief [13DE4] */
 		BOOL32 waitPhase;
 	protected:
-		/** @brief [13DE8] */
 		INT32 heroDAttack;
-		/** @brief [13DEC] */
 		INT32 heroDDefence;
-		/** @brief [13DF0] */
 		INT32 heroDSpellPower2;
-		/** @brief [13DF4] */
 		INT32 heroDSpellPoints;
 	public:
-		/** @brief [13DF8] 18 pieces each with 5 stages */
 		H3LoadedPcx* townSiegePcx[18][5];
-		/** @brief [13F60] hit points of town walls*/
 		INT32 fortWallsHp[18];
-		/** @brief [13FA8] */
 		INT32 fortWallsAlive[18];
 	protected:
 		h3unk8 _f_13FF0[4];
 	public:
-		/** @brief [13FF4] pcx of grids, name of the resource in the lod*/
 		H3LoadedPcx* CCellGrdPcx;
-		/** @brief [13FF8] pcx to shade in blue using cheat menu, name in lod*/
 		H3LoadedPcx* CCellShdPcx;
 	protected:
-		/** @brief [13FFC] wog name */
 		INT32 globalCardeIndex;
 	public:
-		/** @brief [14000] only 20 unlike stacks*/
 		BOOL8 redrawCreatureFrame[2][20];
-		/** @brief [14028] */
 		BOOL8 heroAnimation[2];
-		/** @brief [1402A] */
 		BOOL8 heroFlagAnimation[2];
-		/** @brief [1402C] */
 		BOOL8 turretAnimation[3];
-		/** @brief [14030] marked as true when a combat action is just starting*/
 		BOOL8 actionUndergoing;
-		/** @brief [14031] marked as true when a creature is moving*/
 		BOOL8 travelingSquares[187];
 	public:
 		_H3API_ VOID  SimulateMouseAtHex(INT32 hex_id);
@@ -18878,23 +15340,11 @@ namespace h3
 		_H3API_ VOID  CastSpell(INT32 spell_id, INT32 hex_ix, INT32 cast_type_012, INT32 hex2_ix, INT32 skill_level, INT32 spell_power);
 		_H3API_ INT32 SquareAtCoordinates(const H3POINT& p) const;
 		_H3API_ INT32 SquareAtCoordinates(INT32 x, INT32 y) const;
-		/**
-		 * @brief Checks specified combat square for resurrectable unit
-		 * @param coordinate Valid combat hex 0..187
-		 * @param caster_kind H3Hero: 0, Creature: 1, Artifact: 2
-		 * @return A pointer to a dead stack at the specified hex, nullptr if no valid target
-		 */
 		_H3API_ H3CombatCreature* GetResurrectionTarget(INT32 coordinate, INT32 caster_kind = 0);
 		_H3API_ H3CombatCreature* GetAnimateDeadTarget(INT32 coordinate);
 		_H3API_ INT32 NextCreatureToMove();
 		_H3API_ BOOL8 IsHiddenBattle();
 		_H3API_ BOOL8 IsBattleOver();
-		/**
-         * @brief Make army perform an animation.
-		 *
-         * @param animationIndex which animation
-         * @param resetAnimationWhenDone reset animation idx to 0 or not.
-        */
         _H3API_ VOID  ApplyAnimationToLastHitArmy(INT32 animationIndex, BOOL resetAnimationWhenDone);
 		_H3API_ VOID  AddNecromancyRaisedCreature(INT32 side);
 		_H3API_ VOID  Refresh();
@@ -18904,61 +15354,18 @@ namespace h3
 		_H3API_ BOOL8 IsHumanTurn();
 		_H3API_ VOID  AddStatusMessage(LPCSTR message, BOOL permanent = TRUE);
 		_H3API_ VOID  PlayMagicAnimation(INT32 id, H3CombatCreature* target, INT32 timeStep, BOOL8 showTargetBeingHit);
-		/**
-		 * @brief Make a combat log template by gentext=378 or 379 for damage, 380 or 381 for killed,
-				  and some creature ability damage also use this function to generate combat log.
-
-		 * @param attackerName just name
-		 * @param numAttackers num of creature in attacker stack
-		 * @param damageDone damage done
-		 * @param target target army
-		 * @param killedCount how many creature be killed
-		*/
 		_H3API_ VOID  ReportDamageDone(LPCSTR attackerName, INT32 numAttackers, INT32 damageDone, H3CombatCreature* target, INT32 killedCount);
 		_H3API_ BOOL8 ShouldCastSpellAfterHit(INT32 spellId, INT32 side, H3CombatCreature* target);
 		_H3API_ VOID ResurrectTarget(H3CombatCreature* target, INT32 hitPoints, INT32 isTemporary);
-        /**
-         * @brief Caculate the spell's damage on target
-         * @param damage Basic damage
-         * @param spellId Which spell
-         * @param atkHero Attacker hero
-         * @param defHero Defender hero
-         * @param target Target creature
-         * @param showLog generate combat log.
-         * @return Damage has been modified
-        */
         _H3API_ INT32 CalculateSpellDamageOnTarget(INT32 damage, INT32 spellId, H3Hero* atkHero, H3Hero* defHero, H3CombatCreature* target, BOOL showLog);
 		_H3API_ H3CombatCreature* SummonCreature(INT32 side, INT32 creatureId, INT32 amount, INT32 position, INT32 redrawAnimation, BOOL redraw);
 		_H3API_ H3CombatCreature* GetSummonDemonTarget(INT32 side, INT32 coordinate);
 		_H3API_ VOID RaiseDemon(H3CombatCreature* caster, H3CombatCreature* target);
-		/**
-		 * @brief Checks whether after-hit creature spells can be applied to the target stack using rand(1, 100).
-		 *
-		 * @param spell_id id of the spell being considered
-		 * @param creature_side controlling side of the creature performing the attack [hypnotized ? 1 - side : side]
-		 * @param target creature that will receive the spell
-		 * @return BOOL8 whether the spell can be applied to the target
-		 */
 		_H3API_ BOOL8 CanApplyCreatureSpell(INT32 spell_id, INT32 creature_side, H3CombatCreature* target);
 		_H3API_ VOID DrawRay(BOOL redraw, INT startX, INT startY, INT dstX, INT dstY, INT allowBranches, INT randomnessRange, INT startThickness, INT endThickness, WORD color565, INT amplitude, INT arching, INT rayStraightness, INT smoothness, BOOL pathRandomness, INT timeDelay);
 		_H3API_ VOID DrawRay(BOOL redraw, H3CombatCreature* start, H3CombatCreature* end, INT allowBranches, INT randomnessRange, INT startThickness, INT endThickness, WORD color565, INT amplitude, INT arching, INT rayStraightness, INT smoothness, BOOL pathRandomness, INT timeDelay);
-		/**
-		 * @brief Animates a mass spell cast on the battlefield
-		 *
-		 * @param animation_id the animation id of the spell (H3Spell::animationIndex)
-		 * @param affects_both_sides Whether both sides are affected (Destroy Undead and Death Ripple)
-		 */
 		_H3API_ VOID AnimateMassSpell(INT32 animation_id, BOOL8 affects_both_sides);
-		/**
-		 * @brief Orders the manager to close
-		 * @param msg The current thread message
-		 * @return Value 2 to indicate end of loop
-		 */
 		_H3API_ INT32 Close(H3Msg& msg);
-		/**
-		 * @brief follows the logic from 0x479A5B that prevents summoning a clone
-		 * if too many creatures are present
-		 */
 		_H3API_ BOOL CanSummonOrClone() const;
 	};
 	_H3API_ASSERT_SIZE_(H3CombatManager);
@@ -18974,7 +15381,6 @@ namespace h3
 	_H3API_DECLARE_(ExecutiveMgr);
 
 #pragma pack(push, 4)
-	/** @brief Chief Executive Officer of Managers*/
 	struct H3ExecutiveMgr
 	{
 		_H3API_SIZE_(0x10);
@@ -18988,10 +15394,6 @@ namespace h3
 	public:
 		_H3API_ VOID RemoveManager(H3Manager* mgr);
 		_H3API_ INT  AddManager(H3Manager* mgr, INT32 order);
-		/**
-		 * @brief Starts the specified manager, and removes it once it has run its course
-		 * @param mgr Manager to be started
-		 */
 		_H3API_ VOID StartManager(H3Manager* mgr);
 	};
 	_H3API_ASSERT_SIZE_(H3ExecutiveMgr);
@@ -19022,11 +15424,8 @@ namespace h3
 			INT32 days;
 			h3unk8 _f_5C[8];
 		};
-		/** @brief [38] a buffer to read from <Heroes3>/data/HiScore.dat*/
 		Entry scenarios[11];
-		/** @brief [484] a buffer to read from <Heroes3>/data/HiScore.dat*/
 		Entry campaigns[11];
-		/** @brief [8D0]*/
 		BOOL showingSingleScenarios;
 
 		_H3API_ VOID ResetScores();
@@ -19055,11 +15454,8 @@ namespace h3
 			UINT message;
 			h3unk8 f_4[28]; // contents vary
 		}
-		/** @brief [38] see 0x4EC6B8 */
 		messages[64];
-		/** @brief [838] */
 		INT32 currentMessage;
-		/** @brief [83C] */
 		INT32 nextMessage;
 		BOOL32  addingMessage;
 
@@ -19073,7 +15469,6 @@ namespace h3
 		h3unk32 _f_95C;
 	public:
 		_H3API_ InputMessages& GetCurrentMessage();
-		/** @brief Adds a MC_MOUSE_OVER message to the message queue based on current position*/
 		_H3API_ VOID AddMouseOverMessage();
 	};
 	_H3API_ASSERT_SIZE_(H3InputManager);
@@ -19104,26 +15499,20 @@ namespace h3
 	protected:
 		h3unk8 _f_38[20];
 	public:
-		/* @brief [4C] H3MouseCursorType @ 0x67FF88*/
 		INT32 cursorType;
-		/* @brief [50]*/
 		INT32 cursorFrame;
-		/* @brief [54]*/
 		H3LoadedDef* cursorDef;
 	protected:
 		h3unk32 _f_58;
 		h3unk32 _f_5C;
 		h3unk32 _f_60;
 	public:
-		/** @brief [64] The state of ::ShowCursor()*/
 		BOOL8  showCursorState;
-		/** @brief [68] whether game cursor is hidden*/
 		BOOL   cursorHidden;
 	protected:
 		h3unk32 _f_6C;
 		h3unk32 _f_70;
 		h3unk32 _f_74;
-		/* @brief [78]*/
 		RTL_CRITICAL_SECTION criticalSection;
 	public:
 		_H3API_ VOID operator=(const Cursor& cursor);
@@ -19159,49 +15548,31 @@ namespace h3
 	{
 		_H3API_SIZE_(0xBC);
 		_H3API_VTABLE_(0x640C80);
-		/* only used when in town */
 		_H3API_GET_INFO_(0x6AAABC, H3RecruitMgr);
 
 		h3unk8 _f_38[16];
-		/** @brief [48] dwelling, town... */
 		INT32 objectType;
-		/** @brief [4C]*/
 		BOOL8 teamDwelling;
-		/** @brief [50]*/
 		INT32 selectedType;
-		/** @brief [54] amount currently set for selected type*/
 		INT32 selectedAmount;
 		h3unk32 selectedCreatureIndex;
-		/** @brief [5C]*/
 		INT32  types[4];
-		/** @brief [6C]*/
 		INT16* amounts[4];
-		/** @brief [7C]*/
 		H3Hero* hero;
 		h3unk8 _f_80[4];
-		/** @brief [84]*/
 		INT32 goldCost;
-		/** @brief [88]*/
 		INT32 specialResourceIndex;
-		/** @brief [8C]*/
 		INT32 specialResourceCost;
-		/** @brief [90]*/
 		h3unk32 dword90;
 		h3unk8 _f_94[4];
-		/** @brief [98]*/
 		H3Army* army;
-		/** @brief [9C]*/
 		BOOL8 summoningPortal;
 		h3unk32 _f_A0;
 		h3unk32 _f_A4;
 		h3unk32 _f_A8;
-		/** @brief [AC] for the selected type*/
 		h3unk32 amountAvailable;
-		/** @brief [B0]*/
 		h3unk32 totalGoldCost;
-		/** @brief [B4]*/
 		h3unk32 totalResourceCost;
-		/** @brief [B8]*/
 		h3unk32 amountToBuy;
 
 		_H3API_ H3RecruitMgr(H3Army& army, BOOL8 is_summoning_portal, INT32 type0, INT16& amount0);
@@ -19215,14 +15586,10 @@ namespace h3
 		_H3API_ H3RecruitMgr(H3Army& army, BOOL8 is_summoning_portal, H3CreatureSlot16& slot0,
 			H3CreatureSlot16& slot1, H3CreatureSlot16& slot2, H3CreatureSlot16& slot3);
 		_H3API_ H3RecruitMgr(H3Army& army, H3Generator& generator);
-		/* Used for war machines */
 		_H3API_ H3RecruitMgr(H3Hero* hero, INT32 type, INT16& amount);
-		/* Used for war machines */
 		_H3API_ H3RecruitMgr(H3Hero* hero, INT32 type0, INT16& amount0, INT32 type1, INT16& amount1);
-		/* Used for war machines */
 		_H3API_ H3RecruitMgr(H3Hero* hero, INT32 type0, INT16& amount0, INT32 type1, INT16& amount1,
 			INT32 type2, INT16& amount2);
-		/* Used for war machines */
 		_H3API_ H3RecruitMgr(H3Hero* hero, INT32 type0, INT16& amount0, INT32 type1, INT16& amount1,
 			INT32 type2, INT16& amount2, INT32 type3, INT16& amount3);
 		_H3API_ VOID Run();
@@ -19253,41 +15620,19 @@ namespace h3
 		_H3API_GET_INFO_(0x699414, H3SoundManager);
 
 	protected:
-		/** @brief [38]*/
 		UINT32 mssHandle;
-		/** @brief [3C]*/
 		HANDLE hSamples[16];
 		h3unk8 _f_80;
-		/** @brief [84]*/
 		INT32 clickSoundVar;
 		h3unk32 _f_88;
 		h3unk8 _f_8C;
-		/** @brief [A0]*/
 		_RTL_CRITICAL_SECTION rtlSection[3];
 	public:
 		_H3API_ VOID ClickSound(); // modeled after sub_00456540
 		_H3API_ VOID Play(H3WavFile* wav);
 		_H3API_ VOID Play(LPCSTR wav_name);
-		/**
-		 * @brief Plays a sound file and then waits the specified amount of milliseconds before resuming. Has no effect with HDmod
-		 *
-		 * @param wav_name name of the wav file to play
-		 * @param milliseconds time delay. If negative, 4000 milliseconds are used.
-		 */
 		_H3API_ VOID PlaySoundAndWait(LPCSTR wav_name, INT milliseconds);
-		/**
-		 * @brief Plays a wav asynchronously
-		 *
-		 * @param wav_name The name of the file to play
-		 * @param milliseconds The maximum duration in milliseconds, -1 defaults to 10,000ms
-		*/
 		_H3API_ static VOID PlaySoundAsync(LPCSTR wav_name, INT32 duration = -1);
-        /**
-         * @brief play a sound directly.
-         *
-         * @param wav_name The name of the file to play
-         * @return Played Wav file, WARNNING Homm3HD MOD will modify this return pointer to INT32 value as waiting timesteps
-         */
         _H3API_ static INT64 PlaySoundByFileAsync(LPCSTR wav_name);
 	};
 	_H3API_ASSERT_SIZE_(H3SoundManager);
@@ -19304,10 +15649,6 @@ namespace h3
 	struct H3LoadedPcx;
 
 #pragma pack(push, 4)
-	/**
-	 * @brief trading between two armies, similar to
-	 * https://github.com/potmdehex/homm3tools/blob/master/hd_edition/hde_mod/hde/structures/swapmgr.h
-	 */
 	struct H3SwapManager : public H3Manager
 	{
 		_H3API_SIZE_(0x68);
@@ -19315,37 +15656,23 @@ namespace h3
 		_H3API_GET_INFO_(0x6A3D90, H3SwapManager);
 		_H3API_CTOR_DTOR_(0x5AE850, -1);
 
-		/** @brief [38] */
 		H3SwapManagerDlg* dlg;
-		/** @brief [3C] */
 		H3LoadedPcx* aTradesel_pcx;
-		/** @brief [40]*/
 		H3Hero* hero[2];
-		/** @brief [48] */
 		INT32 heroSelected;
-		/** @brief [4C] */
 		INT32 heroClicked;
-		/** @brief [50] */
 		INT32 clickedCreatureSlot;
-		/** @brief [54] -1 if none*/
 		INT32 slotClicked;
 	protected:
 		h3unk32 _f_58;
 	public:
-		/** @brief [5C]*/
 		BOOL8 twoHumansTrade;
-		/** @brief [5D]*/
 		BOOL8 samePlayer;
 	protected:
 		h3unk32 directPlayOffset_F0_60;
 		h3unk32 object_10h_vt_642468_f_64;
 
 	public:
-		/**
-		 * @brief Orders the manager to close
-		 * @param msg The current thread message
-		 * @return Value 2 to indicate end of loop
-		 */
 		_H3API_ INT32 Close(H3Msg& msg);
 		_H3API_ VOID UpdateLuckMorale();
 		_H3API_ VOID RefreshDialog();
@@ -19375,11 +15702,8 @@ namespace h3
 		_H3API_VTABLE_(0x643730);
 		_H3API_GET_INFO_(0x69954C, H3TownManager);
 
-		/** @brief [38] */
 		H3Town* town;
-		/** @brief [3C] */
 		H3LoadedPcx16* background;
-		/** @brief [40] */
 		H3LoadedDef* creatures[7];
 		struct BuildingDrawInfo
 		{
@@ -19396,39 +15720,28 @@ namespace h3
 			H3LoadedPcx* background; // +28
 			H3DlgTransparentItem* transparentOverlay; // +2C
 		}*buildingDrawing[44]; // +5C
-		/** @brief [10C] */
 		UINT numberBuildings;
-		/** @brief [110] */
 		INT townType;
 	protected:
 		h3unk8 _f_114[4];
 	public:
-		/** @brief [118] */
 		H3TownDialog* dlg;
-		/** @brief [11C] */
 		H3GarrisonInterface* top;
-		/** @brief [120] */
 		H3GarrisonInterface* bottom;
 	protected:
 		h3unk8 _f_124[8];
 	public:
-		/** @brief [12C] source page*/
 		H3GarrisonInterface* source;
-		/** @brief [130] number of source stack*/
 		INT32 sourcePageStack;
-		/** @brief [134] recipient page */
 		H3GarrisonInterface* recipientPage;
-		/** @brief [138] number of recipient page*/
 		INT32 recipientPageStack;
 	protected:
 		h3unk8 _f_13C[100];
 	public:
-		/** @brief [1A0] what can be built in the construction screen of the city*/
 		H3BuildingsBitfield buildings;
 	protected:
 		h3unk32 _f_1A8[9];
 	public:
-		/** @brief [1CC] index of each of the dwellings, 0..6 unupgraded, 7..13 upgraded*/
 		UINT8 dwellingIndexes[7];
 	protected:
 		h3unk32 _f_1D4;
@@ -19457,22 +15770,15 @@ namespace h3
 		_H3API_VTABLE_(0x643D5C);
 		_H3API_GET_INFO_(0x6992D0, H3WindowManager);
 
-		/** @brief [38] clicked item*/
 		INT32 resultItemID;
-		/** @brief [3C] last item with mouse over event*/
 		INT32 mouseoverItemId;
-		/** @brief [40] main drawing surface*/
 		H3LoadedPcx16* screenPcx16;
 	protected:
 		h3unk32 _f_44;
-		/** @brief [48] */
 		BOOL8 mouseTurnedOff;
 	public:
-		/** @brief [4C]*/
 		H3LoadedPcx16* backupScreen;
-		/** @brief [50]*/
 		H3BaseDlg* firstDlg;
-		/** @brief [54]*/
 		H3BaseDlg* lastDlg;
 	protected:
 		h3unk32 _f_58;
@@ -20183,62 +16489,34 @@ namespace h3
 
 	protected:
 
-		/**< @ brief [v00]*/
 		_H3API_ virtual H3DlgItem* vDestroy(BOOL8 deallocate) = 0;
-		/**< @ brief [v04]*/
 		_H3API_ virtual BOOL       vInitiate(INT16 zorder, H3BaseDlg* parent) = 0;
-		/** @ brief [v08]*/
 		_H3API_ virtual INT        vProcessMsg(H3Msg& msg) = 0;
-		/** @ brief [v0C] no action except H3DlgPcx*/
 		_H3API_ virtual VOID       vDrawPcx8(PWORD buffer, RGB565 color) = 0;
-		/** @ brief [v10]*/
 		_H3API_ virtual VOID       vDrawToWindow() = 0;
-		/** @ brief [v14]*/
 		_H3API_ virtual INT        vGetHeight() const = 0;
-		/** @ brief [v18]*/
 		_H3API_ virtual INT        vGetWidth() const = 0;
-		/** @ brief [v1C]*/
 		_H3API_ virtual VOID       vCallParent() const = 0;
-		/** @ brief [v20]*/
 		_H3API_ virtual VOID       vDarkenArea() const = 0;
-		/** @ brief [v24]*/
 		_H3API_ virtual VOID       vEnable(BOOL8 state) = 0;
-		/** @ brief [v28]*/
 		_H3API_ virtual VOID       vGetFocus() = 0;
-		/** @ brief [v2C]*/
 		_H3API_ virtual VOID       vLoseFocus() = 0;
-		/** @ brief [v30]*/
 		_H3API_ virtual VOID       vNullsub(INT unknown) const = 0;
 
-		/** @ brief [04]*/
 		H3BaseDlg*    parent;
-		/** @ brief [08]*/
 		H3DlgItem*    nextDlgItem;
-		/** @ brief [0C]*/
 		H3DlgItem*    previousDlgItem;
-		/** @ brief [10]*/
 		UINT16        id;
-		/** @ brief [12]*/
 		INT16         zOrder;
-		/** @ brief [14] eType*/
 		eControl      type;
-		/** @ brief [16]*/
 		eControlState state;
-		/** @ brief [18]*/
 		INT16         xPos;
-		/** @ brief [1A]*/
 		INT16         yPos;
-		/** @ brief [1C]*/
 		UINT16        widthItem;
-		/** @ brief [1E]*/
 		UINT16        heightItem;
-		/** @ brief [20]*/
 		LPCSTR        hint;
-		/** @ brief [24]*/
 		LPCSTR        rightClickHint;
-		/** @ brief [28]*/
 		BOOL8         hintsAreAllocated;
-		/** @ brief [2C]*/
 		INT32         deactivatesCount;
 
 		_H3API_ BOOL NotifyParent(H3Msg& msg);
@@ -20309,31 +16587,18 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/**
-	 * @brief Created as size 0x6C, but proc is not used
-	 * Although there is room for CustomProc, which is the same as H3DlgCustomButton,
-	 * it is not passed as an argument to the function
-	 */
 	struct H3DlgDefButton : public H3DlgItem
 	{
 		_H3API_SIZE_(0x68);
 		_H3API_VTABLE_(0x63BB54);
 	protected:
-		/** @brief [30]*/
 		H3LoadedDef*    loadedDef;
-		/** @brief [34]*/
 		INT32           defFrame;
-		/** @brief [38]*/
 		INT32           defFrameOnClick;
-		/** @brief [3C]*/
 		INT32           mirror;
-		/** @brief [40]*/
 		h3unk32         _f_40;
-		/** @brief [44]*/
 		BOOL8           closeDialog;
-		/** @brief [48] more than one hotkey can be associated*/
 		H3Vector<INT32> hotkeys;
-		/** @brief [58]*/
 		H3String        caption;
 
 	public:
@@ -20370,9 +16635,7 @@ namespace h3
 		_H3API_SIZE_(0x70);
 		_H3API_VTABLE_(0x63BB88);
 	protected:
-		/** @brief [68]*/
 		H3Font* loadedFont;
-		/** @brief [6C]*/
 		INT32   color;
 	public:
 
@@ -20429,21 +16692,14 @@ namespace h3
 		_H3API_SIZE_(0x48);
 		_H3API_VTABLE_(0x63EC48);
 	protected:
-		/** @ brief [v34]*/
 		_H3API_ virtual BOOL8 vNullSub2(INT unk1, INT unk2) = 0;
 
 	protected:
-		/** @ brief [30]*/
 		H3LoadedDef* loadedDef;
-		/** @ brief [34]*/
 		INT32        defFrame;
-		/** @ brief [38] */
 		INT32        defGroup;
-		/** @ brief [3C]*/
 		INT32        mirror;
-		/** @ brief [40]*/
 		INT32        _f_40;
-		/** @ brief [44]*/
 		BOOL8        closeDialog;
 	public:
 
@@ -20480,19 +16736,13 @@ namespace h3
 		_H3API_VTABLE_(0x642DC0);
 
 	protected:
-		/** @brief [v34]*/
 		_H3API_ virtual VOID vSetText(LPCSTR text) const = 0;
 
 	protected:
-		/** @brief [30]*/
 		H3String text;
-		/** @brief [40]*/
 		H3Font*  font;
-		/** @brief [44]*/
 		INT32    color;
-		/** @brief [48]*/
 		INT32    bkColor;
-		/** @brief [4C]*/
 		eTextAlignment alignment;
 	public:
 		_H3API_ static H3DlgText* Create(INT32 x, INT32 y, INT32 width, INT32 height,
@@ -20525,47 +16775,27 @@ namespace h3
 		_H3API_VTABLE_(0x642D50);
 		_H3API_CTOR_DTOR_(0x5BACD0, -1);
 	protected:
-		/** @brief [v38]*/
 		_H3API_ virtual VOID  vSetFocus(BOOL8 focused) const = 0;
-		/** @brief [v3C]*/
 		_H3API_ virtual INT   vProcessKey(H3Msg &msg) = 0;
-		/** @brief [v40]*/
 		_H3API_ virtual BOOL8 vIsTabEscEnter(H3Msg &msg) const = 0;
-		/** @brief [v44]*/
 		_H3API_ virtual VOID  vLoadPcx16Special(BOOL8 redraw) const = 0;
-		/** @brief [v48]*/
 		_H3API_ virtual VOID  vPcx16FromBuffer() const = 0;
 
 	protected:
-		/** @brief [50]*/
 		H3LoadedPcx*   loadedPcx;
-		/** @brief [54]*/
 		H3LoadedPcx16* loadedPcx16;
-		/** @brief [58]*/
 		UINT16         caretPos;
-		/** @brief [5A]*/
 		UINT16         maxLength;
-		/** @brief [5C]*/
 		UINT16         fieldSizeX;
-		/** @brief [5E]*/
 		UINT16         fieldSizeY;
-		/** @brief [60]*/
 		UINT16         fieldX;
-		/** @brief [62]*/
 		UINT16         fieldY;
-		/** @brief [64]*/
 		INT16          _f_64;
-		/** @brief [66]*/
 		INT16          hasBorder;
-		/** @brief [68]*/
 		INT16          _f_68;
-		/** @brief [6A]*/
 		INT16          _f_6A;
-		/** @brief [6C]*/
 		h3unk          _f_6C;
-		/** @brief [6D]*/
 		BOOL8          focused;
-		/** @brief [6E]*/
 		BOOL8          autoRedraw;
 	public:
 		_H3API_ static H3DlgEdit* Create(INT32 x, INT32 y, INT32 width, INT32 height,
@@ -20586,7 +16816,6 @@ namespace h3
 	struct H3ScreenchatEdit : H3DlgEdit
 	{
 		_H3API_SIZE_(0x74);
-		/** @brief [70]*/
 		BOOL8 enteringText;
 	};
 	_H3API_ASSERT_SIZE_(H3ScreenchatEdit);
@@ -20602,7 +16831,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief 1-pixel wide rectangular frame with the color of your choice*/
 	struct H3DlgFrame : public H3DlgItem
 	{
 		_H3API_SIZE_(0x38);
@@ -20611,10 +16839,8 @@ namespace h3
 		_H3API_ virtual BOOL8 vNullSub2(INT unk1, INT unk2) = 0; /**< @ brief [v34]*/
 
 	protected:
-		/** @ brief [30] H3RGB565 color*/
 		RGB565   color565;
 		h3align  _f_32[2];
-		/** @ brief [34] modifies hue within frame toward RGB565 color, see 0x44FEB4*/
 		BOOL8    changeHue;
 	public:
 		_H3API_ static H3DlgFrame* Create(INT32 x, INT32 y, INT32 width, INT32 height, INT32 id, RGB565 color);
@@ -20642,7 +16868,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief custom class that manages a list of items and draws a contour around them*/
 	class H3DlgHighlightable
 	{
 	protected:
@@ -20705,7 +16930,6 @@ namespace h3
 	struct H3Msg;
 
 #pragma pack(push, 4)
-	/** @brief Custom dialog item that shows items's hints in a managed textpcx*/
 	class H3DlgHintBar : public H3DlgTextPcx
 	{
 		H3DlgItem* lastHint;
@@ -20732,11 +16956,9 @@ namespace h3
 		_H3API_SIZE_(0x34);
 		_H3API_VTABLE_(0x63BA94);
 	protected:
-		/** @brief [v34]*/
 		_H3API_ virtual BOOL8 vNullSub2(INT unk1, INT unk2) = 0;
 
 	protected:
-		/** @brief [30]*/
 		H3LoadedPcx* loadedPcx;
 	public:
 		_H3API_ static H3DlgPcx* Create(INT32 x, INT32 y, INT32 width, INT32 height, INT32 id, LPCSTR pcxName);
@@ -20765,10 +16987,8 @@ namespace h3
 		_H3API_SIZE_(0x34);
 		_H3API_VTABLE_(0x63BACC);
 	protected:
-		/** @brief [v34]*/
 		_H3API_ virtual BOOL8 vNullSub2(INT unk1, INT unk2) = 0;
 	protected:
-		/** @brief [30]*/
 		H3LoadedPcx16* loadedPcx16;
 	public:
 		_H3API_ static H3DlgPcx16* Create(INT32 x, INT32 y, INT32 width, INT32 height, INT32 id, LPCSTR pcxName);
@@ -20800,15 +17020,10 @@ namespace h3
 		_H3API_SIZE_(0x5C);
 		_H3API_VTABLE_(0x642D1C);
 	protected:
-		/** @brief [30]*/
 		LPCSTR               font;
-		/** @brief [34]*/
 		H3Vector<H3String>   textLines;
-		/** @brief [44]*/
 		H3Vector<H3DlgText*> textItems;
-		/** @brief [54]*/
 		H3DlgTextScrollbar*  scrollBar;
-		/** @brief [58]*/
 		H3LoadedPcx16*       canvas;
 	public:
 		_H3API_ static H3DlgScrollableText* Create(LPCSTR text, INT32 x, INT32 y,
@@ -20836,45 +17051,26 @@ namespace h3
 		_H3API_VTABLE_(0x641D60);
 		_H3API_CTOR_DTOR_(0x5963C0, -1);
 	protected:
-		/** @brief [v34]*/
 		_H3API_ virtual VOID vSetTickCount(INT tick) const = 0;
-		/** @brief [v38]*/
 		_H3API_ virtual VOID vChangeTickPosition(INT change) = 0;
-		/** @brief [v3C]*/
 		_H3API_ virtual VOID vDecreaseTickPosition(INT change) = 0;
-		/** @brief [v40]*/
 		_H3API_ virtual VOID vScrollCallOwner() const = 0;
 
 	protected:
-		/** @brief [30]*/
 		H3LoadedDef*        loadedBtnDef;
-		/** @brief [34]*/
 		H3LoadedPcx*        loadedPcx;
-		/** @brief [38]*/
 		INT32               previousTick;
-		/** @brief [3C]*/
 		INT32               tick;
-		/** @brief [40]*/
 		INT32               btnPosition;
-		/** @brief [44]*/
 		INT32               sizeFree;
-		/** @brief [48]*/
 		INT32               ticksCount;
-		/** @brief [4C]*/
 		INT32               sizeMax;
-		/** @brief [50]*/
 		INT32               bigStepSize;
-		/** @brief [54]*/
 		INT32               btnSize2;
-		/** @brief [58]*/
 		h3unk32             _f_58;
-		/** @brief [5C]*/
 		BOOL8               catchKeys;
-		/** @brief [5D]*/
 		BOOL8               focused;
-		/** @brief [60]*/
 		h3unk32             _f_60;
-		/** @brief [64]*/
 		H3DlgScrollbar_proc callBack;
 
 		VOID loadButton(LPCSTR buttonName);
@@ -20905,13 +17101,11 @@ namespace h3
 	struct H3DlgScrollableText;
 
 #pragma pack(push, 4)
-	/** @brief automatically created for scrollable text*/
 	struct H3DlgTextScrollbar : public H3DlgScrollbar
 	{
 		_H3API_SIZE_(0x6C);
 		_H3API_VTABLE_(0x642CD8);
 	protected:
-		/** @brief [68]*/
 		H3DlgScrollableText* owner;
 	public:
 
@@ -20951,11 +17145,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/**
-	 * @brief Wrapper around gz_stream used to read/write h3m and save files
-	 * For reading map files from lod archives: TGzInflateBuf
-	 * original name as glanced from exception 'TGzFile::TOpenFailure'
-	 */
 	struct H3GzFile : H3Allocator
 	{
 		_H3API_SIZE_(8);
@@ -20967,74 +17156,22 @@ namespace h3
 			h3func write;
 		}*vtable;
 		H3GzStream* gzStream;
-		/* returns written size */
 		_H3API_ UINT32 write(VOID* src, UINT32 size);
-		/* returns read size */
 		_H3API_ UINT32 read(VOID* dst, UINT32 size);
 
 	public:
-		/**
-		 * @brief Construct a TGzFile to read or write
-		 * @param file_name file name you wish to open
-		 * @param mode 'rb', 'wb' etc.
-		 */
 		_H3API_ H3GzFile(LPCSTR file_name, LPCSTR mode);
-		/** @brief has a virtual destructor but we're not using it */
 		_H3API_ ~H3GzFile();
-		/**
-		 * @brief Read a string with 16-bit length
-		 * @param string Destination string
-		 * @return Number of bytes read in string
-		 */
 		_H3API_ BOOL ReadString16(H3String& string);
-		/**
-		 * @brief Read a string with 32-bit length
-		 * @param string Destination string
-		 * @return Number of bytes read in string
-		 */
 		_H3API_ BOOL Read(H3String& string);
-		/**
-		 * @brief Writes a string with 32-bit length
-		 * @param string Text to write
-		 * @return Number of bytes written
-		 */
 		_H3API_ BOOL Write(const H3String& string);
-		/**
-		 * @brief Writes a string with 16-bit length
-		 * @param string Text to write
-		 * @return Number of bytes written
-		 */
 		_H3API_ BOOL WriteString16(const H3String& string);
-		/**
-		 * @brief Write primitive data array to file
-		 * @tparam Type primitive data type (e.g. char, int, float)
-		 * @param src data array to be written
-		 * @return Number of bytes written
-		 */
 		template<typename Type, UINT32 Size>
 		BOOL Write(const Type(&src)[Size]);
-		/**
-		 * @brief Read primitive data array from file
-		 * @tparam Type primitive data type (e.g. char, int, float)
-		 * @param dst data array to be read into
-		 * @return Number of bytes read
-		 */
 		template<typename Type, UINT32 Size>
 		BOOL Read(Type(&dst)[Size]);
-		/**
-		 * @brief Write primitive data to file
-		 * @tparam Type primitive data type (e.g. char, int, float)
-		 * @param src data to be written
-		 * @return Number of bytes written
-		 */
 		template<typename Type>
 		BOOL Write(const Type& src);
-		/**
-		 * @brief Read primitive data from file
-		 * @tparam Type primitive data type (e.g. char, int, float)
-		 * @param dst data to be read into
-		 * @return Number of bytes read
-		 */
 		template<typename Type>
 		BOOL Read(Type& dst);
 	};
@@ -21073,9 +17210,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/* z_stream https://github.com/madler/zlib/blob/14763ac7c6c03bca62c39e35c03cf5bfc7728802/zlib.h#L68 */
-	/* Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler */
-	/* Heroes3 version is 1.1.3 */
 	struct H3ZStream
 	{
 		_H3API_SIZE_(0x38);
@@ -21107,10 +17241,6 @@ namespace h3
 	struct H3String;
 
 #pragma pack(push, 4)
-	/**
-	 * @brief Wrapper around zlib inherited from basic_streambuf
-	 * Original name TGzInflateBuf
-	 */
 	struct H3GzInflateBuf
 	{
 		_H3API_SIZE_(0x84);
@@ -21161,7 +17291,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3GzInflateBuf);
 
-	/** @brief wrapper around H3GzInflateBuf*/
 	struct H3GzInflateBufFile
 	{
 		_H3API_SIZE_(8);
@@ -21192,13 +17321,9 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/* gz_stream https://github.com/madler/zlib/blob/14763ac7c6c03bca62c39e35c03cf5bfc7728802/gzio.c#L40 */
-	/* Copyright (C) 1995-1998 Jean-loup Gailly. */
-	/* Heroes3 version is 1.1.3 */
 	struct H3GZStream : H3Allocator
 	{
 		_H3API_SIZE_(0x64);
-		/* aka z_stream */
 		H3ZStream zstrm;
 		INT       zError;           /* error code for last stream operation */
 		INT       zEof;             /* set if end of input file */
@@ -21284,7 +17409,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief original name: type_random_map*/
 	struct H3RmgMap
 	{
 		_H3API_SIZE_(0x18);
@@ -21401,12 +17525,6 @@ namespace h3
 		H3Vector<H3RmgObject*> objects;      /**< @brief [00]*/
 		RMG_Coordinates       previousTile;	/**< @brief [10]*/
 		H3RmgMovementCost      movement;     /**< @brief [1C]*/
-		/**
-		 * @brief [20] 1st byte ? neighbor zone ?  ? distance to yellow item?
-		 * 2nd byte ?
-		 * 3rd byte zone id?
-		 * 4th byte 2nd zone id?
-		 */
 		H3RmgZoneData          zone;
 		H3RmgGroundTile        tile;         /**< @brief [24]*/
 		H3RmgGroundTileData    tileData;     /**< @brief [28]*/
@@ -21431,15 +17549,10 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/**
-	 * @brief A created object using RMG_ObjectGenerator
-	 * original name: type_object
-	 */
 	struct H3RmgObject
 	{
 		_H3API_SIZE_(0x1C);
 
-		/** @brief [00]*/
 		struct VTable
 		{
 			h3func dtor;     // virtual dtor
@@ -21447,11 +17560,8 @@ namespace h3
 			h3func someBool; // returns bool 1 most of the time
 			h3func write;    // write to stream
 		}*vTable;
-		/** @brief [04]*/
 		H3RmgObjectPropsRef* properties;
-		/** @brief [08]*/
 		H3Point             coordinates;
-		/** @brief [14]*/
 		h3unk32             _f_14;
 		h3unk8              _f_18;
 
@@ -21459,10 +17569,6 @@ namespace h3
 	};
 	_H3API_ASSERT_SIZE_(H3RmgObject);
 
-	/**
-	 * @brief Abstract class to generate objects, all other types inherit this
-	 * original name: none, but most generators have type_object_def format
-	 */
 	struct H3RmgObjectGenerator
 	{
 		_H3API_SIZE_(0x14);
@@ -21506,7 +17612,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief similar to H3ObjectAttributes but not same order*/
 	struct H3RmgObjectProperties
 	{
 		_H3API_SIZE_(0x4C);
@@ -21622,7 +17727,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-    /** @brief original name: type_random_map_generator*/
     struct H3RmgRandomMapGenerator
     {
         _H3API_SIZE_(0x14E0);
@@ -21755,7 +17859,6 @@ namespace h3
 
 #pragma pack(push, 4)
 
-	/** @brief values of RMG.TXT*/
 	struct H3RmgZoneConnection
 	{
 		_H3API_SIZE_(0x1C);
@@ -21824,19 +17927,7 @@ namespace h3
 			JOIN_FREE = 0,
 		};
 
-		/**
-		 * @brief Get factor based on ratio of hero to creature power
-		 * http://heroescommunity.com/viewthread.php3?TID=28341
-		 * @param k Power ratio between hero and creatures
-		 * @return -3..+11
-		*/
 		_H3API_ static INT32 GetPowerFactor(FLOAT k);
-		/**
-		 * @brief Checks the gold cost of a would-be diplomacy joining wandering creature stack
-		 * @param hero The current hero
-		 * @param creature mapitem wandering creature
-		 * @return The gold cost to hire creatures, or one of eDiploType options
-		 */
 		_H3API_ static INT32 DiplomacyJoinCost(H3Hero* hero, const H3MapitemMonster& creature);
 	};
 } /* namespace h3 */
@@ -21847,27 +17938,11 @@ namespace h3
 	struct H3LoadedPcx16;
 	class  H3Bitmap;
 
-	/** @brief exports 24-bit bitmap to disk from H3LoadedPcx16 in memory*/
 	class H3Bitmap
 	{
 	public:
-		/**
-		 * @brief transforms the specified pcx to bitmap
-		 * @param pcx a loaded image in memory to convert as bitmap
-		 * @return BOOL whether the conversion was successful
-		 */
 		_H3API_ BOOL Create(const H3LoadedPcx16& pcx);
-		/**
-		 * @brief saves a converted memory pcx to bitmap on disk
-		 * @param file_name the destination name or path of the image
-		 * @return BOOL whether the image was successfully saved
-		 */
 		_H3API_ BOOL Save(LPCSTR file_name);
-		/**
-		 * @brief saves a converted memory pcx to bitmap on disk
-		 * @param file_name the destination name or path of the image
-		 * @return BOOL whether the image was successfully saved
-		 */
 		_H3API_ BOOL Save(const H3String& file_name);
 
 	private:
@@ -21895,11 +17970,6 @@ namespace h3
 	class  H3Exception;
 	class  H3SEHandler;
 
-	/**
-	* @brief Catches SEH exceptions when combined with H3SEHandler
-	* Also adds some logging options for std::exception
-	* See H3SEHandler below for more information
-	*/
 	class H3Exception : public std::exception
 	{
 	public:
@@ -21920,25 +17990,6 @@ namespace h3
 		_H3API_ static VOID LogError(const std::exception& e, const H3String& path);
 	};
 
-	/**
-	 * @brief create a H3SEHandler object on the stack where you want to use try{} catch{}
-	 * to receive the error code, use the what() exception member function
-	 * e.g. this snippet would show an error in-game without crashing the game
-	 * \code{.cpp}
-	 * H3SEHandler seh;
-	 * try
-	 * {
-	 *     some stuff that can create an error...
-	 * }
-	 * catch (const HException& e)
-	 * {
-	 * 	   e.ShowInGame();
-	 * }
-	 * catch (const std::exception& e)
-	 * {
-	 *		H3Exception::LogError(e, custom_file_name);
-	 * }\endcode
-	 */
 	class H3SEHandler
 	{
 		const _se_translator_function m_oldTranslator;
@@ -21955,10 +18006,6 @@ namespace h3
 {
     template<typename T> class H3Tree;
 
-    /**
-     * @brief Red-black tree with iterators
-     * @tparam T requires comparison BOOL8 operator<(const T&)
-     */
     template<typename T>
     class H3Tree
     {
@@ -22700,10 +18747,6 @@ namespace h3
 	class  H3Ini;
 
 #pragma pack(push, 1)
-	/**
-	 * @brief HDmod's format for ini files entries/lines
-	 *
-	 */
 	struct HDIniEntry
 	{
 		_H3API_ENUM_ eType : BYTE
@@ -22722,20 +18765,11 @@ namespace h3
 		DWORD  entryCount;  /**< @brief [05] how many values are associated to this key*/
 		LPCSTR uselessText; /**< @brief [09] linking characters in between entries like " = "*/
 
-		/**
-		 * @brief Get the associated text
-		 *
-		 * @return LPCSTR text from data union
-		 */
 		_H3API_ LPCSTR GetText();
 	};
 #pragma pack(pop)
 
 #pragma pack(push, 4)
-	/**
-	 * @brief HDmod's format for ini files
-	 *
-	 */
 	struct HDIni
 	{
 		HDIniEntry** entries;     /**< @brief [00] pointer to array of entry pointers*/
@@ -22743,10 +18777,6 @@ namespace h3
 		h3unk        _f_08[4];    /**< @brief [08]*/
 		CHAR         name[8];     /**< @brief [0C] unknown length, 8 as placeholder*/
 
-		/**
-		 * @brief parses key entries of the ini
-		 *
-		 */
 		struct iterator
 		{
 		protected:
@@ -22764,19 +18794,9 @@ namespace h3
 
 		_H3API_ iterator begin();
 		_H3API_ iterator end();
-		/**
-		 * @brief find the iterator (line) of the specified key
-		 *
-		 * @param key name of the option line for which settings exist
-		 * @return iterator of the line with matching key, end() iterator if not found
-		 */
 		_H3API_ iterator FindEntry(LPCSTR key);
 	};
 
-	/**
-	 * @brief H3IniLine represents a key + value, comment or empty line for the H3Ini class
-	 *
-	 */
 	class H3IniLine
 	{
 	public:
@@ -22804,135 +18824,31 @@ namespace h3
 	public:
 		_H3API_ H3IniLine();
 #ifdef _H3API_CPLUSPLUS11_
-		/**
-		 * @brief insert a new line in the ini at the current position
-		 *
-		 * @param type type of line to insert
-		 * @param content a copy of the line to be inserted
-		 */
 		_H3API_ H3IniLine(LineType type, H3String&& content);
-		/**
-		 * @brief Insert a KEY line in the ini at the current position
-		 *
-		 * @param content the name of the associated key
-		 * @param value value associated to this key
-		 */
 		_H3API_ H3IniLine(H3String&& content, H3String&& value);
 #else
-		/**
-		 * @brief insert a new line in the ini at the current position
-		 *
-		 * @param type type of line to insert
-		 * @param content a copy of the line to be inserted
-		 */
 		_H3API_ H3IniLine(LineType type, const H3String& content);
-		/**
-		 * @brief Insert a KEY line in the ini at the current position
-		 *
-		 * @param content the name of the associated key
-		 * @param value value associated to this key
-		 */
 		_H3API_ H3IniLine(const H3String& content, const H3String& value);
 #endif
-		/**
-		 * @brief Get an integer value for the current line
-		 *
-		 * @param default_value value to use in case the key is not found
-		 * @return atoi value of the current key, or default_value if the key does not exist
-		 */
 		_H3API_ INT      GetInteger(INT default_value);
-		/**
-		 * @brief Get a boolean value for the current line
-		 *
-		 * @param default_value value to use in case the key is not found
-		 * @return bool true on: 1, t..., on, yes (case insensitive) false on: 0, f..., off, no (case insensitive)
-		 */
 		_H3API_ bool     GetBool(bool default_value);
-		/**
-		 * @brief Get a float value for the current line
-		 *
-		 * @param default_value value to use in case the key is not found
-		 * @return atof value of the current key, or default_value if the key does not exist
-		 */
 		_H3API_ FLOAT    GetFloat(FLOAT default_value);
-		/**
-		 * @brief Get a double value for the current line
-		 *
-		 * @param default_value value to use in case the key is not found
-		 * @return atof value of the current key, or default_value if the key does not exist
-		 */
 		_H3API_ DOUBLE   GetDouble(DOUBLE default_value);
-		/**
-		 * @brief Get a string value for the current line
-		 *
-		 * @param default_value value to use in case the key is not found
-		 * @return returns the contents as is
-		 */
 		_H3API_ H3String GetString(const H3String& default_value);
-		/**
-		 * @brief Get an unsigned integer value for the current line which is written as an hexadecimal value
-		 * 0x and 0X prefixes are supported, but not essential
-		 * @param default_value value to use in case the key is not found
-		 * @return strtoul value of the current key, or default_value if the key does not exist
-		 */
 		_H3API_ UINT     GetHex(UINT default_value);
-		/**
-		 * @brief Set the currentline's value as a boolean
-		 *
-		 * @param value true/false on/off etc.
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetBool(bool value);
-		/**
-		 * @brief Set the currentline's value as a signed integer
-		 *
-		 * @param value signed integer
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetInteger(INT value);
-		/**
-		 * @brief Set the currentline's value as a float
-		 *
-		 * @param value float
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetFloat(FLOAT value);
-		/**
-		 * @brief Set the currentline's value as a double
-		 *
-		 * @param value double
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetDouble(DOUBLE value);
-		/**
-		 * @brief Set the currentline's value as a string
-		 *
-		 * @param value string
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetString(const H3String& value);
-		/**
-		 * @brief Set the currentline's value as an unsigned integer in hexadecimal format
-		 *
-		 * @param value unsigned integer
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetHex(UINT value);
 	};
 
-	/**
-	 * @brief contains all keys existing under this [section]
-	 *
-	 */
 	class H3IniSection
 	{
 		friend class H3Ini;
 
 	public:
-		/**
-		 * @brief parse all keys/lines existing in this section
-		 *
-		 */
 		class iterator
 		{
 		public:
@@ -22953,115 +18869,19 @@ namespace h3
 
 		_H3API_ iterator begin();
 		_H3API_ iterator end();
-		/**
-		 * @brief find a line with the specified key.
-		 *
-		 * @param key line starting as key = value
-		 * @return iterator/line of the matching key, end() if not found
-		 */
 		_H3API_ iterator Get(LPCSTR key);
-		/**
-		 * @brief find a line with the specified key
-		 *
-		 * @param key line starting as key = value
-		 * @return iterator/line of the matching key, end() if not found
-		 */
 		_H3API_ iterator operator[](LPCSTR key);
-		/**
-		 * @brief modify an existing line's value as a boolean.
-		 * Fails if the key is not found.
-		 * @param key line's starting value
-		 * @param value true/false on/off etc.
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetBool(LPCSTR key, bool value);
-		/**
-		 * @brief modify an existing line's value as a signed integer.
-		 * Fails if the key is not found.
-		 * @param key line's starting value
-		 * @param value signed integer
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetInteger(LPCSTR key, INT value);
-		/**
-		 * @brief modify an existing line's value as a string.
-		 * Fails if the key is not found.
-		 * @param key line's starting value
-		 * @param value string
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetString(LPCSTR key, const H3String& value);
-		/**
-		 * @brief modify an existing line's value as a float.
-		 * Fails if the key is not found.
-		 * @param key line's starting value
-		 * @param value float
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetFloat(LPCSTR key, FLOAT value);
-		/**
-		 * @brief modify an existing line's value as a double.
-		 * Fails if the key is not found.
-		 * @param key line's starting value
-		 * @param value double
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetDouble(LPCSTR key, DOUBLE value);
-		/**
-		 * @brief modify an existing line's value as an unsigned integerin hexadecimal format.
-		 * Fails if the key is not found.
-		 * @param key line's starting value
-		 * @param value unsigned integer
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetHex(LPCSTR key, UINT value);
-		/**
-		 * @brief Get the specified key's associated value as a boolean
-		 *
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return bool true on: 1, t..., on, yes (case insensitive) false on: 0, f..., off, no (case insensitive)
-		 */
 		_H3API_ bool     GetBool(LPCSTR key, bool default_value);
-		/**
-		 * @brief Get the specified key's associated value as a signed integer
-		 *
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return INT atoi signed integer of the associated value
-		 */
 		_H3API_ INT      GetInteger(LPCSTR key, INT default_value);
-		/**
-		 * @brief Get the specified key's associated value as a float
-		 *
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return FLOAT atof of the associated value
-		 */
 		_H3API_ FLOAT    GetFloat(LPCSTR key, FLOAT default_value);
-		/**
-		 * @brief Get the specified key's associated value as a double
-		 *
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return DOUBLE atof of the associated value
-		 */
 		_H3API_ DOUBLE   GetDouble(LPCSTR key, DOUBLE default_value);
-		/**
-		 * @brief Get the specified key's associated value
-		 *
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return H3String copy of the associated value
-		 */
 		_H3API_ H3String GetString(LPCSTR key, const H3String& default_value);
-		/**
-		 * @brief Get the specified key's associated value as an unsigned integer
-		 * 0x and 0X prefixes are supported, but not essential
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return UINT strtoul of the associated value
-		 */
 		_H3API_ UINT     GetHex(LPCSTR key, UINT default_value);
 
 	private:
@@ -23070,18 +18890,9 @@ namespace h3
 		BOOL                 m_searched;
 	};
 
-	/**
-	 * @brief an ini read/write class where sections and keys are
-	 * expected to be in a specific order. Access will be closer to constant time than O(log n)
-	 */
 	class H3Ini
 	{
 	public:
-		/**
-		 * @brief parses sections of the ini and their associated keys;
-		 * Using iterators(sections) is generally more efficient.
-		 *
-		 */
 		class iterator
 		{
 		public:
@@ -23096,144 +18907,23 @@ namespace h3
 		private:
 			H3IniSection* data;
 		};
-		/**
-		 * @brief opens and parses an ini file.
-		 * Throws H3Exception only if the specified file is not accessible.
-		 * @param file name of the ini file to parse
-		 * @return BOOL8 whether the file could be parsed successfully
-		 */
 		_H3API_ BOOL8 Open(LPCSTR file);
-		/**
-		 * @brief save a modified ini to disk
-		 *
-		 * @param file path to the ini
-		 * @param utf8 whether to use utf8 bom header
-		 * @return BOOL8 whether the modified ini was successfully saved
-		 */
 		_H3API_ BOOL8 Save(LPCSTR file, BOOL utf8);
-		/**
-		 * @brief Get a [section] iterator
-		 *
-		 * @param section name of the ini section to look for
-		 * @return iterator/section of the matching name, end() if not found
-		 */
 		_H3API_ iterator Get(LPCSTR section);
-		/**
-		 * @brief Get a [section] iterator
-		 *
-		 * @param section name of the ini section to look for
-		 * @return iterator/section of the matching name, end() if not found
-		 */
 		_H3API_ iterator operator[](LPCSTR section);
 		_H3API_ iterator begin();
 		_H3API_ iterator end();
-		/**
-		 * @brief Get the specified [section][key] associated value as a boolean
-		 *
-		 * @param section name of the [section] in which the key resides
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return bool true on: 1, t..., on, yes (case insensitive) false on: 0, f..., off, no (case insensitive)
-		 */
 		_H3API_ bool     GetBool(LPCSTR section, LPCSTR key, bool default_value);
-		/**
-		 * @brief Get the specified [section][key] associated value as a signed integer
-		 *
-		 * @param section name of the [section] in which the key resides
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return INT atoi signed integer
-		 */
 		_H3API_ INT      GetInteger(LPCSTR section, LPCSTR key, INT default_value);
-		/**
-		 * @brief Get the specified [section][key] associated value as a float
-		 *
-		 * @param section name of the [section] in which the key resides
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return FLOAT atof
-		 */
 		_H3API_ FLOAT    GetFloat(LPCSTR section, LPCSTR key, FLOAT default_value);
-		/**
-		 * @brief Get the specified [section][key] associated value as a double
-		 *
-		 * @param section name of the [section] in which the key resides
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return DOUBLE atof
-		 */
 		_H3API_ DOUBLE   GetDouble(LPCSTR section, LPCSTR key, DOUBLE default_value);
-		/**
-		 * @brief Get the specified [section][key] associated value as a string
-		 *
-		 * @param section name of the [section] in which the key resides
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return H3String copy of the key's value
-		 */
 		_H3API_ H3String GetString(LPCSTR section, LPCSTR key, const H3String& default_value);
-		/**
-		 * @brief Get the specified [section][key] associated value as a hexadecimal unsigned integer
-		 * 0x and 0X prefixes are supported, but not essential
-		 * @param section name of the [section] in which the key resides
-		 * @param key line's starting value
-		 * @param default_value value to use in case the key is not found
-		 * @return UINT strtoul unsigned integer
-		 */
 		_H3API_ UINT     GetHex(LPCSTR section, LPCSTR key, UINT default_value);
-		/**
-		 * @brief modify an existing [section][key] value as an boolean.
-		 * Fails if the section or key is not found.
-		 * @param section name of the section to seek
-		 * @param key line's starting value
-		 * @param value true/false on/off etc.
-		 * @return BOOL8 whether the operation was successful
-		 */
 		_H3API_ BOOL8 SetBool(LPCSTR section, LPCSTR key, bool value);
-		/**
-		 * @brief modify an existing [section][key] value as a signed integer.
-		 * Fails if the section or key is not found.
-		 * @param section name of the section to seek
-		 * @param key line's starting value
-		 * @param value signed integer
-		 * @return BOOL8 whether the operation was successful
-		 */
 		_H3API_ BOOL8 SetInteger(LPCSTR section, LPCSTR key, INT value);
-		/**
-		 * @brief modify an existing [section][key] value as a float.
-		 * Fails if the section or key is not found.
-		 * @param section name of the section to seek
-		 * @param key line's starting value
-		 * @param value float
-		 * @return BOOL8 whether the operation was successful
-		 */
 		_H3API_ BOOL8 SetFloat(LPCSTR section, LPCSTR key, FLOAT value);
-		/**
-		 * @brief modify an existing [section][key] value as a double.
-		 * Fails if the section or key is not found.
-		 * @param section name of the section to seek
-		 * @param key line's starting value
-		 * @param value double
-		 * @return BOOL8 whether the operation was successful
-		 */
 		_H3API_ BOOL8 SetDouble(LPCSTR section, LPCSTR key, DOUBLE value);
-		/**
-		 * @brief modify an existing [section][key] value as a string.
-		 * Fails if the section or key is not found.
-		 * @param section name of the section to seek
-		 * @param key line's starting value
-		 * @param value string
-		 * @return BOOL8 whether the operation was successful
-		 */
 		_H3API_ BOOL8 SetString(LPCSTR section, LPCSTR key, const H3String& value);
-		/**
-		 * @brief modify an existing [section][key] value as an unsigned integer in hexadecimal format.
-		 * Fails if the section or key is not found.
-		 * @param section name of the section to seek
-		 * @param key line's starting value
-		 * @param value unsigned integer
-		 * @return BOOL8 whether operation was successful
-		 */
 		_H3API_ BOOL8 SetHex(LPCSTR section, LPCSTR key, UINT value);
 
 	private:
@@ -23249,7 +18939,6 @@ namespace h3
 	class  H3Protect;
 	struct H3DLL;
 
-	/** @brief raii virtual protection to enable writing*/
 	class H3Protect
 	{
 		UINT32 m_address;
@@ -23257,23 +18946,11 @@ namespace h3
 		DWORD  m_oldProtect;
 		BOOL   m_protectEdited;
 	public:
-		/**
-		 * @brief enables writing at memory location
-		 *
-		 * @param address where you wish to write
-		 * @param size how many bytes should be unprotected
-		 */
 		_H3API_ H3Protect(UINT32 address, UINT32 size);
 		_H3API_ ~H3Protect();
-		/**
-		 * @brief checks if virtual protect was successful
-		 *
-		 * @return BOOL whether virtual protect operation enabled writing
-		 */
 		_H3API_ BOOL CanWrite();
 	};
 
-	/** @brief perform operations on loaded memory*/
 	namespace H3Patcher
 	{
 		_H3API_ VOID Breakpoint();
@@ -23360,107 +19037,27 @@ namespace h3
 			CALL_DWORD = 0x15FF,
 		};
 
-		/**
-		 * @brief finds the first byte sequence in a specified region
-		 *
-		 * @param haystack region in which to look for
-		 * @param hlen the length of the memory region to search
-		 * @param needle byte sequence to search for
-		 * @param nlen how many bytes are in the needle
-		 * @return PUCHAR address that matches needle, as a pointer. nullptr if not found
-		 */
 		_H3API_ PUCHAR Memmem(PUCHAR haystack, size_t hlen, PUCHAR needle, size_t nlen);
-		/**
-		 * @brief performs Memmem operation to find first byte sequence in a specified region
-		 *
-		 * @param address starting search point
-		 * @param max_search_length maximum bytes to search through
-		 * @param needle byte sequence to search for
-		 * @param needle_length how many bytes are in the needle
-		 * @param offset how many bytes to shift the found needle location by
-		 * @return UINT32 location in the region, matching the needle and shifted by \p offset. nullptr if not found
-		 */
 		_H3API_ UINT32 FindByNeedle(PUINT8 address, UINT32 max_search_length, PUINT8 needle, INT32 needle_length, INT32 offset);
 
 #ifndef _H3API_NAKED_FUNCTION_
 #define _H3API_NAKED_FUNCTION_ VOID __declspec(naked)
 #endif
 
-		/**
-		 * @brief only works for opcode length 5, most basic hook there is.
-		 * you are also in charge of overwritten assembly
-		 * @param address where to place hook
-		 * @param function _H3API_NAKED_FUNCTION_ hook
-		 */
 		_H3API_ BOOL NakedHook5(UINT32 address, H3NakedFunction function);
-		/**
-		 * @brief same as NakedHook5, but replaces bytes after the first 5 by NOP instructions
-		 *
-		 * @param address where to place hook
-		 * @param function _H3API_NAKED_FUNCTION_ hook
-		 * @param total_bytes how many bytes should be overwritten, minimum 5
-		 */
 		_H3API_ BOOL NakedHook(UINT32 address, H3NakedFunction function, UINT32 total_bytes);
-		/**
-		 * @brief write data at specific location
-		 *
-		 * @tparam T byte, word or dword, float, double...
-		 * @param address where to write data
-		 * @param value data to write
-		 * @return Whether the data was successfully written
-		 */
 		template<typename T>
 		BOOL WriteValue(ADDRESS address, const T value);
 
-		/**
-		 * @brief write data at specific locations
-		 *
-		 * @tparam T byte, word or dword, float, double...
-		 * @tparam size how many locations will be written to
-		 * @param address where to write data
-		 * @param value data to write
-		 * @return Whether the data was successfully written
-		 */
 		template<typename T, size_t size>
 		BOOL WriteValues(const UINT address, const T(&value)[size]);
 
-		/**
-		 * @brief writes pointer of data type (its address)
-		 *
-		 * @tparam T any data type
-		 * @param address address to write to
-		 * @param data a global or constexpr array, double or other value to be written as a pointer
-		 * @return Whether the data was successfully written
-		 */
 		template<typename T>
 		BOOL AddressOfPatch(const UINT address, const T& data);
-		/**
-		 * @brief writes pointer of data type (its address) to multiple locations
-		 *
-		 * @tparam Type any data type
-		 * @tparam size number of items in \p address array
-		 * @param address Locations to write to
-		 * @param data a global or constexpr array, double or other value to be written as a pointer
-		 * @return Whether all patches were successfully done
-		 */
 		template<typename Type, size_t size>
 		inline BOOL AddressOfPatch(const ADDRESS(&address)[size], const Type& data);
-		/**
-		 * @brief writes data type to an object reference without having to dereference to obtain their address
-		 *
-		 * @tparam T type of the object
-		 * @param reference data member of the object
-		 * @param data replacement value
-		 */
 		template<typename T>
 		BOOL ObjectPatch(T& reference, T data);
-		/**
-		 * @brief writes an array of bytes to the specified location
-		 *
-		 * @tparam size how many bytes are to be written
-		 * @param address starting location to write patch
-		 * @param value an array of bytes representing a patch
-		 */
 		template<size_t size>
 		BOOL HexPatch(const UINT address, const BYTE(&value)[size]);
 
@@ -23473,12 +19070,6 @@ namespace h3
 		_H3API_ BOOL FloatPatch(ADDRESS address, FLOAT value);
 		_H3API_ BOOL DoublePatch(ADDRESS address, DOUBLE value);
 
-		/**
-		 * @brief A scoped patch will modify the value at the specified address
-		 * for the duration of the declared class's scope and restore the original
-		 * value once that scope is ended. Useful for modifying something temporarily (raii).
-		 * @tparam Type Any type of value (char, int, double,...)
-		 */
 		template<ADDRESS _Address, typename Type>
 		class ScopedPatch
 		{
@@ -23489,11 +19080,6 @@ namespace h3
 			Type m_oldValue;
 		};
 	}
-	/**
-	 * @brief Similar to H3Patcher::ScopedPatch, however the value should be writable (no memory access modifications)
-	 * @tparam _Address The value to be backed up
-	 * @tparam Type any type of value (char, int, double ...)
-	 */
 	template<ADDRESS _Address, typename Type>
 	class H3ValueBackup
 	{
@@ -23515,7 +19101,6 @@ namespace h3
 		Type m_originalValue;
 	};
 
-	/** @brief get information about loaded dll or process through its name*/
 	struct H3DLL
 	{
 		PUINT8 code;
@@ -23527,11 +19112,6 @@ namespace h3
 		UINT32 dataSize;
 
 		_H3API_ H3DLL();
-		/**
-		 * @brief constructs the object and performs GetDllInfo()
-		 *
-		 * @param dll_name name of the process to inspect
-		 */
 		_H3API_ H3DLL(LPCSTR dll_name);
 
 	protected:
@@ -23539,131 +19119,23 @@ namespace h3
 		_H3API_ VOID needleUnexpectedCode(UINT32 address, PUINT8 needle, INT32 needle_size, PUINT8 expected_code, INT32 expected_size) const;
 		_H3API_ VOID processNotFound() const;
 	public:
-		/**
-		 * @brief get process memory layout and size
-		 *
-		 * @param name name of the process
-		 * @return Whether the DLL was found and data analyzed.
-		 */
 		_H3API_ BOOL GetDLLInfo(LPCSTR name);
-		/**
-		 * @brief find the first instance of needle
-		 *
-		 * @param needle byte sequence to look for
-		 * @param needle_size number of bytes in needle
-		 * @param offset number of bytes by which to shift the result
-		 * @return UINT32 address of the needle modified by \p offset, 0 if needle was not found
-		 */
 		_H3API_ UINT32 NeedleSearch(PUINT8 needle, INT32 needle_size, INT32 offset);
-		/**
-		 * @brief find the location of a secondary needle in the vicinity of primary needle
-		 *
-		 * @param needle primary byte sequence to look for
-		 * @param needle_size size of primary needle
-		 * @param radius search length around primary needle
-		 * @param needle2 secondary byte sequence to look for
-		 * @param needle_size2 size of secondary needle
-		 * @return UINT32 address of the secondary needle, 0 if not found
-		 */
 		_H3API_ UINT32 NeedleSearchAround(PUINT8 needle, INT32 needle_size, INT32 radius, PUINT8 needle2, INT32 needle_size2);
-		/**
-		 * @brief used to perform subsequent searches of a needle based on previous results
-		 *
-		 * @param after starting search location
-		 * @param needle byte sequence to look for
-		 * @param needle_size number of bytes in needle
-		 * @param offset number of bytes by which to shift the result
-		 * @return UINT32 address of the needle modified by \p offset, 0 if needle was not found
-		 */
 		_H3API_ UINT32 NeedleSearchAfter(UINT32 after, const PUINT8 needle, INT32 needle_size, INT32 offset) const;
-		/**
-		 * @brief performs NeedleSearch and checks checks location for expectedCode
-		 *
-		 * @param needle byte sequence to look for
-		 * @param needle_size number of bytes in needle
-		 * @param offset number of bytes by which to shift the result
-		 * @param expected_code byte sequence expected to be found at destination
-		 * @param expected_size size of expected byte sequence
-		 * @return UINT32 address of the needle modified by \p offset, 0 if needle was not found or expected sequence is not confirmed
-		 */
 		_H3API_ UINT32 NeedleSearchConfirm(PUINT8 needle, INT32 needle_size, INT32 offset, PUINT8 expected_code, INT32 expected_size);
-		/**
-		 * @brief performs NeedleSearch in RDATA section
-		 *
-		 * @param needle byte sequence to look for
-		 * @param needle_size number of bytes in needle
-		 * @return UINT32 address of the needle, 0 if needle was not found
-		 */
 		_H3API_ UINT32 NeedleSearchRData(PUINT8 needle, INT32 needle_size) const;
-		/**
-		 * @brief performs NeedleSearch in DATA section
-		 *
-		 * @param needle byte sequence to look for
-		 * @param needle_size number of bytes in needle
-		 * @return UINT32 address of the needle, 0 if needle was not found
-		 */
 		_H3API_ UINT32 NeedleSearchData(PUINT8 needle, INT32 needle_size) const;
-		/**
-		 * @brief find the first instance of needle
-		 *
-		 * @tparam sz number of bytes in needle
-		 * @param needle byte sequence to look for
-		 * @param offset number of bytes by which to shift the result
-		 * @return UINT32 address of the needle, 0 if needle was not found
-		 */
 		template <INT32 sz>
 		UINT32 NeedleSearch(const UINT8(&needle)[sz], INT32 offset);
-		/**
-		 * @brief find the location of a secondary needle in the vicinity of primary needle
-		 *
-		 * @tparam sz number of bytes in primary needle
-		 * @tparam sz2 number of bytes in secondary needle
-		 * @param needle primary byte sequence to look for
-		 * @param radius search length around primary needle
-		 * @param needle2 secondary byte sequence to look for
-		 * @return UINT32 address of the needle, 0 if needle was not found
-		 */
 		template <INT32 sz, INT32 sz2>
 		UINT32 NeedleSearchAround(const UINT8(&needle)[sz], INT32 radius, const UINT8(&needle2)[sz2]);
-		/**
-		 * @brief used to perform subsequent searches of a needle based on previous results
-		 *
-		 * @tparam sz number of bytes in needle
-		 * @param after starting search location
-		 * @param needle byte sequence to look for
-		 * @param offset number of bytes by which to shift the result
-		 * @return UINT32 address of the needle, 0 if needle was not found
-		 */
 		template <INT32 sz>
 		UINT32 NeedleSearchAfter(UINT32 after, const UINT8(&needle)[sz], INT32 offset);
-		/**
-		 * @brief performs NeedleSearch and checks checks location for expectedCode
-		 *
-		 * @tparam sz number of bytes in primary needle
-		 * @tparam sz2 number of bytes in confirmation needle
-		 * @param needle byte sequence to look for
-		 * @param offset number of bytes by which to shift the result
-		 * @param expected_code byte sequence expected to be found at destination
-		 * @return UINT32 address of the needle, 0 if needle was not found
-		 */
 		template <INT32 sz, INT32 sz2>
 		UINT32 NeedleSearchConfirm(const UINT8(&needle)[sz], INT32 offset, const UINT8(&expected_code)[sz2]);
-		/**
-		 * @brief performs NeedleSearch in RDATA section
-		 *
-		 * @tparam sz number of bytes in needle
-		 * @param needle byte sequence to look for
-		 * @return UINT32 address of the needle, 0 if needle was not found
-		 */
 		template <INT32 sz>
 		UINT32 NeedleSearchRData(const UINT8(&needle)[sz]);
-		/**
-		 * @brief performs NeedleSearch in DATA section
-		 *
-		 * @tparam sz number of bytes in needle
-		 * @param needle byte sequence to look for
-		 * @return UINT32 address of the needle, 0 if needle was not found
-		 */
 		template <INT32 sz>
 		UINT32 NeedleSearchData(const UINT8(&needle)[sz]);
 	};
@@ -23833,7 +19305,6 @@ namespace h3
 	class H3DirectoryChanger;
 	class H3DirectoryTraveler;
 
-	/** @brief Wrapper around WIN32_FIND_DATAA to simplify operations and perform basic file iteration*/
 	class H3Path
 	{
 	public:
@@ -23917,7 +19388,6 @@ namespace h3
 		DWORD    m_attributes;
 	};
 
-	/** @brief Performs change of directory and automatically restores old directory when leaving context*/
 	class H3DirectoryChanger
 	{
 	public:
@@ -23931,7 +19401,6 @@ namespace h3
 		BOOL     m_status;
 	};
 
-	/** @brief An iterative, non-recursive class to search for files at a specified depth within directories*/
 	class H3DirectoryTraveler
 	{
 	public:
@@ -23965,18 +19434,7 @@ namespace h3
 			H3DirectoryTraveler* m_parent;
 		};
 
-		/**
-		 * @brief Prepares iteration starting from the current directory.
-		 * @param file_type Only iterate over files of this type, e.g. "exe", "dll", "" for any file.
-		 * @param max_depth How many directories deep to search, <0 means any depth, 0 only current directory.
-		 */
 		_H3API_ H3DirectoryTraveler(const H3String& file_type = "", INT32 max_depth = -1);
-		/**
-		 * @brief Prepares iteration starting from the specified directory.
-		 * @param directory The starting directory to search from.
-		 * @param file_type Only iterate over files of this type, e.g. "exe", "dll", "" for any file.
-		 * @param max_depth How many directories deep to search, <0 means any depth, 0 only current directory.
-		 */
 		_H3API_ H3DirectoryTraveler(const H3Path& directory, const H3String& file_type, INT32 max_depth);
 		_H3API_ ~H3DirectoryTraveler();
 
@@ -24002,7 +19460,6 @@ namespace h3
 
 }
 
-/* only available if you define this macro */
 #ifdef _H3API_PLUGINS_
 
 namespace h3
@@ -24021,31 +19478,11 @@ namespace H3Plugin
 		class H3AssetLoader
 		{
 		public:
-			/* the number of assets added by the plugin so far */
 			virtual INT NumberAdded() = 0;
-			/* returns the last error */
 			virtual LPCSTR GetLastError() = 0;
-			/**
-			 * @brief Loads a pcx from anywhere to the game space
-			 * @param filePath the complete path to the pcx you are looking to load
-			 * @param h3name name of the pcx to use (12-chars)
-			 * @return The loaded pcx or nullptr on failure
-			 */
 			virtual H3LoadedPcx* LoadPcxFromFile(LPCSTR const filePath, LPCSTR const h3name) = 0;
-			/**
-			 * @brief Loads a wav from anywhere to the game space
-			 * @param filePath the complete path to the wav you are looking to load
-			 * @param h3name name of the wav to use (12-chars)
-			 * @return The loaded wav or nullptr on failure
-			 */
 			virtual H3WavFile* LoadWavFromFile(LPCSTR const filePath, LPCSTR const h3name) = 0;
 
-			/**
-			 * @brief Loads a def from anywhere to the game space
-			 * @param filePath the complete path to the def you are looking to load
-			 * @param h3name name of the def to use (12-chars)
-			 * @return The loaded def or nullptr on failure
-			 */
 			virtual H3LoadedDef* LoadDefFromFile(LPCSTR const filePath, LPCSTR const h3name) = 0;
 		};
 
@@ -24063,18 +19500,8 @@ namespace H3Plugin
 		class H3ImageLoader
 		{
 		public:
-			/* the number of images added by the plugin so far */
 			virtual INT NumberAdded() = 0;
-			/* returns the last error */
 			virtual LPCSTR GetLastError() = 0;
-			/**
-			 * @brief Loads many types of image from specified fiel to h3 space. DOES NOT SUPPORT TRANSPARENCY
-			 * @param filepath complete path to the image you are looking to load
-			 * @param h3name name of the pcx16 to use (12-chars)
-			 * @param width optional, used to resize image
-			 * @param height optional, used to resize image
-			 * @return Loaded pcx16 or nullptr on failure
-			*/
 			virtual H3LoadedPcx16* LoadImageToPcx16(LPCSTR filepath, LPCSTR h3name, INT width = -1, INT height = -1) = 0;
 		};
 
@@ -24092,21 +19519,10 @@ namespace H3Plugin
 		class H3TextColorInformation
 		{
 		public:
-			/* number of colors currently available */
 			virtual UINT GetNumberColors() = 0;
-			/* returns a vector of H3Strings with names of colors */
 			virtual const H3Vector<H3String>* GetColorNames() = 0;
-			/* empties the vector of H3Strings with color names */
 			virtual VOID DeleteColorNames() = 0;
-			/**
-			 * @brief Adds a color dynamically, duplicate names are not allowed but colors are.
-			 * @param name Up to 31 characters long
-			 * @param red Index of RRGGBB
-			 * @param green Index of RRGGBB
-			 * @param blue Index of RRGGBB
-			 */
 			virtual VOID AddColor(LPCSTR name, UINT8 red, UINT8 green, UINT8 blue) = 0;
-			/* Adds a color dynamically from a RRGGBB value */
 			VOID AddColor(LPCSTR name, DWORD rgb_color)
 			{
 				AddColor(name, (rgb_color >> 16) & 0xFF, (rgb_color >> 8) & 0xFF, rgb_color & 0xFF);
@@ -24136,83 +19552,29 @@ namespace h3
 	struct H3Random
 	{
 	public:
-		/**
-		 * @brief Set the Random Seed object. This is your own seed, not h3's. Uses timeGetTime() as seed
-		 */
 		_H3API_ static VOID SetRandomSeed();
-		/**
-		 * @brief Set the Random Seed object. This is your own seed, not h3's
-		 * @param seed value to set the random generator position
-		 */
 		_H3API_ static VOID SetRandomSeed(UINT seed);
-		/**
-		 * @brief generates a random number. This is your own random value, not h3's
-		 * @param high the upper margin of the number to be generated
-		 * @return a random number between 0 and \p high
-		 */
 		_H3API_ static INT32 Random(INT32 high);
-		/**
-		 * @brief generates a random number in the specified interval. This is your own random value, not h3's
-		 * @param low the lower boundary
-		 * @param high the upper boundary
-		 * @return a random number between \p low and \p high
-		 */
 		_H3API_ static INT32 RandBetween(INT32 low, INT32 high);
-		/**
-		 * @brief Uses h3's random number generator (will advance seed!)
-		 * If in multiplayer mode, uses TimeGetTime() instead of Random()
-		 * @param min_value lower bound
-		 * @param max_value upper bound
-		 * @return Value clamped in between bounds
-		 */
 		_H3API_ static INT32 MultiplayerRandom(INT32 min_value, INT32 max_value);
-		/**
-		 * @brief Peeks at h3's current random value without advancing seed
-		 * @return random value 0..0x7FFF
-		 */
 		_H3API_ static INT32 PeekRand();
-		/**
-		 * @brief Peeks at h3's current random value without advancing seed
-		 * @param low Minimum value sought, inclusive
-		 * @param high Highest value sought, exclusive
-		 * @return random value low..high-1
-		 */
 		_H3API_ static INT32 PeekRand(INT32 low, INT32 high);
-		/**
-		 * @brief Gets the random value offered by h3, (will advance seed!)
-		 * @return random value 0..0x7FFF
-		 */
 		_H3API_ static INT32 Rand();
-		/**
-		 * @brief Gets the random value offered by h3, (will advance seed!)
-		 * @param low Minimum value sought, inclusive
-		 * @param high Highest value sought, exclusive
-		 * @return random value low..high-1
-		 */
 		_H3API_ static INT32 Rand(INT32 low, INT32 high);
-		/**
-		 * @brief Sets h3's seed value
-		 * @param seed New value to use
-		 */
 		_H3API_ static VOID Srand(UINT32 seed);
 	public:
-		/** @brief Probably best not to touch this*/
 		struct ThreadLocalSingleton
 		{
 		public:
 			_H3API_SIZE_(0x74);
 		private:
 
-			/** @brief [00]*/
 			UINT32 currentThreadId;
 			h3unk32 _f_04[2];
-			/** @brief [0C]*/
 			DWORD   lastError;
 			h3unk32 _f_10;
-			/** @brief [14]*/
 			UINT32 currentSeedValue;
 			h3unk8 _f_18[56];
-			/** @brief [50] 0x690420 nice*/
 			h3unk8* _f_50;
 			h3unk8 _f_54[32];
 		public:
@@ -24223,7 +19585,6 @@ namespace h3
 			_H3API_ static  ThreadLocalSingleton& Get();
 		};
 
-		/** @brief Used to restore h3's seed to its original value*/
 		class SeedRestore
 		{
 		public:
@@ -24244,10 +19605,6 @@ namespace h3
 {
     template<typename Type>	class H3Range;
 
-    /**
-     * @brief Lazy-C++11-man's range iterator
-     * It only increments by step-size 1.
-     */
     template<typename Type>
     class H3Range
     {
@@ -24272,24 +19629,11 @@ namespace h3
         iterator m_end;
     };
 
-    /**
-     * @brief Creates iterable range while automatically deducing type
-     * @tparam Type Any integer/float/double
-     * @param upper_bound Exclusive bound in the following range: [0, upper_bound)
-     * @return Iterable range
-     */
     template<typename Type>
     typename H3Range<Type> Range(Type upper_bound)
     {
         return H3Range<Type>(upper_bound);
     }
-    /**
-     * @brief Creates iterable range while automatically deducing type
-     * @tparam Type Any integer/float/double
-     * @param lower_bound Inclusive bound in the following range: [lower_bound, upper_bound)
-     * @param upper_bound Exclusive bound in the following range: [lower_bound, upper_bound)
-     * @return Iterable range
-     */
     template<typename Type>
     typename H3Range<Type> Range(Type lower_bound, Type upper_bound)
     {
@@ -24304,7 +19648,6 @@ namespace h3
 	class H3File;
 	class H3SpreadSheet;
 
-	/** @brief read / write files using H3 fwrite() assets*/
 	class H3Stream
 	{
 		enum StreamModeValues
@@ -24320,29 +19663,17 @@ namespace h3
 		_H3API_ENUM_ StreamMode
 		{
 			SM_INVALID              = 0,
-			/* r */
 			SM_READ                 = MV_READ,
-			/* rb */
 			SM_READ_BINARY          = MV_READ | MV_BINARY,
-			/* w */
 			SM_WRITE                = MV_WRITE,
-			/* wb */
 			SM_WRITE_BINARY         = MV_WRITE | MV_BINARY,
-			/* a */
 			SM_APPEND               = MV_APPEND,
-			/* ab */
 			SM_APPEND_BINARY        = MV_APPEND | MV_BINARY,
-			/* r+ */
 			SM_READ_UPDATE          = MV_READ | MV_UPDATE,
-			/* r+b */
 			SM_READ_UPDATE_BINARY   = SM_READ_UPDATE | MV_BINARY,
-			/* w+ */
 			SM_WRITE_UPDATE         = MV_WRITE | MV_UPDATE,
-			/* w+b */
 			SM_WRITE_UPDATE_BINARY  = SM_WRITE_UPDATE | MV_BINARY,
-			/* a+ */
 			SM_APPEND_UPDATE        = MV_APPEND | MV_UPDATE,
-			/* a+b */
 			SM_APPEND_UPDATE_BINARY = SM_APPEND_UPDATE | MV_BINARY,
 		};
 		_H3API_ENUM_ StreamStatus
@@ -24365,9 +19696,7 @@ namespace h3
 		_H3API_ BOOL IsReady() const;
 		_H3API_ StreamStatus GetStatus() const;
 		_H3API_ StreamMode GetMode() const;
-		/** @brief makes a copy of the file to provided destination*/
 		_H3API_ BOOL Copy(LPCSTR destination);
-		/** @brief makes a copy of the file to provided destination*/
 		_H3API_ BOOL Copy(const H3String& destination);
 
 #ifdef _H3API_CPLUSPLUS11_
@@ -24422,7 +19751,6 @@ namespace h3
 		_H3API_ static DWORD  GetFileSize(FILE* f);
 	};
 
-	/** @brief read / write using CreateFile (not h3 CreateFile due to HDmod hooks)*/
 	class H3File
 	{
 	protected:
@@ -24480,51 +19808,24 @@ namespace h3
 		_H3API_ static BOOL   WriteFile(HANDLE handle, PVOID buffer, DWORD bytes_to_write);
 	};
 
-	/**
-	 * @brief writes a text file following h3 format (viewable with TxtEdit).
-	 * The '\r' and '\t' characters are reserved for cell / line delimitations, avoid their use!
-	 */
 	class H3SpreadSheet
 	{
 	public:
-		/** @brief clears the contents of the spreadsheet*/
 		_H3API_ VOID Clear();
-		/** @brief inserts the current text and adds a new line*/
 		_H3API_ VOID NewLine();
-		/** @brief insert an empty column at current location*/
 		_H3API_ VOID NewColumn();
-		/** @brief unsigned integers will be printed in hexadecimal format*/
 		_H3API_ H3SpreadSheet& Hex();
-		/** @brief unsigned integers will be printed in decimal format*/
 		_H3API_ H3SpreadSheet& Dec();
-		/** @brief save the spreadsheet's contents to specifield file name.
-		 * The contents are then cleared
-		 */
 		_H3API_ BOOL Save(LPCSTR const file);
 		_H3API_ BOOL Save(const H3String& file);
-		/** @brief insert a line at specified row*/
 		_H3API_ BOOL InsertLine(const H3String& line, UINT row = static_cast<UINT>(-1));
-		/**
-		 * @brief passing a H3SpreadSheet does nothing
-		 * only useful to modify Hex/Dec modes in a << chain
-		 */
 		_H3API_ H3SpreadSheet& operator<<(const H3SpreadSheet&);
-		/** @brief insert text and start a new column*/
 		_H3API_ H3SpreadSheet& operator<<(LPCSTR text);
-		/** @brief insert an integer and start a new column*/
 		_H3API_ H3SpreadSheet& operator<<(INT32 value);
-		/**
-		 * @brief insert an unsigned integer and start a new column.
-		 * May be hexadecimal with Hex() method
-		 */
 		_H3API_ H3SpreadSheet& operator<<(UINT32 value);
-		/** @brief insert a floating integer and start a new column*/
 		_H3API_ H3SpreadSheet& operator<<(FLOAT value);
-		/** @brief insert a double value and start a new column*/
 		_H3API_ H3SpreadSheet& operator<<(DOUBLE value);
-		/** @brief insert a single character and start a new column*/
 		_H3API_ H3SpreadSheet& operator<<(CHAR ch);
-		/** @brief insert a string and start a new column*/
 		_H3API_ H3SpreadSheet& operator<<(const H3String& line);
 
 	private:
@@ -26924,7 +22225,6 @@ namespace h3
 		if (type2 != -1)
 			ai_value += H3CreatureInformation::Get()[type2].aiValue * amount2;
 		INT32 stacks_count = 7;
-		/* follows logic in 0x4AC270 */
 		DOUBLE* thresholds = reinterpret_cast<DOUBLE*>(0x677708);
 		DOUBLE* limit      = reinterpret_cast<DOUBLE*>(0x6776E0);
 		DOUBLE ratio       = hero_power / DOUBLE(ai_value);
@@ -26989,7 +22289,6 @@ namespace h3
 		if (type1 != -1 || type2 != -1)
 		{
 			H3Army copy(split);
-			/* 7x7 splitting cases based on number of original stacks vs number of type 2 stacks */
 			typedef INT SplitOrder[7];
 			typedef SplitOrder Type2SplitOrder[7];
 			SplitOrder& order = reinterpret_cast<Type2SplitOrder*>(0x63DF94)[stacks_count][stacks2];
@@ -35079,7 +30378,6 @@ namespace h3
             if (msg.subtype != eMsgSubtype::MOUSE_WHEEL_BUTTON_DOWN ||
                 msg.subtype != eMsgSubtype::MOUSE_WHEEL_BUTTON_UP)
                 break;
-            /* fall through */
         case eMsgCommand::MOUSE_WHEEL:
         {
             if (deactivatesCount > 0)
@@ -39318,9 +34616,6 @@ public:
 
 	virtual Patch* __stdcall WriteJmp(_ptr_ address, _ptr_ to) = 0;
 
-	/* Example:
-	Pi->WriteHexPatch(0x57b521, "6A 01 6A 00");
-	*/
 	virtual Patch* __stdcall WriteHexPatch(_ptr_ address, const char* hex_str) = 0;
 
 	virtual Patch* __stdcall WriteCodePatchVA(_ptr_ address, char* format, _dword_* va_args) = 0;
