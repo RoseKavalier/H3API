@@ -545,6 +545,10 @@ namespace h3
 	{
 		return Insert(pos, &ch, 1);
 	}
+	_H3API_ H3String& H3String::Insert(int count, CHAR ch)
+	{
+		return THISCALL_3(H3String&, 0x4B5CA0, this, count, ch);
+	}
 	_H3API_ INT H3String::Compare(LPCSTR other) const
 	{
 		return libc::strcmp(String(), other);
