@@ -194,6 +194,8 @@ namespace h3
 		_H3API_ H3String& Insert(UINT pos, LPCSTR msg);
 		_H3API_ H3String& Insert(UINT pos, const H3String& to_insert);
 		_H3API_ H3String& Insert(UINT pos, CHAR ch);
+		// * insert repeated char in front of H3String
+		_H3API_ H3String& Insert(int count, CHAR ch)
 
 		_H3API_ INT Compare(LPCSTR other) const;
 		_H3API_ INT Compare(const H3String& other) const;
