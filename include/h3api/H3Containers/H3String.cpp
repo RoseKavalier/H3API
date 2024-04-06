@@ -294,6 +294,10 @@ namespace h3
 			return *this;
 		return Append(&ch, 1);
 	}
+	_H3API_ H3String& H3String::Append(int count, CHAR ch)
+	{
+		return THISCALL_3(H3String&, 0x4B5CA0, this, count, ch);
+	}
 	_H3API_ LPCSTR H3String::FindFirst(CHAR ch)
 	{
 		PCHAR f = Begin();

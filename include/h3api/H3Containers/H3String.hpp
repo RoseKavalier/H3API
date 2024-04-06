@@ -122,6 +122,7 @@ namespace h3
 		_H3API_ H3String& Append(UINT32 number);
 		_H3API_ H3String& Append(LPCSTR mes);
 		_H3API_ H3String& Append(CHAR ch);
+		_H3API_ H3String& Append(int count, CHAR ch)
 
 		// * Finds position of first ch
 		_H3API_ LPCSTR FindFirst(CHAR ch);
