@@ -82,8 +82,10 @@ namespace h3
 		/** @brief [46] radius for patrolling, -1 means no range limit*/
 		INT8   patrolRadius;
 	protected:
-		h3unk8	_f_47;
-		h3unk8  _f_48;
+		/** @brief [47] direction in which the hero looks*/
+		h3unk8	faceing;
+		/** @brief [48] selected formation type for troups*/
+		h3unk8  formationType;
 	public:
 		/** @brief [49] maximum movement points of the hero on a given turn*/
 		INT32   maxMovement;
