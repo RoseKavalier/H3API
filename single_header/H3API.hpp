@@ -1421,6 +1421,7 @@ namespace h3
 	PCHAR  const h3_TextBuffer = PCHAR(0x697428);
 	LPCSTR const h3_GamePath   = LPCSTR(0x698614);
 	PCHAR  const h3_SaveName   = PCHAR(0x69FC88);
+	PCHAR h3_SavePath = PCHAR(0x63E65C);
 
 	class H3Version
 	{
@@ -2873,6 +2874,9 @@ namespace h3
 		_H3API_ H3String& Erase(PCHAR first, PCHAR last);
 
 		_H3API_ BOOL Split(CHAR ch, H3String& out);
+		_H3API_ BOOL Split(const CHAR* str, H3String& out);
+
+		_H3API_ BOOL EndsWith(H3String& text, H3String& suffix);
 
 		_H3API_ VOID Erase();
 
@@ -2888,6 +2892,7 @@ namespace h3
 		_H3API_ H3String& Insert(UINT pos, LPCSTR msg);
 		_H3API_ H3String& Insert(UINT pos, const H3String& to_insert);
 		_H3API_ H3String& Insert(UINT pos, CHAR ch);
+		_H3API_ H3String& Replace(LPCSTR find, LPCSTR replace);
 
 		_H3API_ INT Compare(LPCSTR other) const;
 		_H3API_ INT Compare(const H3String& other) const;
@@ -3035,6 +3040,7 @@ namespace h3
 		_H3API_ UINT32 Length() const;
 		_H3API_ BOOL32 IsEmpty() const;
 		_H3API_ LPCWSTR String() const;
+		_H3API_ BOOL Empty() const;
 		_H3API_ VOID Insert(UINT32 start_position, UINT32 end_position, WCHAR character);
 		_H3API_ H3WString& Insert(UINT32 start_position, LPCWSTR text);
 		_H3API_ H3WString& Insert(UINT32 start_position, LPCWSTR text, UINT length);
@@ -5462,8 +5468,23 @@ namespace h3
             WATER        = 8,
             ROCK         = 9,
         };
+		enum eSpecialTerrainType : INT32
+		{
+			NONE = 0,
+			CURSEDGROUND = 21,
+			MAGICPLAINS = 46,
+			CLOVERFIELD = 222,
+			EVILFOG = 224,
+			FAVORABLEWINDS = 225,
+			FIERYFIELDS = 226,
+			HOLYGROUND = 227,
+			LUCIDPOOLS = 228,
+			MAGICCLOUDS = 229,
+			ROCKLAND = 231,
+		};
     } /* namespace NH3Terrain */
     typedef NH3Terrain::eTerrainType eTerrain;
+	typedef NH3Terrain::eSpecialTerrainType eSpecialTerrain;
 } /* namespace h3 */
 
 namespace h3
@@ -5584,6 +5605,18 @@ namespace h3
         }
         typedef NTargetType::eTargetType eTargetType;
 
+		namespace NExpertiseEffect
+		{
+			enum eExpertiseEffect : UINT
+			{
+				NONE = 0,
+				BASIC = 1,
+				ADVANCED = 2,
+				EXPERT = 3,
+			};
+		}
+		typedef NExpertiseEffect::eExpertiseEffect eExpertiseEffect;
+
         namespace NSpells
         {
             enum eSpell : INT8
@@ -5674,9 +5707,10 @@ namespace h3
         }
         typedef NSpells::eSpell eSpell;
     } /* namespace NH3Spells */
-    typedef NH3Spells::eSchool     eSpellchool;
+	typedef NH3Spells::eSchool     eSpellSchool;
     typedef NH3Spells::eTargetType eSpellTarget;
     typedef NH3Spells::eSpell     eSpell;
+	typedef NH3Spells::eExpertiseEffect     eSpellExpertise;
 } /* namespace h3 */
 
 namespace h3
@@ -6628,7 +6662,7 @@ namespace h3
 			H3MapitemWitchHut          witchHut;
 			SODSP_MapMonster           sodspWanderingCreature;
 		};
-		INT8 land;
+		INT8 land; //eTerrain
 		INT8 landSprite;
 		INT8 river;
 		INT8 riverSprite;
@@ -9192,6 +9226,8 @@ namespace h3
                 HEAL             = 17,
                 SACRIFICE        = 18,
                 TELEPORT         = 19,
+				CAST_SPELL_CREATURE = 20, //fearie dragon book and others who can "cast spell", example: OGRE_MAGE
+				CAST_SPELL_BOOK = -99, //original book 
             };
         }
         typedef NBattleFieldCursorType::eBattleFieldCursorType eBattleFieldCursorType;
@@ -12890,7 +12926,7 @@ namespace h3
 		_H3API_ BOOL8 HasCreatureType(INT32 type);
 		_H3API_ INT32 GetSpellSpecialtyEffect(INT32 spellID, INT32 creatureLevel, INT32 baseDamage);
 		_H3API_ INT32 GetSorceryEffect(INT32 spell_id, INT32 base_damage, H3CombatCreature* mon);
-		_H3API_ INT32 GetRealSpellDamage(INT32 baseDamage, H3CombatCreature* mon, INT32 spellID, H3Hero* enemy);
+		_H3API_ INT32 GetRealSpellDamage(INT32 baseDamage, H3CombatCreature* mon, INT32 spellID);
 		_H3API_ INT32 GetSpecialTerrain();
 		_H3API_ INT32 GetSpecialSpellTerrain();
 		_H3API_ BOOL HasSpell(INT32 spell);
@@ -13389,7 +13425,7 @@ namespace h3
 		LPCSTR name;
 		LPCSTR shortName;
 		INT32 level;
-		eSpellchool school;
+		eSpellSchool school;
 		INT32 manaCost[4];
 		INT32 spEffect;
 		INT32 baseValue[4];
@@ -15150,6 +15186,9 @@ namespace h3
 		_H3API_ INT        SimulateMouseOver(INT x, INT y);
 		_H3API_ INT        SimulateMouseOver(POINT& p);
 		_H3API_ CHAR       UpdateHintMessage();
+		_H3API_ VOID       SetHintMessage(H3AdventureManager* adv, LPCSTR message);
+		_H3API_ INT        AdvMgr_Show(int a2);
+		_H3API_ INT        GetTerrainOverlayTypeOfMapItem();
 		_H3API_ H3Point    GetCoordinates(H3MapItem* item);
 		_H3API_ VOID       StopSound(H3WavFile* wav);
 
@@ -15367,6 +15406,8 @@ namespace h3
 		_H3API_ VOID AnimateMassSpell(INT32 animation_id, BOOL8 affects_both_sides);
 		_H3API_ INT32 Close(H3Msg& msg);
 		_H3API_ BOOL CanSummonOrClone() const;
+		_H3API_ CHAR  PrepareTurn_AndCastAI();
+		_H3API_ INT32 DrawGrid();
 	};
 	_H3API_ASSERT_SIZE_(H3CombatManager);
 	_H3API_ASSERT_SIZE_(H3CombatManager::TownTowerLoaded);
@@ -21292,6 +21333,45 @@ namespace h3
 		Truncate(pos);
 		return TRUE;
 	}
+	_H3API_ BOOL H3String::Split(const CHAR* str, H3String& out)
+	{
+		const CHAR* pos = strstr(m_string, str);
+		if (!pos)
+			return FALSE;
+
+		UINT index = pos - m_string;
+		UINT length = strlen(str);
+
+		if (index == npos)
+			return FALSE;
+
+		if (index == Length() - length)
+		{
+			Truncate(index);
+			return TRUE;
+		}
+
+		out.Assign(begin() + index + length, Length() - index - length);
+		Truncate(index);
+		return TRUE;
+	}
+	_H3API_ BOOL H3String::EndsWith(H3String& text, H3String& suffix) {
+		size_t textLen = text.Length();
+		size_t suffixLen = suffix.Length();
+
+		if (suffixLen > textLen) {
+			return false;
+		}
+
+		// Compare finish part with suffix
+		for (size_t i = 0; i < suffixLen; ++i) {
+			if (text[textLen - suffixLen + i] != suffix[i]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 	_H3API_ VOID H3String::Erase()
 	{
 		libc::memset(Begin(), 0, Length());
@@ -21360,6 +21440,35 @@ namespace h3
 	_H3API_ H3String& H3String::Insert(UINT pos, CHAR ch)
 	{
 		return Insert(pos, &ch, 1);
+	}
+	_H3API_ H3String& H3String::Replace(LPCSTR find, LPCSTR replace)
+	{
+		if (!find || !replace)
+			return *this;
+
+		UINT find_len = libc::strlen(find);
+		UINT replace_len = libc::strlen(replace);
+
+		if (find_len == 0)
+			return *this;
+
+		H3String result;
+		PCHAR start = m_string;
+		PCHAR pos;
+
+		while ((pos = libc::strstr(start, find)) != nullptr)
+		{
+			result.Append(start, pos - start);
+			result.Append(replace);
+			start = pos + find_len;
+		}
+
+		result.Append(start);
+
+		if (this != &result)
+			*this = result;
+
+		return *this;
 	}
 	_H3API_ INT H3String::Compare(LPCSTR other) const
 	{
@@ -21874,6 +21983,12 @@ namespace h3
 	_H3API_ LPCWSTR H3WString::String() const
 	{
 		return m_string ? m_string : reinterpret_cast<LPCWSTR>(&m_string);
+	}
+	_H3API_ BOOL H3WString::Empty() const
+	{
+		if (m_string == nullptr || m_length == 0)
+			return TRUE;
+		return FALSE;
 	}
 	_H3API_ VOID H3WString::Insert(UINT32 start_position, UINT32 end_position, WCHAR character)
 	{
@@ -27736,7 +27851,7 @@ namespace h3
 	{
 		return THISCALL_4(INT32, 0x4E59D0, this, spell_id, base_damage, mon);
 	}
-	_H3API_ INT32 H3Hero::GetRealSpellDamage(INT32 base_damage, H3CombatCreature* mon, INT32 spell_id, H3Hero* enemy)
+	_H3API_ INT32 H3Hero::GetRealSpellDamage(INT32 base_damage, H3CombatCreature* mon, INT32 spell_id)
 	{
 		INT32 dmg = GetSorceryEffect(spell_id, base_damage, mon);
 		dmg = FASTCALL_3(INT32, 0x44B180, dmg, spell_id, mon->type); // golem-style resistance
@@ -29898,7 +30013,19 @@ namespace h3
 	}
 	_H3API_ CHAR H3AdventureManager::UpdateHintMessage()
 	{
-		return THISCALL_5(CHAR, 0x40B0B0, this, GetMapItem(), GetX(), GetY(), GetZ());
+		return THISCALL_4(CHAR, 0x40B0B0, this, GetMapItem(), GetX(), GetY());
+	}
+	_H3API_ VOID H3AdventureManager::SetHintMessage(H3AdventureManager* adv, LPCSTR message)
+	{
+		THISCALL_2(VOID, 0x40B040, adv, message);
+	}
+	_H3API_ INT H3AdventureManager::AdvMgr_Show(int a2)
+	{
+		return THISCALL_2(int, 0x406F60, this, a2);
+	}
+	_H3API_ INT32 H3AdventureManager::GetTerrainOverlayTypeOfMapItem()
+	{
+		return THISCALL_1(INT32, 0x4FD470, GetMapItem());
 	}
 	_H3API_ H3Point H3AdventureManager::GetCoordinates(H3MapItem* item)
 	{
@@ -29991,6 +30118,14 @@ namespace h3
 	_H3API_ VOID H3CombatManager::AddNecromancyRaisedCreature(INT32 side)
 	{
 		THISCALL_2(VOID, 0x469B00, this, side);
+	}
+	_H3API_ CHAR H3CombatManager::PrepareTurn_AndCastAI() //Refresh State - for example shoot/melee attack
+	{
+		return THISCALL_1(CHAR, 0x477C00, this);
+	}
+	_H3API_ INT32 H3CombatManager::DrawGrid() //Refresh Grid enemy - for example shoot/melee attack
+	{
+		return THISCALL_3(int, 0x4934B0, this, 0, 1);
 	}
 	_H3API_ VOID H3CombatManager::Refresh()
 	{
