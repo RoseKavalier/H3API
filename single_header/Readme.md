@@ -7,7 +7,9 @@ This header file is self-contained to use H3API within your projects. There is n
 
 ## WARNING
 
-No pull requests, modifications, contributions or anything will be accepted related to this unit. This single header is generated using [Quom](https://github.com/Viatorus/quom) and will not be maintained in any other way. **The only tolerated issues** are directly related to **bugs that occur during generation**.
+No pull requests, modifications, contributions or anything will be accepted related to this unit. This single header is generated using [amalgamate.py](../scripts/amalgamate.py) and will not be maintained in any other way. 
+
+**If you find an issue that occured during generation**, report it via an issue or a pull request to `amalgamate.py`.
 
 ## H3API Preprocessor Definitions Overview
 ---
