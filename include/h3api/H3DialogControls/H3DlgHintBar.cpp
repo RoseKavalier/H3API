@@ -39,19 +39,16 @@ namespace h3
     }
     _H3API_ H3DlgHintBar* H3DlgHintBar::Create(H3BaseDlg* dlg)
     {
-        H3DlgHintBar* hint = (H3DlgHintBar*)H3DlgTextPcx::Create(8, dlg->GetHeight() - 26,
-            dlg->GetWidth() - 16, 19, h3_NullString, NH3Dlg::Text::SMALL,
-            NH3Dlg::HDassets::HD_STATUSBAR_PCX, eTextColor::REGULAR);
-        if (hint)
-            hint->lastHint = nullptr;
-        return hint;
+        return H3DlgHintBar::Create(dlg, 8, dlg->GetHeight() - 26, dlg->GetWidth() - 16, 19);
     }
     _H3API_ H3DlgHintBar* H3DlgHintBar::Create(H3BaseDlg* dlg, INT32 x, INT32 y, INT32 w, INT32 h)
     {
-        H3DlgHintBar* hint = (H3DlgHintBar*)H3DlgTextPcx::Create(x, y, w, h, h3_NullString,
-            NH3Dlg::Text::SMALL, NH3Dlg::HDassets::HD_STATUSBAR_PCX, eTextColor::REGULAR);
-        if (hint)
-            hint->lastHint = nullptr;
+        H3DlgHintBar* hint = H3ObjectAllocator<H3DlgHintBar>().allocate(1);
+        if (hint == nullptr)
+            return nullptr;
+        THISCALL_12(H3DlgHintBar*, 0x5BCB70, hint, x, y, w, h, h3_NullString, NH3Dlg::Text::SMALL,
+                    NH3Dlg::HDassets::HD_STATUSBAR_PCX, eTextColor::REGULAR, 0, eTextAlignment::MIDDLE_CENTER, 8);        
+        hint->lastHint = nullptr;
         return hint;
     }
 } /* namespace h3 */
